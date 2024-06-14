@@ -1,0 +1,123 @@
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240412 04:28:42.357 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /scratch/s5104a21/hvactest/build/src
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:107] 5
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:109] Traacking used HV_DD file ./testfile.11262.4096.0
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_comm.cpp:40] init
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /proc
+20240412 04:28:42.358 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240412 04:28:42.363 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240412 04:28:42.363 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240412 04:28:42.364 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240412 04:28:42.364 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240412 04:28:42.365 INFO     HVAC_CLIENT- [hvac_comm.cpp:75] Mecury initialized
+20240412 04:28:42.366 INFO     HVAC_CLIENT- [hvac_client.cpp:135] Remote open - Host 0
+20240412 04:28:42.366 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240412 04:28:42.366 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:344] Connecting to ofi+tcp://10.159.0.41:37733 0
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:77] Open RPC Returned FD 15
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [wrappers.c:108] Open: Tracking File ./testfile.11262.4096.0
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:159] Remote read - Host 0
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:108] INFO: Freeing Bulk Handle
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [wrappers.c:201] Read to file /scratch/s5104a21/hvactest/build/src/testfile.11262.4096.0 of size 4096 returning 4096 bytes
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [wrappers.c:170] Close to file /scratch/s5104a21/hvactest/build/src/testfile.11262.4096.0
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.368 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /scratch/s5104a21/hvactest/build/src
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:107] 5
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:109] Traacking used HV_DD file ./testfile.11262.4096.0
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:135] Remote open - Host 0
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:77] Open RPC Returned FD 15
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [wrappers.c:108] Open: Tracking File ./testfile.11262.4096.0
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:159] Remote read - Host 0
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:108] INFO: Freeing Bulk Handle
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [wrappers.c:201] Read to file /scratch/s5104a21/hvactest/build/src/testfile.11262.4096.0 of size 4096 returning 4096 bytes
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [wrappers.c:170] Close to file /scratch/s5104a21/hvactest/build/src/testfile.11262.4096.0
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240412 04:28:42.369 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+

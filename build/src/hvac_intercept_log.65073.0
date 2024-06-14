@@ -1,0 +1,131 @@
+20240405 12:03:29.589 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240405 12:03:29.590 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240405 12:03:29.590 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240405 12:03:29.590 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /scratch/s5104a21/hvactest/build/src
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:107] 5
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:109] Traacking used HV_DD file ./testfile.65073.4096.0
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_comm.cpp:40] init
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /proc
+20240405 12:03:29.591 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240405 12:03:29.597 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240405 12:03:29.597 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240405 12:03:29.598 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240405 12:03:29.598 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240405 12:03:29.599 INFO     HVAC_CLIENT- [hvac_comm.cpp:75] Mecury initialized
+20240405 12:03:29.599 INFO     HVAC_CLIENT- [hvac_client.cpp:135] Remote open - Host 0
+20240405 12:03:29.600 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240405 12:03:29.611 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:344] Connecting to ofi+tcp://10.159.0.36:34030 0
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:77] Open RPC Returned FD 16
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:159] Remote read - Host 0
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.615 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:108] INFO: Freeing Bulk Handle
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [wrappers.c:201] Read to file /scratch/s5104a21/hvactest/build/src/testfile.65073.4096.0 of size 4096 returning 4096 bytes
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [wrappers.c:170] Close to file /scratch/s5104a21/hvactest/build/src/testfile.65073.4096.0
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.689 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /scratch/s5104a21/hvactest/build/src
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:107] 5
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:109] Traacking used HV_DD file ./testfile.65073.4096.0
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:135] Remote open - Host 0
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:77] Open RPC Returned FD 16
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:159] Remote read - Host 0
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_comm_client.cpp:108] INFO: Freeing Bulk Handle
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [wrappers.c:201] Read to file /scratch/s5104a21/hvactest/build/src/testfile.65073.4096.0 of size 4096 returning 4096 bytes
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 3
+
+20240405 12:03:29.690 INFO     HVAC_CLIENT- [wrappers.c:170] Close to file /scratch/s5104a21/hvactest/build/src/testfile.65073.4096.0
+20240405 12:03:29.691 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 9
+
+20240405 12:03:29.691 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+

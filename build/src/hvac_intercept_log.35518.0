@@ -1,0 +1,74 @@
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:75] track_file enter
+
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:81] 1
+
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:88] 2
+
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:93] 3
+
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:96] 4
+
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:98] ppath: /etc/slurm
+20240417 08:58:25.543 INFO     HVAC_CLIENT- [hvac_client.cpp:103] test: /scratch/s5104a21/hvactest/build/src
+20240417 08:58:25.547 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.548 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.548 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.548 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.548 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.548 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.548 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.549 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:155] remote_read func
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 7
+
+20240417 08:58:25.550 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 6
+
+20240417 08:58:52.127 INFO     HVAC_CLIENT- [hvac_client.cpp:224] fd: 5
+

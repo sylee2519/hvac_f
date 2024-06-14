@@ -1,0 +1,4 @@
+20240510 02:32:54.825 INFO     hvac_server- [hvac_server.cpp:72] Server process starting up
+20240510 02:32:54.826 INFO     hvac_server- [hvac_comm.cpp:40] init
+
+20240510 02:32:54.856 INFO     hvac_server- [hvac_comm.cpp:75] Mecury initialized
