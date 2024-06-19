@@ -1,1 +1,1 @@
-/apps/compiler/gcc/10.2.0/bin/gcc  -fcommon -g CMakeFiles/basic_test.dir/basic_test.c.o -o basic_test 
+/usr/bin/gcc  -fcommon -g CMakeFiles/basic_test.dir/basic_test.c.o -o basic_test   -L/home/seoyeong/lib/mercury/lib  -L/home/seoyeong/lib/log4c/lib 

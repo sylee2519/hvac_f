@@ -230,8 +230,6 @@ hvac_rpc_handler(hg_handle_t handle)
 }
 
 
-
-
 static hg_return_t
 hvac_open_rpc_handler(hg_handle_t handle)
 {
@@ -252,7 +250,6 @@ hvac_open_rpc_handler(hg_handle_t handle)
     HG_Respond(handle,NULL,NULL,&out);
 
     return (hg_return_t)ret;
-
 }
 
 static hg_return_t
@@ -295,6 +292,45 @@ hvac_seek_rpc_handler(hg_handle_t handle)
     return (hg_return_t)ret;
 }
 
+static hg_return_t 
+hvac_update_rpc_handler(hg_handle_t handle) {
+    hvac_update_in_t in;
+
+    ret = HG_Get_input(handle, &in);
+    if (ret != HG_SUCCESS) {
+        fprintf(stderr, "Error in HG_Get_input\n");
+        return ret;
+    }
+
+    hg_size_t bulk_size = in.num_paths * sizeof(std::pair<std::string, std::string>);
+    void* bulk_buf = malloc(bulk_size);
+    if (!bulk_buf) {
+        fprintf(stderr, "Failed to allocate buffer for bulk transfer\n");
+        HG_Free_input(handle, &in);
+        return HG_NOMEM_ERROR;
+    }
+
+    // Perform bulk transfer from client to server
+    const struct hg_info* hgi = HG_Get_info(handle);
+    ret = HG_Bulk_transfer(hgi->context, HG_BULK_PULL, hgi->addr, in.bulk_handle, 0, bulk_buf, bulk_size, HG_OP_ID_IGNORE);
+    if (ret != HG_SUCCESS) {
+        fprintf(stderr, "Error in HG_Bulk_transfer\n");
+        free(bulk_buf);
+        HG_Free_input(handle, &in);
+        return ret;
+    }
+    // Update path_cache_map 
+    std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(bulk_buf);
+    for (hg_size_t i = 0; i < in.num_paths; ++i) {
+        path_cache_map[paths[i].first] = paths[i].second;
+    }
+
+    free(bulk_buf);
+    HG_Free_input(handle, &in);
+    HG_Destroy(handle);
+
+    return (hg_return_t)ret;
+}
 
 /* register this particular rpc type with Mercury */
 hg_id_t
@@ -346,6 +382,19 @@ hvac_seek_rpc_register(void)
 
     return tmp;
 }
+
+/* This function is to update the file paths in server side */
+hg_id_t
+hvac_update_rpc_register(void)
+{
+    hg_id_t tmp;
+
+    tmp = MERCURY_REGISTER(
+        hg_class, "hvac_update_rpc", hvac_update_in_t, void, hvac_update_rpc_handler);
+
+    return tmp;
+}
+
 
 /* Create context even for client */
 void

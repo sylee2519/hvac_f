@@ -43,7 +43,7 @@ int hvac_start_comm_server(void)
     hvac_open_rpc_register();
     hvac_close_rpc_register();
     hvac_seek_rpc_register();
-
+    hvac_update_rpc_register(); // sy: add
 
 
     while (1)

@@ -5,6 +5,8 @@
 
 #include "hvac_comm.h"
 #include "hvac_data_mover_internal.h"
+// sy: add
+#include "hvac_fault.h"
 
 extern "C" {
 #include "hvac_logging.h"
@@ -23,6 +25,8 @@ static hg_id_t hvac_client_rpc_id;
 static hg_id_t hvac_client_open_id;
 static hg_id_t hvac_client_close_id;
 static hg_id_t hvac_client_seek_id;
+// sy: add
+static hg_id_t hvac_client_update_id;
 ssize_t read_ret = -1;
 
 /* Mercury Data Caching */
@@ -36,6 +40,9 @@ struct hvac_rpc_state {
     void *buffer;
     hg_bulk_t bulk_handle;
     hg_handle_t handle;
+    // sy: add
+    uint32_t node;
+    char path[256];
 };
 
 // Carry CB Information for CB
@@ -102,6 +109,12 @@ hvac_read_cb(const struct hg_cb_info *info)
     HG_Get_output(info->info.forward.handle, &out);
     bytes_read = out.ret;
 
+    /* sy add */
+    if (bytes_read > 0) {
+        storeData(hvac_rpc_state_p->node, hvac_rpc_state_p->path, hvac_rpc_state_p->buffer, bytes_read);
+    }
+    /* sy add */
+
     /* clean up resources consumed by this rpc */
     ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	assert(ret == HG_SUCCESS);
@@ -131,6 +144,7 @@ void hvac_client_comm_register_rpc()
     hvac_client_rpc_id = hvac_rpc_register();    
     hvac_client_close_id = hvac_close_rpc_register();
     hvac_client_seek_id = hvac_seek_rpc_register();
+    hvac_client_update_id = hvac_update_rpc_register();
 }
 
 void hvac_client_block()
@@ -218,11 +232,9 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd)
     sprintf(in.path,"%s",path.c_str());
     
     
-
+    // hvac_open_cb --> rpc callback function
     ret = HG_Forward(handle, hvac_open_cb, hvac_open_state_p, &in);
     assert(ret == 0);
-
-    
  
     hvac_comm_free_addr(svr_addr);
 
@@ -246,7 +258,12 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
     /* set up state structure */
     hvac_rpc_state_p = (struct hvac_rpc_state *)malloc(sizeof(*hvac_rpc_state_p));
     hvac_rpc_state_p->size = count;
-
+    
+    /* sy: add */
+    hvac_rpc_state_p->node = svr_hash;
+    strncpy(hvac_rpc_state_p->path, path, sizeof(hvac_rpc_state_p->path) - 1);
+    hvac_rpc_state_p->path[sizeof(hvac_rpc_state_p->path) - 1] = '\0';
+    /* sy: add */
 
     /* This includes allocating a src buffer for bulk transfer */
     hvac_rpc_state_p->buffer = buffer;
@@ -311,6 +328,75 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 
     return;
 
+}
+
+// sy: add
+void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& path_cache_map)
+{
+    hg_addr_t svr_addr;
+    hvac_update_in_t in;
+    hg_handle_t handle;
+    struct hvac_rpc_state *hvac_rpc_state_p;
+
+    hvac_client_get_addr();
+    HG_Addr_lookup2(hvac_comm_get_class(), my_address.c_str(), &svr_addr);
+
+    hvac_rpc_state_p = (struct hvac_rpc_state *)malloc(sizeof(*hvac_rpc_state_p));
+    hg_size_t num_paths = path_cache_map.size();
+    hg_size_t bulk_size = num_paths * sizeof(std::pair<std::string, std::string>);
+
+    // Buffer allocation for bulk transfer
+    hvac_rpc_state_p->buffer = malloc(bulk_size);
+    if (!hvac_rpc_state_p->buffer) {
+        fprintf(stderr, "Failed to allocate buffer for bulk transfer\n");
+        return;
+    }
+
+    std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(hvac_rpc_state_p->buffer);
+    size_t index = 0;
+    for (const auto& entry : path_cache_map) {
+        paths[index++] = entry;
+    }
+
+    hvac_rpc_state_p->size = bulk_size;
+
+    // Create handle to represent this RPC operation
+    hvac_comm_create_handle(svr_addr, hvac_update_rpc_id, &handle);
+
+    // Buffer registration
+    const struct hg_info* hgi = HG_Get_info(handle);
+    assert(hgi);
+    int ret = HG_Bulk_create(hgi->hg_class, 1, &hvac_rpc_state_p->buffer, &hvac_rpc_state_p->size, HG_BULK_READ_ONLY, &in.bulk_handle);
+    assert(ret == 0);
+
+    in.num_paths = num_paths;
+    in.bulk_handle = hvac_rpc_state_p->bulk_handle;
+
+    ret = HG_Forward(handle, NULL, NULL, &in);
+    assert(ret == 0);
+
+    HG_Bulk_free(in.bulk_handle);
+    free(hvac_rpc_state_p->buffer);
+    free(hvac_rpc_state_p);
+    HG_Destroy(handle);
+    hvac_comm_free_addr(svr_addr);
+
+    return;
+}
+
+void hvac_client_get_addr() {
+
+    if(my_address.empty()){
+        hg_addr_t client_addr;
+        hg_size_t size = PATH_MAX;
+        char addr_buffer[PATH_MAX];
+
+        HG_Addr_self(hg_class, &client_addr);
+        HG_Addr_to_string(hg_class, addr_buffer, &size, client_addr);
+        HG_Addr_free(hg_class, client_addr);
+
+        my_address = std::string(addr_buffer);
+    }
 }
 
 

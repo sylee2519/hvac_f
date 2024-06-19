@@ -23,9 +23,11 @@ MERCURY_GEN_PROC(hvac_rpc_in_t, ((int32_t)(input_val))((hg_bulk_t)(bulk_handle))
 MERCURY_GEN_PROC(hvac_seek_out_t, ((int32_t)(ret)))
 MERCURY_GEN_PROC(hvac_seek_in_t, ((int32_t)(fd))((int32_t)(offset))((int32_t)(whence)))
 
-
 //Close Handler input arg
 MERCURY_GEN_PROC(hvac_close_in_t, ((int32_t)(fd)))
+
+//Update Handler input arg
+MERCURY_GEN_PROC(hvac_update_in_t, ((hg_bulk_t)(bulk_handle))((hg_size_t)(num_paths)))
 
 
 //General
@@ -51,6 +53,9 @@ void hvac_client_comm_register_rpc();
 void hvac_client_block();
 ssize_t hvac_read_block();
 ssize_t hvac_seek_block();
+// sy: add
+void hvac_client_comm_gen_update_rpc(const map<string, string>& path_cache_map);
+void hvac_client_get_addr();
 
 
 
@@ -59,5 +64,7 @@ hg_id_t hvac_rpc_register(void);
 hg_id_t hvac_open_rpc_register(void);
 hg_id_t hvac_close_rpc_register(void);
 hg_id_t hvac_seek_rpc_register(void);
+// sy: add
+hg_id_t hvac_update_rpc_register(void);
 #endif
 

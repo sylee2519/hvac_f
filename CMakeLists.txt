@@ -44,6 +44,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcommon")
 
 find_package(PkgConfig REQUIRED)
 
+
+##sy add
+pkg_check_modules(MERCURY REQUIRED mercury)
+pkg_check_modules(LOG4C REQUIRED log4c)
+
+# Include directories and link libraries
+include_directories(${MERCURY_INCLUDE_DIRS} ${LOG4C_INCLUDE_DIRS})
+link_directories(${MERCURY_LIBRARY_DIRS} ${LOG4C_LIBRARY_DIRS})
+add_definitions(${MERCURY_CFLAGS_OTHER} ${LOG4C_CFLAGS_OTHER})
+
+##sy add
+
+
+
+
 add_subdirectory(src)
 
 add_subdirectory(tests)
