@@ -11,6 +11,8 @@
 
 #include "hvac_logging.h"
 #include "hvac_data_mover_internal.h"
+#include "hvac_fault.h"
+
 using namespace std;
 namespace fs = std::filesystem;
 

@@ -12,7 +12,11 @@ struct Data {
     ssize_t size;        
 };
 
-std::unordered_map<uint32_t, std::vector<Data>> data_storage;
-std::map<std::tring, std::string> path_cache_map;
-string my_address;
+extern std::unordered_map<uint32_t, std::vector<Data>> data_storage;
+extern std::map<std::string, std::string> path_cache_map;
+extern std::string my_address;
+
+void storeData(uint32_t node, const char* path, void *buffer, ssize_t size);
+void writeToFile(uint32_t node);
+
 #endif

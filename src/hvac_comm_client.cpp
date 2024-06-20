@@ -261,7 +261,8 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
     
     /* sy: add */
     hvac_rpc_state_p->node = svr_hash;
-    strncpy(hvac_rpc_state_p->path, path, sizeof(hvac_rpc_state_p->path) - 1);
+	std::string path = fd_map[localfd];
+    strncpy(hvac_rpc_state_p->path, path.c_str(), sizeof(hvac_rpc_state_p->path) - 1);
     hvac_rpc_state_p->path[sizeof(hvac_rpc_state_p->path) - 1] = '\0';
     /* sy: add */
 
@@ -361,7 +362,7 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
     hvac_rpc_state_p->size = bulk_size;
 
     // Create handle to represent this RPC operation
-    hvac_comm_create_handle(svr_addr, hvac_update_rpc_id, &handle);
+    hvac_comm_create_handle(svr_addr, hvac_client_update_id, &handle);
 
     // Buffer registration
     const struct hg_info* hgi = HG_Get_info(handle);
@@ -391,9 +392,9 @@ void hvac_client_get_addr() {
         hg_size_t size = PATH_MAX;
         char addr_buffer[PATH_MAX];
 
-        HG_Addr_self(hg_class, &client_addr);
-        HG_Addr_to_string(hg_class, addr_buffer, &size, client_addr);
-        HG_Addr_free(hg_class, client_addr);
+        HG_Addr_self(hvac_comm_get_class(), &client_addr);
+        HG_Addr_to_string(hvac_comm_get_class(), addr_buffer, &size, client_addr);
+        HG_Addr_free(hvac_comm_get_class(), client_addr);
 
         my_address = std::string(addr_buffer);
     }

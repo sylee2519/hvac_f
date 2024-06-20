@@ -8,6 +8,7 @@
 
 #include "hvac_logging.h"
 #include "hvac_fault.h"
+#include "hvac_comm.h"
 
 namespace fs = std::filesystem;
 
@@ -26,7 +27,7 @@ void storeData(uint32_t node, const char* path, void *buffer, ssize_t size) {
     data.value = data_copy;
     data.size = size;
     
-    data_storage[node].push_back)(data);
+    data_storage[node].push_back(data);
 }
 
 void writeToFile(uint32_t node) {

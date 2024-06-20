@@ -1,0 +1,2 @@
+/usr/local/lib/libhvac_client.so
+/usr/local/bin/hvac_server

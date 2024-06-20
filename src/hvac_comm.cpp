@@ -292,14 +292,18 @@ hvac_seek_rpc_handler(hg_handle_t handle)
     return (hg_return_t)ret;
 }
 
+static hg_return_t bulk_transfer_cb(const struct hg_cb_info *info) {
+         return HG_SUCCESS;
+}
+
 static hg_return_t 
 hvac_update_rpc_handler(hg_handle_t handle) {
     hvac_update_in_t in;
 
-    ret = HG_Get_input(handle, &in);
+    int ret = HG_Get_input(handle, &in);
     if (ret != HG_SUCCESS) {
         fprintf(stderr, "Error in HG_Get_input\n");
-        return ret;
+        return (hg_return_t)ret;
     }
 
     hg_size_t bulk_size = in.num_paths * sizeof(std::pair<std::string, std::string>);
@@ -310,21 +314,33 @@ hvac_update_rpc_handler(hg_handle_t handle) {
         return HG_NOMEM_ERROR;
     }
 
-    // Perform bulk transfer from client to server
-    const struct hg_info* hgi = HG_Get_info(handle);
-    ret = HG_Bulk_transfer(hgi->context, HG_BULK_PULL, hgi->addr, in.bulk_handle, 0, bulk_buf, bulk_size, HG_OP_ID_IGNORE);
+	// bulk hander creation
+	hg_bulk_t local_bulk_handle;
+    ret = HG_Bulk_create(HG_Get_info(handle)->hg_class, 1, &bulk_buf, &bulk_size, HG_BULK_READWRITE, &local_bulk_handle);
     if (ret != HG_SUCCESS) {
-        fprintf(stderr, "Error in HG_Bulk_transfer\n");
+        fprintf(stderr, "Error in HG_Bulk_create\n");
         free(bulk_buf);
         HG_Free_input(handle, &in);
-        return ret;
+        return (hg_return_t)ret;
+    }
+
+
+    // Perform bulk transfer from client to server
+    const struct hg_info* hgi = HG_Get_info(handle);
+    ret = HG_Bulk_transfer(hgi->context, bulk_transfer_cb, NULL, HG_BULK_PULL, hgi->addr, in.bulk_handle, 0, local_bulk_handle, 0, bulk_size, HG_OP_ID_IGNORE);
+	if (ret != HG_SUCCESS) {
+        fprintf(stderr, "Error in HG_Bulk_transfer\n");
+        HG_Bulk_free(local_bulk_handle);
+		free(bulk_buf);
+        HG_Free_input(handle, &in);
+        return (hg_return_t)ret;
     }
     // Update path_cache_map 
     std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(bulk_buf);
     for (hg_size_t i = 0; i < in.num_paths; ++i) {
         path_cache_map[paths[i].first] = paths[i].second;
     }
-
+	HG_Bulk_free(local_bulk_handle);
     free(bulk_buf);
     HG_Free_input(handle, &in);
     HG_Destroy(handle);

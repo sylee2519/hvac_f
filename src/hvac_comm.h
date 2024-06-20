@@ -8,8 +8,12 @@ extern "C" {
 }
 
 #include <string>
+#include <map>
 using namespace std;
 /* visible API for example RPC operation */
+
+extern std::map<int,std::string> fd_map;
+extern map<string, string> path_cache_map;
 
 //RPC Open Handler
 MERCURY_GEN_PROC(hvac_open_out_t, ((int32_t)(ret_status)))

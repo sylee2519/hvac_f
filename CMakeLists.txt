@@ -57,8 +57,6 @@ add_definitions(${MERCURY_CFLAGS_OTHER} ${LOG4C_CFLAGS_OTHER})
 ##sy add
 
 
-
-
 add_subdirectory(src)
 
 add_subdirectory(tests)

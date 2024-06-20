@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o.d"
   "CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o"
   "CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o.d"
+  "CMakeFiles/hvac_client.dir/hvac_fault_client.cpp.o"
+  "CMakeFiles/hvac_client.dir/hvac_fault_client.cpp.o.d"
   "CMakeFiles/hvac_client.dir/hvac_logging.c.o"
   "CMakeFiles/hvac_client.dir/hvac_logging.c.o.d"
   "CMakeFiles/hvac_client.dir/wrappers.c.o"

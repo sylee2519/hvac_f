@@ -14,6 +14,7 @@ add_library(hvac_client SHARED
   hvac_logging.c 
   hvac_comm.cpp 
   hvac_comm_client.cpp
+  hvac_fault_client.cpp
 )
 
 target_compile_definitions(hvac_client PUBLIC HVAC_CLIENT)
@@ -21,7 +22,7 @@ target_compile_definitions(hvac_client PUBLIC HVAC_PRELOAD)
 target_include_directories(hvac_client PRIVATE ${CMAKE_SOURCE_DIR}/include ${LOG4C_INCLUDE_DIRS} ${MERCURY_INCLUDE_DIRS})
 
 # Set RPATH properties if needed (adjust as necessary)
-set_target_properties(hvac_client PROPERTIES BUILD_RPATH /home/seoyeong/lib/mercury/lib)
+set_target_properties(hvac_client PROPERTIES BUILD_RPATH /scratch/s5104a21/lib/mercury/lib)
 
 # Link against required libraries
 target_link_libraries(hvac_client 
@@ -44,7 +45,7 @@ target_compile_definitions(hvac_server PUBLIC HVAC_SERVER)
 target_include_directories(hvac_server PRIVATE ${CMAKE_SOURCE_DIR}/include ${LOG4C_INCLUDE_DIRS} ${MERCURY_INCLUDE_DIRS})
 
 # Set RPATH properties if needed (adjust as necessary)
-set_target_properties(hvac_server PROPERTIES BUILD_RPATH /home/seoyeong/lib/mercury/lib)
+set_target_properties(hvac_server PROPERTIES BUILD_RPATH /scratch/s5104a21/lib/mercury/lib)
 
 # Link against required libraries
 target_link_libraries(hvac_server 
