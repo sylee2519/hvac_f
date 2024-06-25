@@ -337,9 +337,21 @@ hvac_update_rpc_handler(hg_handle_t handle) {
     }
     // Update path_cache_map 
     std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(bulk_buf);
+
+    L4C_INFO("path_cache_map before update:");
+    for (const auto& entry : path_cache_map) {
+        L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+    }
+	
     for (hg_size_t i = 0; i < in.num_paths; ++i) {
         path_cache_map[paths[i].first] = paths[i].second;
     }
+	    L4C_INFO("path_cache_map after update:");
+    for (const auto& entry : path_cache_map) {
+        L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+    }
+	
+
 	HG_Bulk_free(local_bulk_handle);
     free(bulk_buf);
     HG_Free_input(handle, &in);

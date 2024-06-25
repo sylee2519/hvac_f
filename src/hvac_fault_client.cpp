@@ -11,6 +11,7 @@
 #include "hvac_comm.h"
 
 namespace fs = std::filesystem;
+std::unordered_map<uint32_t, std::vector<Data>> data_storage;
 
 void storeData(uint32_t node, const char* path, void *buffer, ssize_t size) {
     void *data_copy = malloc(size);
@@ -28,6 +29,13 @@ void storeData(uint32_t node, const char* path, void *buffer, ssize_t size) {
     data.size = size;
     
     data_storage[node].push_back(data);
+
+    L4C_INFO("contents of data storage for node %u \n", node);
+    for (const auto& stored_data : data_storage[node]) {
+        L4C_INFO("File Path: %-50s  Size: %-10zd  Value: %p\n", stored_data.file_path, stored_data.size, stored_data.value);
+        // Adjust the output format as per your requirements
+                   }
+                           L4C_INFO("\n");
 }
 
 void writeToFile(uint32_t node) {
@@ -60,13 +68,14 @@ void writeToFile(uint32_t node) {
 
         path_cache_map[data.file_path] = filename;
 
-        free(data.value);
+//        free(data.value);
         free(newdir);
     }
     hvac_client_comm_gen_update_rpc(path_cache_map);
 
     // Clear data after writing
-    data_storage[node].clear();
+//    data_storage[node].clear();
+
 }
 
 void emptyStore() {

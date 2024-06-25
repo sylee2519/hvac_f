@@ -77,7 +77,7 @@ endif()
 
 
 
-set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/usr/mpi/gcc/openmpi-4.1.2a1/include;/apps/compiler/gcc/10.2.0/include/c++/10.2.0;/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu;/apps/compiler/gcc/10.2.0/include/c++/10.2.0/backward;/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include;/usr/local/include;/apps/compiler/gcc/10.2.0/include;/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed;/usr/include")
+set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/apps/compiler/gcc/10.2.0/include/c++/10.2.0;/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu;/apps/compiler/gcc/10.2.0/include/c++/10.2.0/backward;/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include;/usr/local/include;/apps/compiler/gcc/10.2.0/include;/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed;/usr/include")
 set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++;m;gcc_s;gcc;c;gcc_s;gcc")
 set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0;/apps/compiler/gcc/10.2.0/lib64;/lib64;/usr/lib64;/apps/compiler/gcc/10.2.0/lib")
 set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")
