@@ -15,8 +15,6 @@ extern "C" {
 #include <unistd.h>
 }
 
-#include <atomic>
-std::atomic<bool> write_called{false};
 #include <new>
 #include <utility> 
 
@@ -37,7 +35,11 @@ ssize_t read_ret = -1;
 /* Mercury Data Caching */
 std::map<int, std::string> address_cache;
 extern std::map<int, int > fd_redir_map;
-std::string my_address;
+//std::string my_address;
+hg_addr_t my_address = HG_ADDR_NULL;
+int firstEpochData = 1280 / 2; // data size divide by the number of clients
+int tmp = 0;
+uint32_t my_hash;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -47,7 +49,7 @@ struct hvac_rpc_state {
     hg_bulk_t bulk_handle;
     hg_handle_t handle;
     // sy: add
-    uint32_t node;
+    hg_addr_t node;
     char path[256];
 };
 
@@ -115,13 +117,16 @@ hvac_read_cb(const struct hg_cb_info *info)
     HG_Get_output(info->info.forward.handle, &out);
     bytes_read = out.ret;
 
+	tmp++;
     /* sy add */
-    if (bytes_read > 0) {
+    if (firstEpochData > tmp && bytes_read > 0) {
 		L4C_INFO("store data is called\n");
-        storeData(hvac_rpc_state_p->node, hvac_rpc_state_p->path, hvac_rpc_state_p->buffer, bytes_read);
+		if (hvac_rpc_state_p->node != my_address){
+        	storeData(hvac_rpc_state_p->node, hvac_rpc_state_p->path, hvac_rpc_state_p->buffer, bytes_read);
+		}
     }
     /* sy add */
-	if(!write_called.exchange(true)){
+	if(tmp == firstEpochData){
 		writeToFile(hvac_rpc_state_p->node);
 	}
     /* clean up resources consumed by this rpc */
@@ -269,7 +274,7 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
     hvac_rpc_state_p->size = count;
     
     /* sy: add */
-    hvac_rpc_state_p->node = svr_hash;
+    hvac_rpc_state_p->node = svr_addr;
 	std::string path = fd_map[localfd];
     strncpy(hvac_rpc_state_p->path, path.c_str(), sizeof(hvac_rpc_state_p->path) - 1);
     hvac_rpc_state_p->path[sizeof(hvac_rpc_state_p->path) - 1] = '\0';
@@ -344,17 +349,15 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 
 void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& path_cache_map)
 {
-    hg_addr_t svr_addr;
+//    hg_addr_t svr_addr;
     hvac_update_in_t in;
     hg_handle_t handle;
     struct hvac_rpc_state *hvac_rpc_state_p;
 	
 	
     hvac_client_get_addr();
-		L4C_INFO("before lookup\n");		
-    HG_Addr_lookup2(hvac_comm_get_class(), my_address.c_str(), &svr_addr);
+//    HG_Addr_lookup2(hvac_comm_get_class(), my_address.c_str(), &svr_addr);
 	
-		L4C_INFO("after lookup\n");		
 //    hvac_rpc_state_p = (struct hvac_rpc_state *)malloc(sizeof(*hvac_rpc_state_p));
 	hvac_rpc_state_p = new hvac_rpc_state;
 	if (!hvac_rpc_state_p) {
@@ -387,7 +390,7 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
     hvac_rpc_state_p->size = bulk_size;
 
     // Create handle to represent this RPC operation
-    hvac_comm_create_handle(svr_addr, hvac_client_update_id, &handle);
+    hvac_comm_create_handle(my_address, hvac_client_update_id, &handle);
 		L4C_INFO("after create handle\n");		
 
     // Buffer registration
@@ -433,7 +436,7 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
 //    free(hvac_rpc_state_p->buffer);
 //    free(hvac_rpc_state_p);
     HG_Destroy(handle);
-    hvac_comm_free_addr(svr_addr);
+    hvac_comm_free_addr(my_address);
 
 		L4C_INFO("after free\n");		
     return;
@@ -441,7 +444,7 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
 
 void hvac_client_get_addr() {
 
-    if(my_address.empty()){
+    if(my_address == HG_ADDR_NULL){
 		L4C_INFO("my_address empty\n");		
         hg_addr_t client_addr;
         hg_size_t size = PATH_MAX;
@@ -451,8 +454,9 @@ void hvac_client_get_addr() {
         HG_Addr_to_string(hvac_comm_get_class(), addr_buffer, &size, client_addr);
         HG_Addr_free(hvac_comm_get_class(), client_addr);
 
-        my_address = std::string(addr_buffer);
-		L4C_INFO("my_address %s\n", my_address.c_str());		
+        std::string address = std::string(addr_buffer);
+		HG_Addr_lookup2(hvac_comm_get_class(), address.c_str(), &my_address);
+		L4C_INFO("my_address %s\n", address.c_str());		
     }
 }
 

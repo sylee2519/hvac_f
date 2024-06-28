@@ -29,8 +29,6 @@ struct hvac_rpc_state {
     hvac_rpc_in_t in;
 };
 
-
-
 //Initialize communication for both the client and server
 //processes
 //This is based on the rpc_engine template provided by the mercury lib

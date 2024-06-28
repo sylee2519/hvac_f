@@ -11,9 +11,9 @@
 #include "hvac_comm.h"
 
 namespace fs = std::filesystem;
-std::unordered_map<uint32_t, std::vector<Data>> data_storage;
+std::unordered_map<hg_addr_t, std::vector<Data>> data_storage;
 
-void storeData(uint32_t node, const char* path, void *buffer, ssize_t size) {
+void storeData(hg_addr_t node, const char* path, void *buffer, ssize_t size) {
     void *data_copy = malloc(size);
     if(data_copy == nullptr){
         fprintf(stderr, "Error: Memory allocation failed.\n");
@@ -30,17 +30,19 @@ void storeData(uint32_t node, const char* path, void *buffer, ssize_t size) {
     
     data_storage[node].push_back(data);
 
+/*
     L4C_INFO("contents of data storage for node %u \n", node);
     for (const auto& stored_data : data_storage[node]) {
         L4C_INFO("File Path: %-50s  Size: %-10zd  Value: %p\n", stored_data.file_path, stored_data.size, stored_data.value);
         // Adjust the output format as per your requirements
                    }
                            L4C_INFO("\n");
+*/
 }
 
-void writeToFile(uint32_t node) {
+void writeToFile(hg_addr_t node) {
     if (data_storage.find(node) == data_storage.end()) {
-        fprintf(stderr, "Error: Node %d data not found.\n", node);
+        fprintf(stderr, "Error: Node data not found.\n");
         return;
     }
 

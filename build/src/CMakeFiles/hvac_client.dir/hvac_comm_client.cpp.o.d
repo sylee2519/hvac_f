@@ -431,7 +431,4 @@ src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o: \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cassert \
  /usr/include/assert.h /usr/include/unistd.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/atomic \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/atomic_base.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/atomic_lockfree_defines.h
+ /usr/include/bits/confname.h /usr/include/getopt.h
