@@ -74,7 +74,7 @@ void writeToFile(hg_addr_t node) {
         free(newdir);
     }
     hvac_client_comm_gen_update_rpc(1, path_cache_map);
-
+	L4C_INFO("after fault, memory files written\n");
     // Clear data after writing
 //    data_storage[node].clear();
 

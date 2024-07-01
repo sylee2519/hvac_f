@@ -31,6 +31,15 @@ struct hvac_rpc_state {
     hvac_rpc_in_t in;
 };
 
+struct hvac_update_rpc_state {
+    hg_size_t size;
+    void *buffer;
+    hg_bulk_t bulk_handle;
+    hg_handle_t handle;
+    hvac_update_in_t in;
+};
+
+
 //Initialize communication for both the client and server
 //processes
 //This is based on the rpc_engine template provided by the mercury lib
@@ -293,7 +302,60 @@ hvac_seek_rpc_handler(hg_handle_t handle)
 }
 
 static hg_return_t bulk_transfer_cb(const struct hg_cb_info *info) {
-         return HG_SUCCESS;
+    if (info->ret != HG_SUCCESS) {
+        fprintf(stderr, "Bulk transfer failed with error %d\n", info->ret);
+        return info->ret;
+    }
+
+    hvac_update_rpc_state *state = (hvac_update_rpc_state *)info->arg;
+
+    // Retrieve the address of the originator
+	const struct hg_info *hgi = HG_Get_info(state->handle);
+    hg_addr_t client_addr = hgi->addr;
+    hvac_get_addr();
+    int cmp_result = HG_Addr_cmp(hgi->hg_class, client_addr, my_address);
+
+    std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(state->buffer);
+
+	// Update path_cache_map
+	if (cmp_result == 0) {
+        L4C_INFO("path_cache_map before update:");
+        for (const auto& entry : path_cache_map) {
+            L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+        }
+
+        for (hg_size_t i = 0; i < state->in.num_paths; ++i) {
+            path_cache_map[paths[i].first] = paths[i].second;
+        }
+        L4C_INFO("path_cache_map after update:");
+        for (const auto& entry : path_cache_map) {
+            L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+        }
+    }
+	else { // Exclusive copy
+        L4C_INFO("Exclusive copy received\n:");
+        std::vector<Data> data_vector;
+        for (hg_size_t i = 0; i < state->in.num_paths; ++i) {
+            Data data;
+            strncpy(data.file_path, paths[i].first.c_str(), sizeof(data.file_path));
+            data.file_path[sizeof(data.file_path) - 1] = '\0';  // Ensure null termination
+            data.size = paths[i].second.size();
+            data.value = malloc(data.size);
+            if (data.value) {
+                memcpy(data.value, paths[i].second.c_str(), data.size);
+            }
+            data_vector.push_back(data);
+        }
+        data_storage[client_addr] = data_vector;
+    }
+
+    HG_Bulk_free(state->bulk_handle);
+    free(state->buffer);
+    HG_Free_input(state->handle, &state->in);
+    HG_Destroy(state->handle);
+    free(state);
+
+    return HG_SUCCESS;
 }
 
 static hg_return_t 
@@ -324,10 +386,15 @@ hvac_update_rpc_handler(hg_handle_t handle) {
         return (hg_return_t)ret;
     }
 
+	hvac_update_rpc_state *state = (hvac_update_rpc_state *)malloc(sizeof(hvac_update_rpc_state));
+    state->buffer = bulk_buf;
+    state->bulk_handle = local_bulk_handle;
+    state->handle = handle;
+    state->in = in;
 
     // Perform bulk transfer from client to server
     const struct hg_info* hgi = HG_Get_info(handle);
-    ret = HG_Bulk_transfer(hgi->context, bulk_transfer_cb, NULL, HG_BULK_PULL, hgi->addr, in.bulk_handle, 0, local_bulk_handle, 0, bulk_size, HG_OP_ID_IGNORE);
+    ret = HG_Bulk_transfer(hgi->context, bulk_transfer_cb, state, HG_BULK_PULL, hgi->addr, in.bulk_handle, 0, local_bulk_handle, 0, bulk_size, HG_OP_ID_IGNORE);
 	if (ret != HG_SUCCESS) {
         fprintf(stderr, "Error in HG_Bulk_transfer\n");
         HG_Bulk_free(local_bulk_handle);
@@ -336,50 +403,7 @@ hvac_update_rpc_handler(hg_handle_t handle) {
         return (hg_return_t)ret;
     }
   
-    // Retrieve the address of the originator
-    hg_addr_t client_addr = hgi->addr;
-	hvac_get_addr();
-	int cmp_result = HG_Addr_cmp(hgi->hg_class, client_addr, my_address);
-	
-	std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(bulk_buf);
-
-	// Update path_cache_map
-    if (cmp_result == 0) {
-    	L4C_INFO("path_cache_map before update:");
-    	for (const auto& entry : path_cache_map) {
-        	L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-    	}
-	
-    	for (hg_size_t i = 0; i < in.num_paths; ++i) {
-        	path_cache_map[paths[i].first] = paths[i].second;
-    	}
-	    L4C_INFO("path_cache_map after update:");
-    	for (const auto& entry : path_cache_map) {
-        	L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-    	}
-	}	
-	else { // Exclusive copy
-		std::vector<Data> data_vector;
-		for (hg_size_t i = 0; i < in.num_paths; ++i) {
-        	Data data;
-        	strncpy(data.file_path, paths[i].first.c_str(), sizeof(data.file_path));
-        	data.file_path[sizeof(data.file_path) - 1] = '\0';  // Ensure null termination
-        	data.size = paths[i].second.size();
-        	data.value = malloc(data.size);
-        	if (data.value) {
-            	memcpy(data.value, paths[i].second.c_str(), data.size);
-        	}
-        	data_vector.push_back(data);
-    	}
-		data_storage[client_addr] = data_vector;
-	}
-
-	HG_Bulk_free(local_bulk_handle);
-    free(bulk_buf);
-    HG_Free_input(handle, &in);
-    HG_Destroy(handle);
-
-    return (hg_return_t)ret;
+    return HG_SUCCESS;
 }
 
 void hvac_get_addr() {

@@ -91,12 +91,12 @@ bool hvac_track_file(const char *path, int flags, int fd)
 	try {
 
 		std::string ppath = std::filesystem::canonical(path).parent_path();
-	L4C_INFO("ppath: %s", ppath.c_str());	
+//	L4C_INFO("ppath: %s", ppath.c_str());	
 		// Check if current file exists in HVAC_DATA_DIR
 		if (hvac_data_dir != NULL){
 			std::string test = std::filesystem::canonical(hvac_data_dir);
 			
-	L4C_INFO("test: %s", test.c_str());	
+//	L4C_INFO("test: %s", test.c_str());	
 			if (ppath.find(test) != std::string::npos)
 			{
 				//L4C_FATAL("Got a file want a stack trace");

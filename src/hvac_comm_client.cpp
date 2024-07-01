@@ -208,6 +208,30 @@ hvac_read_cb(const struct hg_cb_info *info)
     return HG_SUCCESS;
 }
 
+/* sy: add */
+/* callback function for udpate rpc */
+static hg_return_t update_cb(const struct hg_cb_info *callback_info) {
+    hvac_rpc_state *state = static_cast<hvac_rpc_state *>(callback_info->arg);
+
+    L4C_INFO("update_cb called\n");
+
+    HG_Bulk_free(state->bulk_handle);
+
+    std::pair<std::string, std::string> *paths = static_cast<std::pair<std::string, std::string> *>(state->buffer);
+    hg_size_t num_paths = state->size / sizeof(std::pair<std::string, std::string>);
+    for (hg_size_t i = 0; i < num_paths; ++i) {
+        paths[i].~pair();
+    }
+    operator delete(state->buffer);
+
+    delete state;
+
+    L4C_INFO("udpate_cb completed\n");
+
+    return HG_SUCCESS;
+}
+
+
 void hvac_client_comm_register_rpc()
 {   
     hvac_client_open_id = hvac_open_rpc_register();
@@ -401,7 +425,7 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 
 }
 
-// sy: add
+/* sy: add */
 /* Flag 0 for exclusive data copy, and 1 for path update after rebuilding process */
 void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::string>& path_cache_map)
 {
@@ -438,7 +462,8 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
 
 	L4C_INFO("after setting paths to send\n");		
     hvac_rpc_state_p->size = bulk_size;
-
+	hvac_rpc_state_p->bulk_handle = HG_BULK_NULL;	
+	hvac_rpc_state_p->handle = handle;	
     // Create handle to represent this RPC operation
 
 	// In case of Exclusive data	
@@ -448,11 +473,14 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
         L4C_INFO("Exclusive copy - Host %d", host);
 	    exclusive_addr = hvac_client_comm_lookup_addr(host);	
     	hvac_comm_create_handle(exclusive_addr, hvac_client_update_id, &handle);
+		hvac_rpc_state_p->node = exclusive_addr;
 	}
 	
 	// In case of path update after failure
 	else {
+        L4C_INFO("update\n");
     	hvac_comm_create_handle(my_address, hvac_client_update_id, &handle);
+		hvac_rpc_state_p->node = my_address;
 	}
 
 	L4C_INFO("after create handle\n");		
@@ -473,7 +501,7 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
 
 	L4C_INFO("after bulk create\n");		
     in.num_paths = num_paths;
-    ret = HG_Forward(handle, NULL, NULL, &in);
+    ret = HG_Forward(handle, update_cb, hvac_rpc_state_p, &in);
 	if (ret != 0) {
         fprintf(stderr, "Failed to forward handle\n");
         HG_Bulk_free(in.bulk_handle);
@@ -486,12 +514,7 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
     }
 
 	L4C_INFO("after forward\n");		
-    HG_Bulk_free(in.bulk_handle);
-	for (size_t i = 0; i < num_paths; ++i) {
-        paths[i].~pair();
-    }
-	operator delete(hvac_rpc_state_p->buffer);
-    delete hvac_rpc_state_p;
+
     HG_Destroy(handle);
     
 	if(flag == 0){
