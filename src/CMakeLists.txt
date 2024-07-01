@@ -38,7 +38,7 @@ add_executable(hvac_server
   hvac_server.cpp 
   hvac_data_mover.cpp 
   hvac_comm.cpp 
-  hvac_logging.c 
+  hvac_logging.c
 )
 
 target_compile_definitions(hvac_server PUBLIC HVAC_SERVER)

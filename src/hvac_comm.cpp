@@ -1,5 +1,6 @@
 #include "hvac_comm.h"
 #include "hvac_data_mover_internal.h"
+#include "hvac_fault.h"
 
 extern "C" {
 #include "hvac_logging.h"
@@ -12,13 +13,14 @@ extern "C" {
 #include <string>
 #include <iostream>
 #include <map>	
-
+#include <unordered_map>
 
 static hg_class_t *hg_class = NULL;
 static hg_context_t *hg_context = NULL;
 static int hvac_progress_thread_shutdown_flags = 0;
 static int hvac_server_rank = -1;
 static int server_rank = -1;
+hg_addr_t my_address = HG_ADDR_NULL;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -333,22 +335,44 @@ hvac_update_rpc_handler(hg_handle_t handle) {
         HG_Free_input(handle, &in);
         return (hg_return_t)ret;
     }
-    // Update path_cache_map 
-    std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(bulk_buf);
+  
+    // Retrieve the address of the originator
+    hg_addr_t client_addr = hgi->addr;
+	hvac_get_addr();
+	int cmp_result = HG_Addr_cmp(hgi->hg_class, client_addr, my_address);
+	
+	std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(bulk_buf);
 
-    L4C_INFO("path_cache_map before update:");
-    for (const auto& entry : path_cache_map) {
-        L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-    }
+	// Update path_cache_map
+    if (cmp_result == 0) {
+    	L4C_INFO("path_cache_map before update:");
+    	for (const auto& entry : path_cache_map) {
+        	L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+    	}
 	
-    for (hg_size_t i = 0; i < in.num_paths; ++i) {
-        path_cache_map[paths[i].first] = paths[i].second;
-    }
+    	for (hg_size_t i = 0; i < in.num_paths; ++i) {
+        	path_cache_map[paths[i].first] = paths[i].second;
+    	}
 	    L4C_INFO("path_cache_map after update:");
-    for (const auto& entry : path_cache_map) {
-        L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-    }
-	
+    	for (const auto& entry : path_cache_map) {
+        	L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+    	}
+	}	
+	else { // Exclusive copy
+		std::vector<Data> data_vector;
+		for (hg_size_t i = 0; i < in.num_paths; ++i) {
+        	Data data;
+        	strncpy(data.file_path, paths[i].first.c_str(), sizeof(data.file_path));
+        	data.file_path[sizeof(data.file_path) - 1] = '\0';  // Ensure null termination
+        	data.size = paths[i].second.size();
+        	data.value = malloc(data.size);
+        	if (data.value) {
+            	memcpy(data.value, paths[i].second.c_str(), data.size);
+        	}
+        	data_vector.push_back(data);
+    	}
+		data_storage[client_addr] = data_vector;
+	}
 
 	HG_Bulk_free(local_bulk_handle);
     free(bulk_buf);
@@ -357,6 +381,25 @@ hvac_update_rpc_handler(hg_handle_t handle) {
 
     return (hg_return_t)ret;
 }
+
+void hvac_get_addr() {
+
+    if(my_address == HG_ADDR_NULL){
+        L4C_INFO("my_address empty\n");
+        hg_addr_t client_addr;
+        hg_size_t size = PATH_MAX;
+        char addr_buffer[PATH_MAX];
+
+        HG_Addr_self(hvac_comm_get_class(), &client_addr);
+        HG_Addr_to_string(hvac_comm_get_class(), addr_buffer, &size, client_addr);
+        HG_Addr_free(hvac_comm_get_class(), client_addr);
+
+        std::string address = std::string(addr_buffer);
+        HG_Addr_lookup2(hvac_comm_get_class(), address.c_str(), &my_address);
+        L4C_INFO("my_address %s\n", address.c_str());
+    }
+}
+
 
 /* register this particular rpc type with Mercury */
 hg_id_t

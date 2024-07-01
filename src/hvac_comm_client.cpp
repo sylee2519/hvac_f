@@ -31,15 +31,15 @@ static hg_id_t hvac_client_seek_id;
 // sy: add
 static hg_id_t hvac_client_update_id;
 ssize_t read_ret = -1;
+std::map<std::string, std::string> exclusive_data;
+int firstEpochData = 1280 / 2; // data size divide by the number of clients
+int tmp = 0;
+uint32_t my_hash;
+
 
 /* Mercury Data Caching */
 std::map<int, std::string> address_cache;
 extern std::map<int, int > fd_redir_map;
-//std::string my_address;
-hg_addr_t my_address = HG_ADDR_NULL;
-int firstEpochData = 1280 / 2; // data size divide by the number of clients
-int tmp = 0;
-uint32_t my_hash;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -57,6 +57,48 @@ struct hvac_rpc_state {
 struct hvac_open_state{
     uint32_t local_fd;
 };
+
+// sy: add
+// DJB2
+struct CustomHash{
+    std::size_t operator()(const std::string& str) const {
+        std::size_t hash = 5381;
+        for (char c : str) {
+            hash = ((hash << 5) + hash) + c; // hash * 33 + c
+        }
+        return hash;
+    }
+};
+
+// sy: add
+// Find rank by address
+int find_rank_by_addr(const std::map<int, std::string>& address_cache, hg_addr_t target_addr) {
+    for (const auto& entry : address_cache) {
+        hg_addr_t current_addr;
+        if (HG_Addr_lookup2(hvac_comm_get_class(), entry.second.c_str(), &current_addr) == HG_SUCCESS) {
+            if (HG_Addr_cmp(hvac_comm_get_class(), target_addr, current_addr) == 0) {
+                HG_Addr_free(hvac_comm_get_class(), current_addr);
+                return entry.first;
+            }
+            HG_Addr_free(hvac_comm_get_class(), current_addr);
+        }
+    }
+    return -1; // Indicating not found
+}
+
+// sy: add
+// Find Node
+int find_valid_host(const std::string& input, int self_id) {
+    CustomHash custom_hash;
+    std::size_t hash_value = custom_hash(input);
+    int host = hash_value % (g_hvac_server_count-1);
+
+    if (host == self_id) {
+        host = (host + 1) % (g_hvac_server_count);
+    }
+
+    return host;
+}
 
 static hg_return_t
 hvac_seek_cb(const struct hg_cb_info *info)
@@ -117,19 +159,33 @@ hvac_read_cb(const struct hg_cb_info *info)
     HG_Get_output(info->info.forward.handle, &out);
     bytes_read = out.ret;
 
-	tmp++;
     /* sy add */
+	tmp++;
+	hvac_get_addr();
+
     if (firstEpochData > tmp && bytes_read > 0) {
 		L4C_INFO("store data is called\n");
+		// Shared data
 		if (hvac_rpc_state_p->node != my_address){
         	storeData(hvac_rpc_state_p->node, hvac_rpc_state_p->path, hvac_rpc_state_p->buffer, bytes_read);
 		}
+		// Exclusive data copy
+		else{
+    		std::string bufferString;
+    		bufferString = static_cast<char*>(hvac_rpc_state_p->buffer);
+			exclusive_data.insert({hvac_rpc_state_p->path, bufferString});
+			int host = find_rank_by_addr(address_cache, my_address);
+			host = find_valid_host(hvac_rpc_state_p->path, host); 
+			hvac_client_comm_gen_update_rpc(0, exclusive_data);
+		}
     }
     /* sy add */
+	/* Need to be replaced by failure detection code */
 	if(tmp == firstEpochData){
 		writeToFile(hvac_rpc_state_p->node);
 	}
     /* clean up resources consumed by this rpc */
+	exclusive_data.clear(); // sy: add
     ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	assert(ret == HG_SUCCESS);
 	L4C_INFO("INFO: Freeing Bulk Handle"); //Does this deregister memory?
@@ -346,19 +402,16 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 }
 
 // sy: add
-
-void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& path_cache_map)
+/* Flag 0 for exclusive data copy, and 1 for path update after rebuilding process */
+void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::string>& path_cache_map)
 {
-//    hg_addr_t svr_addr;
+
     hvac_update_in_t in;
     hg_handle_t handle;
     struct hvac_rpc_state *hvac_rpc_state_p;
+	hg_addr_t exclusive_addr;
 	
-	
-    hvac_client_get_addr();
-//    HG_Addr_lookup2(hvac_comm_get_class(), my_address.c_str(), &svr_addr);
-	
-//    hvac_rpc_state_p = (struct hvac_rpc_state *)malloc(sizeof(*hvac_rpc_state_p));
+    hvac_get_addr();
 	hvac_rpc_state_p = new hvac_rpc_state;
 	if (!hvac_rpc_state_p) {
         fprintf(stderr, "Failed to allocate memory for hvac_rpc_state_p\n");
@@ -369,37 +422,46 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
     hg_size_t bulk_size = num_paths * sizeof(std::pair<std::string, std::string>);
 
     // Buffer allocation for bulk transfer
-//    hvac_rpc_state_p->buffer = malloc(bulk_size);
 	hvac_rpc_state_p->buffer = operator new(bulk_size);
     if (!hvac_rpc_state_p->buffer) {
         fprintf(stderr, "Failed to allocate buffer for bulk transfer\n");
-//		free(hvac_rpc_state_p);
 		delete hvac_rpc_state_p;
         return;
     }
 
-		L4C_INFO("before pair\n");		
+	L4C_INFO("before pair\n");		
     std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(hvac_rpc_state_p->buffer);
     size_t index = 0;
     for (const auto& entry : path_cache_map) {
-//        paths[index++] = entry;
 		new (&paths[index++]) std::pair<std::string, std::string>(entry); 
     }
 
-		L4C_INFO("after setting paths to send\n");		
+	L4C_INFO("after setting paths to send\n");		
     hvac_rpc_state_p->size = bulk_size;
 
     // Create handle to represent this RPC operation
-    hvac_comm_create_handle(my_address, hvac_client_update_id, &handle);
-		L4C_INFO("after create handle\n");		
 
+	// In case of Exclusive data	
+	if(flag == 0){
+		int host = find_rank_by_addr(address_cache, my_address);
+        host = find_valid_host(hvac_rpc_state_p->path, host);	
+        L4C_INFO("Exclusive copy - Host %d", host);
+	    exclusive_addr = hvac_client_comm_lookup_addr(host);	
+    	hvac_comm_create_handle(exclusive_addr, hvac_client_update_id, &handle);
+	}
+	
+	// In case of path update after failure
+	else {
+    	hvac_comm_create_handle(my_address, hvac_client_update_id, &handle);
+	}
+
+	L4C_INFO("after create handle\n");		
     // Buffer registration
     const struct hg_info* hgi = HG_Get_info(handle);
     assert(hgi);
     int ret = HG_Bulk_create(hgi->hg_class, 1, &hvac_rpc_state_p->buffer, &hvac_rpc_state_p->size, HG_BULK_READ_ONLY, &in.bulk_handle);
-//    assert(ret == 0);
 
-	 if (ret != 0) {
+	if (ret != 0) {
         fprintf(stderr, "Failed to create bulk handle\n");
         for (size_t i = 0; i < num_paths; ++i) {
             paths[i].~pair();
@@ -409,12 +471,9 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
         return;
     }
 
-		L4C_INFO("after bulk create\n");		
+	L4C_INFO("after bulk create\n");		
     in.num_paths = num_paths;
-//    in.bulk_handle = hvac_rpc_state_p->bulk_handle;
-//not needed directly assgiend at HG_Bulk_create
     ret = HG_Forward(handle, NULL, NULL, &in);
-//    assert(ret == 0);
 	if (ret != 0) {
         fprintf(stderr, "Failed to forward handle\n");
         HG_Bulk_free(in.bulk_handle);
@@ -426,40 +485,25 @@ void hvac_client_comm_gen_update_rpc(const std::map<std::string, std::string>& p
         return;
     }
 
-		L4C_INFO("after forward\n");		
+	L4C_INFO("after forward\n");		
     HG_Bulk_free(in.bulk_handle);
 	for (size_t i = 0; i < num_paths; ++i) {
         paths[i].~pair();
     }
 	operator delete(hvac_rpc_state_p->buffer);
     delete hvac_rpc_state_p;
-//    free(hvac_rpc_state_p->buffer);
-//    free(hvac_rpc_state_p);
     HG_Destroy(handle);
-    hvac_comm_free_addr(my_address);
-
-		L4C_INFO("after free\n");		
+    
+	if(flag == 0){
+		hvac_comm_free_addr(exclusive_addr);
+	}
+    else{
+        hvac_comm_free_addr(my_address);
+    }
+	
+	L4C_INFO("after free\n");		
     return;
 }
-
-void hvac_client_get_addr() {
-
-    if(my_address == HG_ADDR_NULL){
-		L4C_INFO("my_address empty\n");		
-        hg_addr_t client_addr;
-        hg_size_t size = PATH_MAX;
-        char addr_buffer[PATH_MAX];
-
-        HG_Addr_self(hvac_comm_get_class(), &client_addr);
-        HG_Addr_to_string(hvac_comm_get_class(), addr_buffer, &size, client_addr);
-        HG_Addr_free(hvac_comm_get_class(), client_addr);
-
-        std::string address = std::string(addr_buffer);
-		HG_Addr_lookup2(hvac_comm_get_class(), address.c_str(), &my_address);
-		L4C_INFO("my_address %s\n", address.c_str());		
-    }
-}
-
 
 //We've converted the filename to a rank
 //Using standard c++ hashing modulo servers

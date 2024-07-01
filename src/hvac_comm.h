@@ -14,6 +14,7 @@ using namespace std;
 
 extern std::map<int,std::string> fd_map;
 extern map<string, string> path_cache_map;
+extern uint32_t g_hvac_server_count;
 
 //RPC Open Handler
 MERCURY_GEN_PROC(hvac_open_out_t, ((int32_t)(ret_status)))
@@ -58,8 +59,10 @@ void hvac_client_block();
 ssize_t hvac_read_block();
 ssize_t hvac_seek_block();
 // sy: add
-void hvac_client_comm_gen_update_rpc(const map<string, string>& path_cache_map);
-void hvac_client_get_addr();
+void hvac_client_comm_gen_update_rpc(int flag, const map<string, string>& path_cache_map);
+void hvac_get_addr();
+int find_rank_by_addr(const std::map<int, std::string>& address_cache, hg_addr_t target_addr);
+int find_valid_host(const std::string& input, int self_id);
 
 
 

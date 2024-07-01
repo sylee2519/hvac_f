@@ -410,6 +410,12 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/vector.tcc \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_heap.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h \
+  /scratch/s5104a21/hvactest/src/hvac_fault.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/unordered_map \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable_policy.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unordered_map.h \
   /scratch/s5104a21/hvactest/src/hvac_logging.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /scratch/s5104a21/lib/log4c/include/log4c.h \
@@ -1433,6 +1439,12 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/vector.tcc \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_heap.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h \
+  /scratch/s5104a21/hvactest/src/hvac_fault.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/unordered_map \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable_policy.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unordered_map.h \
   /scratch/s5104a21/hvactest/src/hvac_logging.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /scratch/s5104a21/lib/log4c/include/log4c.h \
@@ -1462,10 +1474,6 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 /usr/include/sys/uio.h:
 
 /scratch/s5104a21/hvactest/src/hvac_internal.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable.h:
-
-/scratch/s5104a21/hvactest/src/hvac_fault.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_ops.h:
 
@@ -1498,8 +1506,6 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_facets_nonio.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ctime:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ratio:
 
@@ -1569,6 +1575,14 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /scratch/s5104a21/lib/log4c/include/log4c/defs.h:
 
+/scratch/s5104a21/lib/log4c/include/log4c/version.h:
+
+/scratch/s5104a21/lib/log4c/include/log4c.h:
+
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits:
+
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params.hpp:
 
 /usr/include/bits/pthreadtypes.h:
@@ -1608,6 +1622,10 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_i.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/local.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac_logging.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/for.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/enum.hpp:
 
@@ -1673,10 +1691,6 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_back.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable_policy.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater.hpp:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/deque.tcc:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/deduce_d.hpp:
@@ -1696,10 +1710,6 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 /scratch/s5104a21/lib/mercury2/include/mercury_types.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_seq.hpp:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/for.hpp:
-
-/scratch/s5104a21/hvactest/src/hvac_logging.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_tuple.hpp:
 
@@ -1979,6 +1989,8 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/initializer_list:
 
+/scratch/s5104a21/hvactest/src/hvac_fault.h:
+
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/detail/def.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_front.hpp:
@@ -2089,12 +2101,6 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_params.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/unordered_map:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/iostream:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_params.hpp:
@@ -2155,6 +2161,12 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_right_256.hpp:
 
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/unordered_map:
+
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/rest_n.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/insert.hpp:
@@ -2204,8 +2216,6 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/while.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/detail/is_single_return.hpp:
-
-/scratch/s5104a21/lib/log4c/include/log4c/version.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/size_64.hpp:
 
@@ -2363,6 +2373,10 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/string_view.tcc:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable_policy.h:
+
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitxor.hpp:
 
 /usr/include/bits/waitstatus.h:
@@ -2449,6 +2463,4 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h:
 
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h:
-
-/scratch/s5104a21/lib/log4c/include/log4c.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable.h:

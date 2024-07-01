@@ -20,7 +20,7 @@ struct Data {
 
 extern std::unordered_map<hg_addr_t, std::vector<Data>> data_storage;
 extern std::map<std::string, std::string> path_cache_map;
-extern hg_addr_t my_address;;
+extern hg_addr_t my_address;
 
 void storeData(hg_addr_t node, const char* path, void *buffer, ssize_t size);
 void writeToFile(hg_addr_t node);

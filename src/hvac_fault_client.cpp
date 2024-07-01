@@ -73,7 +73,7 @@ void writeToFile(hg_addr_t node) {
 //        free(data.value);
         free(newdir);
     }
-    hvac_client_comm_gen_update_rpc(path_cache_map);
+    hvac_client_comm_gen_update_rpc(1, path_cache_map);
 
     // Clear data after writing
 //    data_storage[node].clear();
