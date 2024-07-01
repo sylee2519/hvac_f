@@ -43,7 +43,7 @@ extern std::map<int, int > fd_redir_map;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
-    uint32_t value;
+//    uint32_t value;
     hg_size_t size;
     void *buffer;
     hg_bulk_t bulk_handle;
@@ -52,6 +52,8 @@ struct hvac_rpc_state {
     hg_addr_t node;
     char path[256];
 };
+
+
 
 // Carry CB Information for CB
 struct hvac_open_state{
@@ -164,13 +166,15 @@ hvac_read_cb(const struct hg_cb_info *info)
 	hvac_get_addr();
 
     if (firstEpochData > tmp && bytes_read > 0) {
-		L4C_INFO("store data is called\n");
+		int cmp_result = HG_Addr_cmp(hvac_comm_get_class(), hvac_rpc_state_p->node, my_address);
 		// Shared data
-		if (hvac_rpc_state_p->node != my_address){
-        	storeData(hvac_rpc_state_p->node, hvac_rpc_state_p->path, hvac_rpc_state_p->buffer, bytes_read);
+        if (cmp_result != 0){
+			L4C_INFO("store data is called\n");
+			storeData(hvac_rpc_state_p->node, hvac_rpc_state_p->path, hvac_rpc_state_p->buffer, bytes_read);
 		}
 		// Exclusive data copy
 		else{
+			L4C_INFO("exclusive copy is called\n");
     		std::string bufferString;
     		bufferString = static_cast<char*>(hvac_rpc_state_p->buffer);
 			exclusive_data.insert({hvac_rpc_state_p->path, bufferString});
@@ -224,9 +228,16 @@ static hg_return_t update_cb(const struct hg_cb_info *callback_info) {
     }
     operator delete(state->buffer);
 
+	HG_Destroy(state->handle);
+
+	hg_return_t ret = HG_Addr_free(HG_Get_info(state->handle)->hg_class, state->node);
+    if (ret != HG_SUCCESS) {
+        L4C_INFO("Failed to free address\n");
+    }
+
     delete state;
 
-    L4C_INFO("udpate_cb completed\n");
+    L4C_INFO("update_cb completed\n");
 
     return HG_SUCCESS;
 }
@@ -453,7 +464,6 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
         return;
     }
 
-	L4C_INFO("before pair\n");		
     std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(hvac_rpc_state_p->buffer);
     size_t index = 0;
     for (const auto& entry : path_cache_map) {
@@ -463,7 +473,6 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
 	L4C_INFO("after setting paths to send\n");		
     hvac_rpc_state_p->size = bulk_size;
 	hvac_rpc_state_p->bulk_handle = HG_BULK_NULL;	
-	hvac_rpc_state_p->handle = handle;	
     // Create handle to represent this RPC operation
 
 	// In case of Exclusive data	
@@ -475,13 +484,14 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
     	hvac_comm_create_handle(exclusive_addr, hvac_client_update_id, &handle);
 		hvac_rpc_state_p->node = exclusive_addr;
 	}
-	
 	// In case of path update after failure
 	else {
         L4C_INFO("update\n");
     	hvac_comm_create_handle(my_address, hvac_client_update_id, &handle);
 		hvac_rpc_state_p->node = my_address;
 	}
+
+	hvac_rpc_state_p->handle = handle;	
 
 	L4C_INFO("after create handle\n");		
     // Buffer registration
@@ -515,16 +525,6 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
 
 	L4C_INFO("after forward\n");		
 
-    HG_Destroy(handle);
-    
-	if(flag == 0){
-		hvac_comm_free_addr(exclusive_addr);
-	}
-    else{
-        hvac_comm_free_addr(my_address);
-    }
-	
-	L4C_INFO("after free\n");		
     return;
 }
 
