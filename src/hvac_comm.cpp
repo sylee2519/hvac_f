@@ -43,6 +43,27 @@ struct hvac_update_rpc_state {
     hvac_update_in_t in;
 };
 
+// sy: add
+std::map<std::string, std::string> deserialize_map(void* buffer, hg_size_t size) {
+    std::map<std::string, std::string> map;
+    char* ptr = (char*)buffer;
+    char* end = ptr + size;
+
+    while (ptr < end) {
+        std::string first = std::string(ptr);
+        ptr += first.size() + 1;
+        std::string second = std::string(ptr);
+        ptr += second.size() + 1;
+        map[first] = second;
+    }
+	L4C_INFO("deserialization\n");
+	for (const auto& pair : map) {
+        L4C_INFO("Key: %s, Value: %s\n", pair.first.c_str(), pair.second.c_str());
+    }
+
+    return map;
+}
+
 
 //Initialize communication for both the client and server
 //processes
@@ -317,6 +338,14 @@ static hg_return_t bulk_transfer_cb(const struct hg_cb_info *info) {
         return HG_PROTOCOL_ERROR;
     }	
 
+//	HG_Bulk_free(state->bulk_handle);
+
+	std::map<std::string, std::string> tmp_map = deserialize_map(state->buffer, state->size);
+
+	for (const auto& entry : tmp_map) {
+        L4C_INFO("Received path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+    }
+
     // Retrieve the address of the originator
 	const struct hg_info *hgi = HG_Get_info(state->handle);
 	if (!hgi) {
@@ -328,31 +357,22 @@ static hg_return_t bulk_transfer_cb(const struct hg_cb_info *info) {
     hvac_get_addr();
     int cmp_result = HG_Addr_cmp(hgi->hg_class, client_addr, my_address);
 
-    std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(state->buffer);
-	if (!paths) {
-        fprintf(stderr, "Invalid paths buffer in bulk_transfer_cb\n");
-        return HG_PROTOCOL_ERROR;
-    }
-
 	// Update path_cache_map
 	if (cmp_result == 0) {
         L4C_INFO("path_cache_map before update:");
         for (const auto& entry : path_cache_map) {
-            L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+			if (entry.first.empty() || entry.second.empty()) {
+            	L4C_INFO("Invalid path or cache value: path=%s, cache=%s", entry.first.c_str(), entry.second.c_str());
+            	continue;
+        	}
+        	if (entry.first.data() == nullptr || entry.second.data() == nullptr) {
+            	L4C_INFO("Null data encountered: path=%s, cache=%s", entry.first.c_str(), entry.second.c_str());
+            	continue;
+        	}
+        	L4C_INFO("Updating path_cache_map with path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
+        	path_cache_map[entry.first] = entry.second;
         }
 
-        for (hg_size_t i = 0; i < state->in.num_paths; ++i) {
-			if (paths[i].first.empty() || paths[i].second.empty()) {
-                L4C_INFO("Invalid path or cache value at index %lu\n", i);
-                continue;
-            }
-			if (paths[i].first.data() == nullptr || paths[i].second.data() == nullptr) {
-                L4C_INFO("Null data encountered at index %lu\n", i);
-                continue;
-            }
-			L4C_INFO("Updating path_cache_map with path: %s, cache: %s", paths[i].first.c_str(), paths[i].second.c_str());
-            path_cache_map[paths[i].first] = paths[i].second;
-        }
         L4C_INFO("path_cache_map after update:");
         for (const auto& entry : path_cache_map) {
             L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
@@ -361,33 +381,42 @@ static hg_return_t bulk_transfer_cb(const struct hg_cb_info *info) {
 	else { // Exclusive copy
         L4C_INFO("Exclusive copy received\n:");
         std::vector<Data> data_vector;
-        for (hg_size_t i = 0; i < state->in.num_paths; ++i) {
-			if (paths[i].first.empty() || paths[i].second.empty()) {
-                L4C_INFO("Invalid path or cache value at index %lu\n", i);
-                continue;
-			}
-            Data data;
-            strncpy(data.file_path, paths[i].first.c_str(), sizeof(data.file_path));
+		for (const auto& entry : path_cache_map) {
+            if (entry.first.empty() || entry.second.empty()) {
+            	L4C_INFO("Invalid path or cache value: path=%s, cache=%s", entry.first.c_str(), entry.second.c_str());
+            	continue;
+        	}
+			Data data;
+			strncpy(data.file_path, entry.first.c_str(), sizeof(data.file_path));
             data.file_path[sizeof(data.file_path) - 1] = '\0';  // Ensure null termination
-            data.size = paths[i].second.size();
+            data.size = entry.second.size();
             data.value = malloc(data.size);
             if (data.value) {
-                memcpy(data.value, paths[i].second.c_str(), data.size);
+                memcpy(data.value, entry.second.c_str(), data.size);
             }
             data_vector.push_back(data);
         }
-        data_storage[client_addr] = data_vector;
+		// This part is to append the exclusive data to the memory data structure
+		auto it = data_storage.find(client_addr);
+    	if (it != data_storage.end()) {
+        	it->second.insert(it->second.end(), data_vector.begin(), data_vector.end());
+    	} 
+		else {
+        	data_storage[client_addr] = data_vector;
+    	}
     }
-
-    HG_Bulk_free(state->bulk_handle);
+	HG_Bulk_free(state->bulk_handle);
     free(state->buffer);
     HG_Free_input(state->handle, &state->in);
     HG_Destroy(state->handle);
+	hg_return_t ret = HG_Addr_free(HG_Get_info(state->handle)->hg_class, state->node);
     free(state);
 
     return HG_SUCCESS;
 }
 
+// sy: add
+// update rpc handler (server-side)
 static hg_return_t 
 hvac_update_rpc_handler(hg_handle_t handle) {
     hvac_update_in_t in;
@@ -398,7 +427,7 @@ hvac_update_rpc_handler(hg_handle_t handle) {
         return (hg_return_t)ret;
     }
 
-    hg_size_t bulk_size = in.num_paths * sizeof(std::pair<std::string, std::string>);
+    hg_size_t bulk_size = in.bulk_size;;
     void* bulk_buf = malloc(bulk_size);
     if (!bulk_buf) {
         fprintf(stderr, "Failed to allocate buffer for bulk transfer\n");

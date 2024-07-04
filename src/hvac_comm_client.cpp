@@ -102,6 +102,37 @@ int find_valid_host(const std::string& input, int self_id) {
     return host;
 }
 
+// sy: add
+// map serialization for update RPC
+void* serialize_map(const std::map<std::string, std::string>& map, hg_size_t* out_size) {
+    hg_size_t total_size = 0;
+
+    for (const auto& pair : map) {
+		L4C_INFO("Key: %s, Value: %s\n", pair.first.c_str(), pair.second.c_str());
+        total_size += pair.first.size() + 1;  
+        total_size += pair.second.size() + 1; 
+    }
+
+    char* buffer = (char*)malloc(total_size);
+    if (!buffer) {
+        return nullptr;
+    }
+
+    char* ptr = buffer;
+    for (const auto& pair : map) {
+        strcpy(ptr, pair.first.c_str());
+        ptr += pair.first.size() + 1; // including Null ptr
+        strcpy(ptr, pair.second.c_str());
+        ptr += pair.second.size() + 1; // including Null ptr
+    }
+
+    *out_size = total_size;
+    return buffer;
+}
+
+
+
+
 static hg_return_t
 hvac_seek_cb(const struct hg_cb_info *info)
 {
@@ -215,18 +246,13 @@ hvac_read_cb(const struct hg_cb_info *info)
 /* sy: add */
 /* callback function for udpate rpc */
 static hg_return_t update_cb(const struct hg_cb_info *callback_info) {
-    hvac_rpc_state *state = static_cast<hvac_rpc_state *>(callback_info->arg);
+	hvac_rpc_state *state = (hvac_rpc_state *)callback_info->arg;
 
     L4C_INFO("update_cb called\n");
 
     HG_Bulk_free(state->bulk_handle);
 
-    std::pair<std::string, std::string> *paths = static_cast<std::pair<std::string, std::string> *>(state->buffer);
-    hg_size_t num_paths = state->size / sizeof(std::pair<std::string, std::string>);
-    for (hg_size_t i = 0; i < num_paths; ++i) {
-        paths[i].~pair();
-    }
-    operator delete(state->buffer);
+    free(state->buffer);
 
 	HG_Destroy(state->handle);
 
@@ -235,7 +261,7 @@ static hg_return_t update_cb(const struct hg_cb_info *callback_info) {
         L4C_INFO("Failed to free address\n");
     }
 
-    delete state;
+    free(state);
 
     L4C_INFO("update_cb completed\n");
 
@@ -447,32 +473,16 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
 	hg_addr_t exclusive_addr;
 	
     hvac_get_addr();
-	hvac_rpc_state_p = new hvac_rpc_state;
-	if (!hvac_rpc_state_p) {
-        fprintf(stderr, "Failed to allocate memory for hvac_rpc_state_p\n");
-        return;
-    }	
+	hvac_rpc_state_p = (struct hvac_rpc_state *)malloc(sizeof(*hvac_rpc_state_p));
 
-    hg_size_t num_paths = path_cache_map.size();
-    hg_size_t bulk_size = num_paths * sizeof(std::pair<std::string, std::string>);
-
-    // Buffer allocation for bulk transfer
-	hvac_rpc_state_p->buffer = operator new(bulk_size);
-    if (!hvac_rpc_state_p->buffer) {
-        fprintf(stderr, "Failed to allocate buffer for bulk transfer\n");
-		delete hvac_rpc_state_p;
-        return;
-    }
-
-    std::pair<std::string, std::string>* paths = static_cast<std::pair<std::string, std::string>*>(hvac_rpc_state_p->buffer);
-    size_t index = 0;
-    for (const auto& entry : path_cache_map) {
-		new (&paths[index++]) std::pair<std::string, std::string>(entry); 
-    }
-
-	L4C_INFO("after setting paths to send\n");		
+	hg_size_t bulk_size;
+    hvac_rpc_state_p->buffer = serialize_map(path_cache_map, &bulk_size);
+    assert(hvac_rpc_state_p->buffer);
+	
+	L4C_INFO("after setting paths to send\n");
     hvac_rpc_state_p->size = bulk_size;
-	hvac_rpc_state_p->bulk_handle = HG_BULK_NULL;	
+    hvac_rpc_state_p->bulk_handle = HG_BULK_NULL;
+
     // Create handle to represent this RPC operation
 
 	// In case of Exclusive data	
@@ -501,26 +511,20 @@ void hvac_client_comm_gen_update_rpc(int flag, const std::map<std::string, std::
 
 	if (ret != 0) {
         fprintf(stderr, "Failed to create bulk handle\n");
-        for (size_t i = 0; i < num_paths; ++i) {
-            paths[i].~pair();
-        }
-        operator delete(hvac_rpc_state_p->buffer);
-        delete hvac_rpc_state_p;
-        return;
+        free(hvac_rpc_state_p->buffer);
+        free(hvac_rpc_state_p);
+		return;
     }
 
 	L4C_INFO("after bulk create\n");		
-    in.num_paths = num_paths;
+	in.bulk_size = bulk_size;
     ret = HG_Forward(handle, update_cb, hvac_rpc_state_p, &in);
 	if (ret != 0) {
         fprintf(stderr, "Failed to forward handle\n");
         HG_Bulk_free(in.bulk_handle);
-        for (size_t i = 0; i < num_paths; ++i) {
-            paths[i].~pair();
-        }
-        operator delete(hvac_rpc_state_p->buffer);
-        delete hvac_rpc_state_p;
-        return;
+        free(hvac_rpc_state_p->buffer);
+        free(hvac_rpc_state_p);
+		return;
     }
 
 	L4C_INFO("after forward\n");		

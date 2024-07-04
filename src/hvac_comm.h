@@ -32,7 +32,7 @@ MERCURY_GEN_PROC(hvac_seek_in_t, ((int32_t)(fd))((int32_t)(offset))((int32_t)(wh
 MERCURY_GEN_PROC(hvac_close_in_t, ((int32_t)(fd)))
 
 //Update Handler input arg
-MERCURY_GEN_PROC(hvac_update_in_t, ((hg_bulk_t)(bulk_handle))((hg_size_t)(num_paths)))
+MERCURY_GEN_PROC(hvac_update_in_t, ((hg_bulk_t)(bulk_handle))((hg_size_t)(bulk_size)))
 
 
 //General
@@ -63,7 +63,8 @@ void hvac_client_comm_gen_update_rpc(int flag, const map<string, string>& path_c
 void hvac_get_addr();
 int find_rank_by_addr(const std::map<int, std::string>& address_cache, hg_addr_t target_addr);
 int find_valid_host(const std::string& input, int self_id);
-
+void* serialize_map(const std::map<std::string, std::string>& map, hg_size_t* out_size);
+std::map<std::string, std::string> deserialize_map(void* buffer, hg_size_t size);
 
 
 //Mercury common RPC registration
