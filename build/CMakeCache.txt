@@ -27,7 +27,7 @@ CMAKE_BUILD_TYPE:STRING=Debug
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/apps/compiler/gcc/10.2.0/bin/c++
+CMAKE_CXX_COMPILER:FILEPATH=/apps/compiler/gcc/10.2.0/bin/g++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -248,7 +248,19 @@ hvac_client_LIB_DEPENDS:STATIC=general;pthread;general;dl;
 pkgcfg_lib_LOG4C_log4c:FILEPATH=/scratch/s5104a21/lib/log4c/lib/liblog4c.so
 
 //Path to a library.
-pkgcfg_lib_MERCURY_mercury:FILEPATH=/scratch/s5104a21/lib/mercury/lib/libmercury.so
+pkgcfg_lib_MERCURY_mchecksum:FILEPATH=/scratch/s5104a21/lib/mercury2/lib/libmchecksum.so
+
+//Path to a library.
+pkgcfg_lib_MERCURY_mercury:FILEPATH=/scratch/s5104a21/lib/mercury2/lib/libmercury.so
+
+//Path to a library.
+pkgcfg_lib_MERCURY_mercury_hl:FILEPATH=/scratch/s5104a21/lib/mercury2/lib/libmercury_hl.so
+
+//Path to a library.
+pkgcfg_lib_MERCURY_mercury_util:FILEPATH=/scratch/s5104a21/lib/mercury2/lib/libmercury_util.so
+
+//Path to a library.
+pkgcfg_lib_MERCURY_na:FILEPATH=/scratch/s5104a21/lib/mercury2/lib/libna.so
 
 
 ########################
@@ -437,37 +449,37 @@ LOG4C_log4c_INCLUDEDIR:INTERNAL=
 LOG4C_log4c_LIBDIR:INTERNAL=
 LOG4C_log4c_PREFIX:INTERNAL=
 LOG4C_log4c_VERSION:INTERNAL=
-MERCURY_CFLAGS:INTERNAL=-I/scratch/s5104a21/lib/mercury/include;-I/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
+MERCURY_CFLAGS:INTERNAL=-I/scratch/s5104a21/lib/mercury2/include;-I/scratch/s5104a21/lib/boost/include;-I/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
 MERCURY_CFLAGS_I:INTERNAL=
 MERCURY_CFLAGS_OTHER:INTERNAL=
 MERCURY_FOUND:INTERNAL=1
-MERCURY_INCLUDEDIR:INTERNAL=/scratch/s5104a21/lib/mercury/include
-MERCURY_INCLUDE_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury/include;/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
-MERCURY_LDFLAGS:INTERNAL=-L/scratch/s5104a21/lib/mercury/lib;-lmercury
+MERCURY_INCLUDEDIR:INTERNAL=/scratch/s5104a21/lib/mercury2/include
+MERCURY_INCLUDE_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury2/include;/scratch/s5104a21/lib/boost/include;/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
+MERCURY_LDFLAGS:INTERNAL=-L/scratch/s5104a21/lib/mercury2/lib;-lmercury_hl;-lmercury;-lmchecksum;-lmercury_util;-lna
 MERCURY_LDFLAGS_OTHER:INTERNAL=
-MERCURY_LIBDIR:INTERNAL=/scratch/s5104a21/lib/mercury/lib
-MERCURY_LIBRARIES:INTERNAL=mercury
-MERCURY_LIBRARY_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury/lib
+MERCURY_LIBDIR:INTERNAL=/scratch/s5104a21/lib/mercury2/lib
+MERCURY_LIBRARIES:INTERNAL=mercury_hl;mercury;mchecksum;mercury_util;na
+MERCURY_LIBRARY_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury2/lib
 MERCURY_LIBS:INTERNAL=
 MERCURY_LIBS_L:INTERNAL=
 MERCURY_LIBS_OTHER:INTERNAL=
 MERCURY_LIBS_PATHS:INTERNAL=
 MERCURY_MODULE_NAME:INTERNAL=mercury
-MERCURY_PREFIX:INTERNAL=/scratch/s5104a21/lib/mercury
-MERCURY_STATIC_CFLAGS:INTERNAL=-I/scratch/s5104a21/lib/mercury/include;-I/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
+MERCURY_PREFIX:INTERNAL=/scratch/s5104a21/lib/mercury2
+MERCURY_STATIC_CFLAGS:INTERNAL=-I/scratch/s5104a21/lib/mercury2/include;-I/scratch/s5104a21/lib/boost/include;-I/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
 MERCURY_STATIC_CFLAGS_I:INTERNAL=
 MERCURY_STATIC_CFLAGS_OTHER:INTERNAL=
-MERCURY_STATIC_INCLUDE_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury/include;/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
-MERCURY_STATIC_LDFLAGS:INTERNAL=-pthread;-L/scratch/s5104a21/lib/mercury/lib;-L/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/lib;-lmercury;-lna;-lmpi;-lmercury_util;-ldl;-lrt
-MERCURY_STATIC_LDFLAGS_OTHER:INTERNAL=
+MERCURY_STATIC_INCLUDE_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury2/include;/scratch/s5104a21/lib/boost/include;/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include
+MERCURY_STATIC_LDFLAGS:INTERNAL=-pthread;-L/scratch/s5104a21/lib/mercury2/lib;-L/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/lib;-L/scratch/s5104a21/lib/libfabric/lib;-lmercury_hl;-lmercury;-lmchecksum;-lmercury_util;-lna;-lrt;-lmpi;-lfabric
+MERCURY_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
 MERCURY_STATIC_LIBDIR:INTERNAL=
-MERCURY_STATIC_LIBRARIES:INTERNAL=mercury;na;mpi;mercury_util;dl;rt
-MERCURY_STATIC_LIBRARY_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury/lib;/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/lib
+MERCURY_STATIC_LIBRARIES:INTERNAL=mercury_hl;mercury;mchecksum;mercury_util;na;rt;mpi;fabric
+MERCURY_STATIC_LIBRARY_DIRS:INTERNAL=/scratch/s5104a21/lib/mercury2/lib;/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/lib;/scratch/s5104a21/lib/libfabric/lib
 MERCURY_STATIC_LIBS:INTERNAL=
 MERCURY_STATIC_LIBS_L:INTERNAL=
 MERCURY_STATIC_LIBS_OTHER:INTERNAL=
 MERCURY_STATIC_LIBS_PATHS:INTERNAL=
-MERCURY_VERSION:INTERNAL=2.3.1
+MERCURY_VERSION:INTERNAL=2.1.0
 MERCURY_mercury_INCLUDEDIR:INTERNAL=
 MERCURY_mercury_LIBDIR:INTERNAL=
 MERCURY_mercury_PREFIX:INTERNAL=
@@ -484,7 +496,15 @@ __pkg_config_checked_LOG4C:INTERNAL=1
 __pkg_config_checked_MERCURY:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_LOG4C_log4c
 pkgcfg_lib_LOG4C_log4c-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_MERCURY_mchecksum
+pkgcfg_lib_MERCURY_mchecksum-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_MERCURY_mercury
 pkgcfg_lib_MERCURY_mercury-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_MERCURY_mercury_hl
+pkgcfg_lib_MERCURY_mercury_hl-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_MERCURY_mercury_util
+pkgcfg_lib_MERCURY_mercury_util-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_MERCURY_na
+pkgcfg_lib_MERCURY_na-ADVANCED:INTERNAL=1
 prefix_result:INTERNAL=/scratch/s5104a21/lib/log4c/lib
 

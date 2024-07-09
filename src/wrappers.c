@@ -168,10 +168,10 @@ int WRAP_DECL(close)(int fd)
 	if (path)
 	{
 		L4C_INFO("Close to file %s",path);
-		hvac_remove_fd(fd);
+		hvac_remove_fd(fd); // sy: This calls remote close
 	}
 
-	//hvac_remote_close(fd);
+//	hvac_remote_close(fd);
 
 	/* Close the passed in file-descriptor tracked or not */
 	if ((ret = __real_close(fd)) != 0)
@@ -192,7 +192,10 @@ ssize_t WRAP_DECL(read)(int fd, void *buf, size_t count)
     MAP_OR_FAIL(read);	
 	
     const char *path = hvac_get_path(fd);
-
+	if(path == NULL){
+		ret = __real_read(fd,buf,count);
+		return ret;
+	}
 
 	ret = hvac_remote_read(fd,buf,count);
 
@@ -215,6 +218,7 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
 	MAP_OR_FAIL(pread);
 
 	const char *path = hvac_get_path(fd);
+
 	if (path)
 	{                
 		L4C_INFO("pread to tracked file %s",path);

@@ -222,8 +222,6 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd)
     ret = HG_Forward(handle, hvac_open_cb, hvac_open_state_p, &in);
     assert(ret == 0);
 
-    
- 
     hvac_comm_free_addr(svr_addr);
 
     return;

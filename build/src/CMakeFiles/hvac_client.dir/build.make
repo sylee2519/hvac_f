@@ -73,29 +73,29 @@ src/CMakeFiles/hvac_client.dir/hvac.cpp.o: src/CMakeFiles/hvac_client.dir/flags.
 src/CMakeFiles/hvac_client.dir/hvac.cpp.o: /scratch/s5104a21/hvactest/src/hvac.cpp
 src/CMakeFiles/hvac_client.dir/hvac.cpp.o: src/CMakeFiles/hvac_client.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/CMakeFiles/hvac_client.dir/hvac.cpp.o"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac.cpp.o -MF CMakeFiles/hvac_client.dir/hvac.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac.cpp.o -c /scratch/s5104a21/hvactest/src/hvac.cpp
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac.cpp.o -MF CMakeFiles/hvac_client.dir/hvac.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac.cpp.o -c /scratch/s5104a21/hvactest/src/hvac.cpp
 
 src/CMakeFiles/hvac_client.dir/hvac.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hvac_client.dir/hvac.cpp.i"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac.cpp > CMakeFiles/hvac_client.dir/hvac.cpp.i
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac.cpp > CMakeFiles/hvac_client.dir/hvac.cpp.i
 
 src/CMakeFiles/hvac_client.dir/hvac.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hvac_client.dir/hvac.cpp.s"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac.cpp -o CMakeFiles/hvac_client.dir/hvac.cpp.s
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac.cpp -o CMakeFiles/hvac_client.dir/hvac.cpp.s
 
 src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o: src/CMakeFiles/hvac_client.dir/flags.make
 src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o: /scratch/s5104a21/hvactest/src/hvac_client.cpp
 src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o: src/CMakeFiles/hvac_client.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_client.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_client.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_client.cpp
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_client.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_client.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_client.cpp
 
 src/CMakeFiles/hvac_client.dir/hvac_client.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hvac_client.dir/hvac_client.cpp.i"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_client.cpp > CMakeFiles/hvac_client.dir/hvac_client.cpp.i
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_client.cpp > CMakeFiles/hvac_client.dir/hvac_client.cpp.i
 
 src/CMakeFiles/hvac_client.dir/hvac_client.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hvac_client.dir/hvac_client.cpp.s"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_client.cpp -o CMakeFiles/hvac_client.dir/hvac_client.cpp.s
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_client.cpp -o CMakeFiles/hvac_client.dir/hvac_client.cpp.s
 
 src/CMakeFiles/hvac_client.dir/wrappers.c.o: src/CMakeFiles/hvac_client.dir/flags.make
 src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrappers.c
@@ -115,15 +115,15 @@ src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o: src/CMakeFiles/hvac_client
 src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o: /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp
 src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o: src/CMakeFiles/hvac_client.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp
 
 src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.i"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp > CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.i
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp > CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.i
 
 src/CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.s"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp -o CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.s
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp -o CMakeFiles/hvac_client.dir/hvac_data_mover.cpp.s
 
 src/CMakeFiles/hvac_client.dir/hvac_logging.c.o: src/CMakeFiles/hvac_client.dir/flags.make
 src/CMakeFiles/hvac_client.dir/hvac_logging.c.o: /scratch/s5104a21/hvactest/src/hvac_logging.c
@@ -143,29 +143,29 @@ src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o: src/CMakeFiles/hvac_client.dir/f
 src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/hvac_comm.cpp
 src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o: src/CMakeFiles/hvac_client.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_comm.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_comm.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_comm.cpp
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_comm.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_comm.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_comm.cpp
 
 src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hvac_client.dir/hvac_comm.cpp.i"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_comm.cpp > CMakeFiles/hvac_client.dir/hvac_comm.cpp.i
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_comm.cpp > CMakeFiles/hvac_client.dir/hvac_comm.cpp.i
 
 src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hvac_client.dir/hvac_comm.cpp.s"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_comm.cpp -o CMakeFiles/hvac_client.dir/hvac_comm.cpp.s
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_comm.cpp -o CMakeFiles/hvac_client.dir/hvac_comm.cpp.s
 
 src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o: src/CMakeFiles/hvac_client.dir/flags.make
 src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o: /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp
 src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o: src/CMakeFiles/hvac_client.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o -MF CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o.d -o CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp
 
 src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.i"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp > CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.i
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp > CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.i
 
 src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.s"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp -o CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.s
+	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp -o CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.s
 
 # Object files for target hvac_client
 hvac_client_OBJECTS = \
@@ -189,7 +189,11 @@ src/libhvac_client.so: src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o
 src/libhvac_client.so: src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o
 src/libhvac_client.so: src/CMakeFiles/hvac_client.dir/build.make
 src/libhvac_client.so: /scratch/s5104a21/lib/log4c/lib/liblog4c.so
-src/libhvac_client.so: /scratch/s5104a21/lib/mercury/lib/libmercury.so
+src/libhvac_client.so: /scratch/s5104a21/lib/mercury2/lib/libmercury_hl.so
+src/libhvac_client.so: /scratch/s5104a21/lib/mercury2/lib/libmercury.so
+src/libhvac_client.so: /scratch/s5104a21/lib/mercury2/lib/libmchecksum.so
+src/libhvac_client.so: /scratch/s5104a21/lib/mercury2/lib/libmercury_util.so
+src/libhvac_client.so: /scratch/s5104a21/lib/mercury2/lib/libna.so
 src/libhvac_client.so: src/CMakeFiles/hvac_client.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX shared library libhvac_client.so"
 	cd /scratch/s5104a21/hvactest/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hvac_client.dir/link.txt --verbose=$(VERBOSE)

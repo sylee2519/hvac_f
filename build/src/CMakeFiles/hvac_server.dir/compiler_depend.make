@@ -7,10 +7,10 @@ src/CMakeFiles/hvac_server.dir/hvac.cpp.o: /scratch/s5104a21/hvactest/src/hvac.c
 src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/hvac_comm.cpp \
   /usr/include/stdc-predef.h \
   /scratch/s5104a21/hvactest/src/hvac_comm.h \
-  /scratch/s5104a21/lib/mercury/include/mercury.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_header.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_core_types.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_config.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_header.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_core_types.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_config.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stddef.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h \
   /usr/include/stdint.h \
@@ -20,10 +20,9 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /usr/include/gnu/stubs.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/bits/wchar.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_compiler_attributes.h \
-  /scratch/s5104a21/lib/mercury/include/na_types.h \
-  /scratch/s5104a21/lib/mercury/include/na_config.h \
-  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_compiler_attributes.h \
+  /scratch/s5104a21/lib/mercury2/include/na_types.h \
+  /scratch/s5104a21/lib/mercury2/include/na_config.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/limits.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/syslimits.h \
   /usr/include/limits.h \
@@ -33,222 +32,246 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /usr/include/bits/posix2_lim.h \
   /usr/include/bits/xopen_lim.h \
   /usr/include/bits/stdio_lim.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_types.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_core.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_core_header.h \
-  /scratch/s5104a21/lib/mercury/include/na.h \
-  /usr/include/stdio.h \
-  /usr/include/bits/types.h \
-  /usr/include/bits/typesizes.h \
-  /usr/include/libio.h \
-  /usr/include/_G_config.h \
-  /usr/include/wchar.h \
-  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h \
-  /usr/include/bits/sys_errlist.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_bulk.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_macros.h \
-  /scratch/s5104a21/lib/mercury/include/mercury.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_bulk.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_proc.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_types.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_core.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_core_header.h \
+  /scratch/s5104a21/lib/mercury2/include/na.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_bulk.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_macros.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_bulk.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_proc.h \
   /usr/include/string.h \
   /usr/include/xlocale.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_proc_bulk.h \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/library.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/add.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/dec.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/config/config.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/inc.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/while.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/cat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/error.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/auto_rec.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/iif.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/fold_left.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/detail/fold_left.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/expr_iif.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/adt.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/is_binary.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/check.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/compl.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/eat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/fold_right.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/detail/fold_right.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitand.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/detail/while.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bool.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/expand.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/overload.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/rem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/detail/is_single_return.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/div.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/detail/div_base.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/sub.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/less_equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/not.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/mod.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/mul.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/data.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/insert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/push_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/comma_if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/comma.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/detail/get_data.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_1.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_empty_variadic.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/is_begin_parens.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/detail/is_empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/not_equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/deduce_d.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/pop_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/repeat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/deduce_z.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/pop_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/push_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/remove.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/replace.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/greater.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/less.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/greater_equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/config/limits.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/expr_if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/assert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/line.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/iterate.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot/slot.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot/detail/def.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/stringize.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/apply.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/is_unary.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/identity.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/intercept.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/local.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/self.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/append.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/at.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/rest_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/cat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each_i.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/for.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/detail/for.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/filter.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/first_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each_product.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/transform.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/and.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitnor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitxor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/nor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/or.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/xor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/paren.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/paren_if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/remove_parens.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/deduce_r.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_binary_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params_with_a_default.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params_with_defaults.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted_binary_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/repeat_from_to.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection/max.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection/min.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/cat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/fold_left.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/filter.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/first_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/split.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/fold_right.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/is_empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each_i.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each_product.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/insert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/rest_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/pop_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/pop_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/push_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/push_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/remove.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/replace.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/subseq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/binary_transform.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/detail/is_single_return.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/transform.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/variadic_seq_to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/insert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/pop_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/pop_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/push_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/push_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/remove.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/replace.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/wstringize.hpp \
-  /scratch/s5104a21/lib/mercury/include/mercury_proc_string.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_string_object.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_proc_bulk.h \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/library.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/add.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/config/config.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/dec.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/config/limits.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/dec_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/inc.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/inc_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/iif.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/while.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/cat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/error.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/auto_rec.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/limits/auto_rec_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/fold_left.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_left.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/expr_iif.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/adt.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_binary.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/check.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/compl.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/eat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_left_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/limits/fold_left_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/fold_right.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_right.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/identity.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_right_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitand.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/while.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bool.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/limits/bool_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/limits/while_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/limits/while_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/expand.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/overload.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/check_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/has_opt.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/size_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/rem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/detail/is_single_return.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/elem_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_maximum_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/not_equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/limits/not_equal_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/maximum_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_minimum_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/not.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/div.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/div_base.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/sub.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/and.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/less_equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_1_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/mod.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/mul.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/data.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/insert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/push_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/comma_if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/comma.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/detail/get_data.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_1.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_empty_variadic.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/is_begin_parens.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/detail/is_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/deduce_d.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/repeat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/limits/repeat_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_z.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/push_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/remove.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/replace.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/reverse_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/to_list_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/to_seq_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/less.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater_equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/expr_if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/assert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/line.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/iterate.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/slot.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/detail/def.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/stringize.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/apply.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_unary.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/intercept.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/limits/intercept_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/va_opt.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/local.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/self.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/append.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/at.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/rest_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/cat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_i.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/for.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/for.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/limits/for_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/limits/for_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/filter.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/first_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_product.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/transform.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitnor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitxor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/nor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/or.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/xor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/paren.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/paren_if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/remove_parens.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_r.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_binary_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params_with_a_default.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params_with_defaults.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_binary_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/repeat_from_to.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/selection.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/selection/max.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/selection/min.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/cat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/fold_left.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/elem_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/size_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_left_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/enum_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/filter.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/first_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/split.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/limits/split_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/fold_right.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_right_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/is_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each_i.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each_product.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/insert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/rest_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/pop_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/pop_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/push_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/push_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/remove.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/replace.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/subseq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/binary_transform.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/detail/is_single_return.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/transform.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/variadic_seq_to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/insert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/remove.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/replace.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/wstringize.hpp \
+  /scratch/s5104a21/lib/mercury2/include/mercury_proc_string.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_string_object.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/string \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++config.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/os_defines.h \
@@ -276,6 +299,9 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/predefined_ops.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/postypes.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cwchar \
+  /usr/include/wchar.h \
+  /usr/include/stdio.h \
+  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cstdint \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/allocator.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++allocator.h \
@@ -296,6 +322,8 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/iosfwd \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cctype \
   /usr/include/ctype.h \
+  /usr/include/bits/types.h \
+  /usr/include/bits/typesizes.h \
   /usr/include/endian.h \
   /usr/include/bits/endian.h \
   /usr/include/bits/byteswap.h \
@@ -343,6 +371,9 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /usr/include/bits/stdlib-float.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/std_abs.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cstdio \
+  /usr/include/libio.h \
+  /usr/include/_G_config.h \
+  /usr/include/bits/sys_errlist.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cerrno \
   /usr/include/errno.h \
   /usr/include/bits/errno.h \
@@ -380,6 +411,7 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_multimap.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/erase_if.h \
   /scratch/s5104a21/hvactest/src/hvac_logging.h \
+  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /scratch/s5104a21/lib/log4c/include/log4c.h \
   /scratch/s5104a21/lib/log4c/include/log4c/version.h \
   /scratch/s5104a21/lib/log4c/include/log4c/defs.h \
@@ -429,7 +461,17 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_ios.tcc \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ostream.tcc \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/istream \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/istream.tcc
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/istream.tcc \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/chrono \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ratio \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ctime \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/parse_numbers.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/fstream \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/codecvt.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/basic_file.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++io.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fstream.tcc
 
 src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o: /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp \
   /usr/include/stdc-predef.h \
@@ -780,17 +822,16 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
   /usr/include/bits/confname.h \
   /usr/include/getopt.h \
   /scratch/s5104a21/hvactest/src/hvac_comm.h \
-  /scratch/s5104a21/lib/mercury/include/mercury.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_header.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_core_types.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_config.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_header.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_core_types.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_config.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/bits/wchar.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_compiler_attributes.h \
-  /scratch/s5104a21/lib/mercury/include/na_types.h \
-  /scratch/s5104a21/lib/mercury/include/na_config.h \
-  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_compiler_attributes.h \
+  /scratch/s5104a21/lib/mercury2/include/na_types.h \
+  /scratch/s5104a21/lib/mercury2/include/na_config.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/limits.h \
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/syslimits.h \
   /usr/include/limits.h \
@@ -799,212 +840,244 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
   /usr/include/linux/limits.h \
   /usr/include/bits/posix2_lim.h \
   /usr/include/bits/xopen_lim.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_types.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_core.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_core_header.h \
-  /scratch/s5104a21/lib/mercury/include/na.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_bulk.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_macros.h \
-  /scratch/s5104a21/lib/mercury/include/mercury.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_bulk.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_proc.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_proc_bulk.h \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/library.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/add.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/dec.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/config/config.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/inc.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/while.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/cat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/error.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/auto_rec.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/iif.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/fold_left.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/detail/fold_left.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/expr_iif.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/adt.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/is_binary.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/check.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/compl.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/eat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/fold_right.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/detail/fold_right.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitand.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/detail/while.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bool.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/expand.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/overload.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/rem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/detail/is_single_return.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/div.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/detail/div_base.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/sub.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/less_equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/not.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/mod.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/mul.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/data.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/insert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/push_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/comma_if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/comma.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/detail/get_data.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_1.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_empty_variadic.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/is_begin_parens.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/detail/is_empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/not_equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/deduce_d.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/pop_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/repeat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/deduce_z.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/pop_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/push_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/remove.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/replace.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/greater.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/less.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/greater_equal.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/config/limits.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/expr_if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/assert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/line.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/iterate.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot/slot.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot/detail/def.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/stringize.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/apply.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/is_unary.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/identity.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/intercept.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/local.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/self.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/append.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/at.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/rest_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/cat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each_i.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/for.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/detail/for.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/filter.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/first_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each_product.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/transform.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/and.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitnor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitxor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/nor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/or.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/xor.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/paren.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/paren_if.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/remove_parens.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/deduce_r.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_binary_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params_with_a_default.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params_with_defaults.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted_binary_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing_params.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/repeat_from_to.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection/max.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection/min.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/cat.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/fold_left.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/elem.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/size.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/enum.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/filter.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/first_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/split.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/fold_right.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/reverse.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/is_empty.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each_i.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each_product.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/insert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/rest_n.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/pop_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/pop_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/push_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/push_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/remove.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/replace.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/subseq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/binary_transform.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/detail/is_single_return.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/transform.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/variadic_seq_to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/insert.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/pop_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/pop_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/push_back.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/push_front.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/remove.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/replace.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_array.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_list.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_seq.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_tuple.hpp \
-  /scratch/s5104a21/lib/mercury/include/boost/preprocessor/wstringize.hpp \
-  /scratch/s5104a21/lib/mercury/include/mercury_proc_string.h \
-  /scratch/s5104a21/lib/mercury/include/mercury_string_object.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_types.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_core.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_core_header.h \
+  /scratch/s5104a21/lib/mercury2/include/na.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_bulk.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_macros.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_bulk.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_proc.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_proc_bulk.h \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/library.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/add.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/config/config.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/dec.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/config/limits.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/dec_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/inc.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/inc_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/iif.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/while.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/cat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/error.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/auto_rec.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/limits/auto_rec_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/fold_left.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_left.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/expr_iif.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/adt.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_binary.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/check.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/compl.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/eat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_left_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/limits/fold_left_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/fold_right.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_right.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/identity.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_right_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitand.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/while.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bool.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/limits/bool_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/limits/while_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/limits/while_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/expand.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/overload.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/check_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/has_opt.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/size_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/rem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/detail/is_single_return.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/elem_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_maximum_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/not_equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/limits/not_equal_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/maximum_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_minimum_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/not.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/div.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/div_base.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/sub.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/and.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/less_equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_1_number.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/mod.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/mul.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/data.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/insert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/push_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/comma_if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/comma.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/detail/get_data.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_1.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_empty_variadic.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/is_begin_parens.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/detail/is_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/deduce_d.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/repeat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/limits/repeat_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_z.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/push_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/remove.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/replace.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/reverse_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/to_list_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/to_seq_64.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/less.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater_equal.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/expr_if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/assert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/line.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/iterate.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/slot.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/detail/def.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/stringize.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/apply.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_unary.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/intercept.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/limits/intercept_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/va_opt.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/local.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/self.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/append.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/at.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/rest_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/cat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_i.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/for.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/for.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/limits/for_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/limits/for_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/filter.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/first_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_product.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/transform.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitnor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitxor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/nor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/or.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/xor.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/paren.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/paren_if.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/remove_parens.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_r.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_binary_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params_with_a_default.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params_with_defaults.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_binary_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_params.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/repeat_from_to.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/selection.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/selection/max.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/selection/min.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/cat.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/fold_left.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/elem.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/elem_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/size.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/size_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_left_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/enum.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/enum_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/filter.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/first_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/split.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/limits/split_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/fold_right.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/reverse.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_right_256.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/is_empty.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each_i.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each_product.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/insert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/rest_n.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/pop_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/pop_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/push_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/push_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/remove.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/replace.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/subseq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/binary_transform.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/detail/is_single_return.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/transform.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/variadic_seq_to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/slot.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/insert.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_back.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_front.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/remove.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/replace.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_array.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_list.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_seq.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_tuple.hpp \
+  /scratch/s5104a21/lib/boost/include/boost/preprocessor/wstringize.hpp \
+  /scratch/s5104a21/lib/mercury2/include/mercury_proc_string.h \
+  /scratch/s5104a21/lib/mercury2/include/mercury_string_object.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/string \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stringfwd.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/memoryfwd.h \
@@ -1113,6 +1186,7 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_multimap.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/erase_if.h \
   /scratch/s5104a21/hvactest/src/hvac_logging.h \
+  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /scratch/s5104a21/lib/log4c/include/log4c.h \
   /scratch/s5104a21/lib/log4c/include/log4c/version.h \
   /scratch/s5104a21/lib/log4c/include/log4c/defs.h \
@@ -1135,6 +1209,8 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /scratch/s5104a21/lib/log4c/include/log4c/appender_type_rollingfile.h:
 
+/usr/include/sys/mman.h:
+
 /usr/include/sys/uio.h:
 
 /scratch/s5104a21/hvactest/src/hvac_internal.h:
@@ -1153,33 +1229,35 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/codecvt:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/sstream.tcc:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/quoted_string.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/iomanip:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unique_ptr.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/codecvt.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_facets_nonio.tcc:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/messages_members.h:
 
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/time_members.h:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_facets_nonio.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/locale:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/filesystem:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_path.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fstream.tcc:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/basic_file.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/codecvt.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ctime:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits:
 
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ratio:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/chrono:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/filesystem:
-
-/scratch/s5104a21/hvactest/src/hvac_data_mover.cpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/istream.tcc:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/istream:
 
@@ -1193,665 +1271,275 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /usr/include/wctype.h:
 
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cwctype:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_facets.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_ios.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/streambuf.tcc:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/streambuf:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/error_constants.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/system_error:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/aligned_buffer.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ios_base.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection/max.hpp:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ios:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitnor.hpp:
+/usr/include/getopt.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/push_front.hpp:
+/usr/include/bits/confname.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params_with_defaults.hpp:
+/usr/include/unistd.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ratio:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/sstream:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_tuple.hpp:
+/usr/include/assert.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params_with_a_default.hpp:
+/usr/include/bits/stat.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/greater_equal.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/remove_parens.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/paren_if.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/xor.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/or.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/nor.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitxor.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitor.hpp:
-
-/usr/include/stdint.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/and.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/shared_ptr_base.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_list.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/transform.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_seq.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/time_members.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bool.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted_params.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_array.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/error.hpp:
-
-/scratch/s5104a21/hvactest/src/hvac_data_mover_internal.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/first_n.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_seq.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/vector.tcc:
-
-/scratch/s5104a21/lib/log4c/include/log4c/init.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/filter.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/compl.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/for.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/iomanip:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/elem.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/rest_n.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/at.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/append.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/identity.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic.hpp:
-
-/scratch/s5104a21/lib/log4c/include/log4c/version.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/stringize.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_facets_nonio.tcc:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/iterate.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/detail/while.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/assert.hpp:
-
-/usr/include/asm-generic/errno-base.h:
-
-/scratch/s5104a21/hvactest/src/hvac_logging.c:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug/line.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/config/limits.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_array.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/greater.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/equal.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_tuple.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/debug/assertions.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++allocator.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_seq.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/concept_check.h:
-
-/scratch/s5104a21/lib/log4c/include/log4c/logging_event.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/to_list.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/reverse.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/reverse.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/cat.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/detail/is_empty.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_function.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/pop_back.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/is_begin_parens.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/functional_hash.h:
-
-/usr/include/gnu/stubs-64.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_empty.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_1.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/comma.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/predefined_ops.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/self.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/empty.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_macros.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/pop_front.hpp:
-
-/usr/include/libintl.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_construct.h:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/remove.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/remove.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cpp_type_traits.h:
-
-/usr/include/string.h:
-
-/usr/include/wchar.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/size.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_seq.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/array:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/if.hpp:
-
-/usr/include/_G_config.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/enum.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/detail/div_base.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/config/config.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/elem.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/to_tuple.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/is_binary.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/cat.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/check.hpp:
-
-/usr/include/locale.h:
-
-/scratch/s5104a21/hvactest/src/hvac.cpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/detail/is_single_return.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/insert.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h:
-
-/usr/include/bits/posix1_lim.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/fold_left.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_binary_params.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot/slot.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/deduce_z.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/rem.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/dec.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/clocale:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/repeat_from_to.hpp:
-
-/usr/include/bits/xopen_lim.h:
-
-/usr/include/sys/sysmacros.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/insert.hpp:
-
-/usr/include/stdc-predef.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/paren.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_bulk.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/seq.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/replace.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_core_types.h:
-
-/scratch/s5104a21/lib/mercury/include/mercury_core.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/size.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/detail/get_data.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/repeat.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/cat.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/comma_if.hpp:
-
-/usr/include/bits/local_lim.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/detail/for.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/push_back.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/pstl/pstl_config.h:
-
-/scratch/s5104a21/lib/mercury/include/na.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/queue:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/detail/fold_left.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_core_header.h:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stddef.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_uninitialized.h:
-
-/scratch/s5104a21/lib/mercury/include/mercury_types.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/fold_right.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/postypes.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/deduce_d.hpp:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/data.hpp:
-
-/usr/include/features.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/less.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/not_equal.hpp:
-
-/usr/include/bits/waitstatus.h:
-
-/usr/include/bits/wordsize.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/library.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ptr_traits.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/iif.hpp:
-
-/usr/include/bits/endian.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/inc.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_algobase.h:
-
-/scratch/s5104a21/hvactest/src/hvac_comm.h:
-
-/usr/include/xlocale.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/comparison/less_equal.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/fold_left.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array.hpp:
-
-/usr/include/bits/sys_errlist.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/new_allocator.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/push_front.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/eat.hpp:
-
-/scratch/s5104a21/lib/log4c/include/log4c/layout.h:
-
-/scratch/s5104a21/lib/log4c/include/log4c/appender.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_string.tcc:
-
-/usr/include/bits/wchar.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/pop_back.hpp:
-
-/usr/include/gnu/stubs.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection/min.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cstdint:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_shifted_binary_params.hpp:
-
-/usr/include/limits.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/iteration/local.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/selection.hpp:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/syslimits.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/debug.hpp:
-
-/usr/include/stdio.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/add.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cwchar:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/replace.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/os_defines.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_conv.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/intercept.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp:
-
-/scratch/s5104a21/lib/mercury/include/na_types.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/bitand.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/expand.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/elem.hpp:
+/usr/include/linux/falloc.h:
 
 /scratch/s5104a21/hvactest/src/hvac_server.cpp:
 
 /usr/include/bits/fcntl-linux.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/expr_iif.hpp:
+/usr/include/bits/fcntl.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_array.hpp:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_fwd.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/map:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each_product.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/adt.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_proc.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/uses_allocator.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/detail/fold_right.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_iterator_base_types.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/enable_special_members.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/overload.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/is_unary.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/slot/detail/def.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/size.hpp:
-
-/scratch/s5104a21/hvactest/src/hvac_comm.cpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/div.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cxxabi_forced.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/range_cmp.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/sub.hpp:
-
-/usr/include/sys/mman.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/pop_front.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_relops.h:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/limits.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/reverse.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/logical/not.hpp:
-
-/usr/include/asm/errno.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/deque:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/detail/auto_rec.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/mod.hpp:
-
-/usr/include/bits/posix2_lim.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/expr_if.hpp:
-
-/usr/include/bits/pthreadtypes.h:
-
-/usr/include/linux/falloc.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/arithmetic/mul.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/to_list.hpp:
-
-/usr/include/sys/cdefs.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_params.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/enum.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/gthr-default.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/size.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/exception:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/enum.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_header.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_bvector.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/filter.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/array/elem.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/std_abs.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/first_n.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/detail/is_single_return.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/optional:
-
-/scratch/s5104a21/lib/mercury/include/mercury_proc_bulk.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/split.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/reverse.hpp:
-
-/usr/include/bits/types.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/is_empty.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/alloc_traits.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each_i.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/insert.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/rest_n.hpp:
-
-/usr/include/bits/uio.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/push_back.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++config.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/replace.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/subseq.hpp:
-
-/usr/include/bits/byteswap-16.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_array.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/nested_exception.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/detail/binary_transform.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cassert:
-
-/usr/include/asm-generic/errno.h:
-
-/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/to_tuple.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/variadic_seq_to_seq.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cwctype:
-
-/scratch/s5104a21/lib/mercury/include/mercury_compiler_attributes.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/push_back.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/push_front.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/remove.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/variadic/to_list.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/atomic_word.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/wstringize.hpp:
-
-/usr/include/bits/environments.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/deduce_r.hpp:
-
-/scratch/s5104a21/lib/mercury/include/mercury_proc_string.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/charconv.h:
-
-/scratch/s5104a21/lib/mercury/include/mercury_string_object.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/cpu_defines.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/initializer_list:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stringfwd.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/string_view:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/type_traits:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/stdio_lim.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hash_bytes.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/char_traits.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/functexcept.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/stdexcept:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/punctuation.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception_defines.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/type_traits.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/numeric_traits.h:
+/scratch/s5104a21/lib/log4c/include/log4c/rollingpolicy.h:
 
 /scratch/s5104a21/lib/log4c/include/log4c/location_info.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/list/for_each_i.hpp:
+/scratch/s5104a21/lib/log4c/include/log4c/logging_event.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_pair.h:
+/scratch/s5104a21/lib/log4c/include/log4c/layout.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.tcc:
+/scratch/s5104a21/lib/log4c/include/log4c/rc.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception_ptr.h:
+/scratch/s5104a21/lib/log4c/include/log4c/init.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/pop_front.hpp:
+/scratch/s5104a21/lib/log4c/include/log4c/defs.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/move.h:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_iterator_base_funcs.h:
+/usr/include/bits/pthreadtypes.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/size.hpp:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/fold_right.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/insert.hpp:
+
+/usr/include/alloca.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/xor.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/node_handle.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac_data_mover.cpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/comma_if.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/error_constants.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_left_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/size.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/elem_64.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/less_equal.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_iterator.h:
 
-/usr/include/bits/mman.h:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/paren.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/debug/debug.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/os_defines.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_i.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/local.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/enum.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac_data_mover_internal.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/cat.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_string.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/self.hpp:
+
+/usr/include/bits/sched.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/functexcept.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each_product.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/enum_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/stringize.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/slot.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration/iterate.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_compiler_attributes.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/assert.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_empty_variadic.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/limits/intercept_256.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cxxabi_init_exception.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/expr_if.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_core_header.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_tuple.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/shared_ptr_base.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_seq.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/predefined_ops.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/repeat.hpp:
+
+/usr/include/features.h:
+
+/scratch/s5104a21/lib/log4c/include/log4c/buffer.h:
+
+/usr/include/linux/limits.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/push_front.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_front.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/paren_if.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/fstream:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_back.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/deque.tcc:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/deduce_d.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control.hpp:
+
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/syslimits.h:
+
+/scratch/s5104a21/lib/log4c/include/log4c/priority.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/detail/is_empty.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/at.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_minimum_number.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_types.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_seq.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/for.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac_logging.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_tuple.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cpp_type_traits.h:
+
+/usr/include/bits/wchar.h:
+
+/scratch/s5104a21/hvactest/src/hvac_logging.c:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_empty.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/detail/get_data.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_conv.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/limits/while_256.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/tuple:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/comma.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/push_back.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/if.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/enum.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/size.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/mod.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/not.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/and.hpp:
+
+/usr/include/stdio.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/div_base.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/or.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/dec.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_path.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/config/config.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/nor.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/cat.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/limits/fold_left_256.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_relops.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/replace.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_list.hpp:
+
+/usr/include/string.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each_i.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/remove.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/string_conversions.h:
+
+/usr/include/stdlib.h:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_proc.h:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_macros.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/is_begin_parens.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/identity.hpp:
+
+/usr/include/bits/posix1_lim.h:
+
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/limits.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/maximum_number.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/alloc_traits.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_list.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_left_256.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/allocator.h:
 
@@ -1859,19 +1547,511 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /usr/include/bits/errno.h:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/remove_parens.hpp:
+
+/usr/include/bits/local_lim.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cassert:
+
+/usr/include/asm-generic/errno.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing.hpp:
+
+/usr/include/bits/posix2_lim.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/reverse.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac.cpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/detail/is_single_return.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/na.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/sub.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/size.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/mul.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_r.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/for_each.hpp:
+
+/usr/include/endian.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/transform.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/error.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/to_list_64.hpp:
+
+/usr/include/limits.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_proc_bulk.h:
+
+/usr/include/stdc-predef.h:
+
+/scratch/s5104a21/lib/mercury2/include/na_config.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/istream.tcc:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_core.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_function.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/functional_hash.h:
+
+/scratch/s5104a21/lib/log4c/include/log4c/appender.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_string.tcc:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_bulk.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/less.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitor.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_header.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/aligned_buffer.h:
+
+/usr/include/xlocale.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/while.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++config.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_seq.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/nested_exception.h:
+
+/usr/include/sys/cdefs.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/first_n.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/append.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/na_types.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/sstream.tcc:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/reverse_64.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bool.hpp:
+
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/data.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac_comm.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/eat.hpp:
+
+/scratch/s5104a21/hvactest/src/hvac_comm.cpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/locale:
+
+/scratch/s5104a21/lib/mercury2/include/mercury.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/limits/auto_rec_256.hpp:
+
+/usr/include/ctype.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/fold_left.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ptr_traits.h:
+
+/usr/include/bits/endian.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/limits/repeat_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/fold_right.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/expr_iif.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_binary.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/check.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each_product.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_core_types.h:
+
+/usr/include/gnu/stubs.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/limits/to_seq_64.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/detail/limits/for_256.hpp:
+
+/usr/include/stdint.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/to_seq.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/iif.hpp:
+
+/usr/include/bits/uio.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/variadic_seq_to_seq.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_left.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/auto_rec.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/atomicity.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/not_equal.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_right.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++io.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cstdint:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/div.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/exception:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_binary_params.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/reverse.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/cpu_defines.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/initializer_list:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/slot/detail/def.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_front.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_algobase.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitand.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/overload.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/enable_special_members.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/adt.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/to_array.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/repeat_from_to.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/limits/bool_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/insert.hpp:
+
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stddef.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_uninitialized.h:
+
+/scratch/s5104a21/lib/log4c/include/log4c/category.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/compl.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/limits/not_equal_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/limits/while_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/check_empty.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/reverse.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/for_each.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/elem.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_right_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/elem_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_z.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_config.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/selection.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/expand.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/numeric_traits.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/has_opt.hpp:
+
+/usr/include/locale.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/rem.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/size.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_unary.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/move.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_tuple.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/elem.hpp:
+
+/usr/include/libintl.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_construct.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/greater_equal.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/iterator_concepts.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/config/limits.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/elem.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params_with_a_default.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/empty.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_list.hpp:
+
+/usr/include/bits/byteswap.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/line.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params_with_defaults.hpp:
+
+/usr/include/fcntl.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/alloc_traits.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_binary_params.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_params.hpp:
+
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_binary_params.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/iostream:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_params.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/selection/max.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/selection/min.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/cat.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/ctype_inline.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/wordsize.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/fold_left.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/gthr-default.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/seq.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/concept_check.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/streambuf.tcc:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/elem.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/size.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/uses_allocator.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/enum.hpp:
+
+/usr/include/bits/environments.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitnor.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/filter.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/first_n.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/split.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/inc_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/binary_transform.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/limits/split_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/reverse.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/for.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_right_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/rest_n.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/insert.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/rest_n.hpp:
+
+/usr/include/bits/posix_opt.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/apply.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/remove.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/clocale:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/pop_back.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/debug.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/debug/assertions.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++allocator.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/pop_front.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/erase_if.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/push_front.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_iterator_base_funcs.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/remove.hpp:
+
+/usr/include/bits/stdio_lim.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hash_bytes.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/replace.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++locale.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_heap.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_maximum_number.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/to_array.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/control/detail/while.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/detail/is_single_return.hpp:
+
+/scratch/s5104a21/lib/log4c/include/log4c/version.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/size_64.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/transform.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/push_back.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_array.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/pop_back.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_back.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_front.hpp:
+
+/usr/include/bits/waitflags.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_array.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_list.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/to_tuple.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/limits/for_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/intercept.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_proc_string.h:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_string_object.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/pstl/pstl_config.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stringfwd.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/string_view:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/is_1.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/type_traits:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/char_traits.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/stdexcept:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception_defines.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/type_traits.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_pair.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.tcc:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception_ptr.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_iterator_base_types.h:
+
+/usr/include/bits/mman.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/debug/debug.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/postypes.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/inc.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/cwchar:
+
+/usr/include/wchar.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/add.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/array:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/new_allocator.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/dec_256.hpp:
+
+/usr/include/bits/sys_errlist.h:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/new:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cxxabi_init_exception.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception.h:
 
-/usr/include/linux/errno.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/optional:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/typeinfo:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/array/replace.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/localefwd.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/fold_right.hpp:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/control/while.hpp:
 
 /usr/include/bits/locale.h:
 
@@ -1879,31 +2059,37 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cctype:
 
-/scratch/s5104a21/lib/mercury/include/mercury_config.h:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_multimap.h:
 
-/usr/include/ctype.h:
+/usr/include/bits/types.h:
 
-/usr/include/endian.h:
+/usr/include/bits/byteswap-16.h:
 
-/usr/include/bits/byteswap.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ostream:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ostream_insert.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/va_opt.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/subseq.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cxxabi_forced.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/size_256.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/range_cmp.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/charconv.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/range_access.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/sstream:
-
-/usr/include/assert.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/iterator_concepts.h:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/enum.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/concepts:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/int_limits.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_string.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/atomicity.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/gthr.h:
 
@@ -1917,55 +2103,43 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /usr/include/sched.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/enum.hpp:
-
 /usr/include/time.h:
-
-/usr/include/bits/sched.h:
 
 /usr/include/bits/time.h:
 
 /usr/include/bits/timex.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/for_each_product.hpp:
-
-/usr/include/libio.h:
-
-/usr/include/bits/setjmp.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/alloc_traits.h:
-
-/scratch/s5104a21/lib/log4c/include/log4c/defs.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/atomic_word.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/string_view.tcc:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/string_conversions.h:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitxor.hpp:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities.hpp:
-
-/usr/include/stdlib.h:
-
-/usr/include/bits/waitflags.h:
+/usr/include/bits/waitstatus.h:
 
 /usr/include/sys/types.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/detail/is_1_number.hpp:
 
 /usr/include/sys/select.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_vector.h:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/wstringize.hpp:
+
 /usr/include/bits/select.h:
 
 /usr/include/errno.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/ctype_inline.h:
+/usr/include/bits/xopen_lim.h:
 
-/usr/include/bits/typesizes.h:
-
-/usr/include/bits/sigset.h:
-
-/usr/include/alloca.h:
+/usr/include/sys/sysmacros.h:
 
 /usr/include/bits/stdlib-float.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/std_abs.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/parse_numbers.h:
 
@@ -1973,86 +2147,58 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cstdio:
 
-/scratch/s5104a21/lib/log4c/include/log4c/category.h:
+/usr/include/bits/setjmp.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cerrno:
 
-/usr/include/bits/stat.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/typeinfo:
+
+/usr/include/linux/errno.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/list/filter.hpp:
+
+/usr/include/asm-generic/errno-base.h:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/queue:
+
+/usr/include/asm/errno.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/detail/is_empty.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/deque:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/memoryfwd.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_deque.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/deque.tcc:
+/usr/include/sys/time.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/seq/transform.hpp:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/library.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/system_error:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/vector:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++locale.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_heap.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_tree.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/node_handle.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/tuple:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/tuple/pop_back.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/invoke.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/erase_if.h:
-
-/scratch/s5104a21/hvactest/src/hvac_logging.h:
-
-/scratch/s5104a21/lib/log4c/include/log4c.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ios:
-
-/scratch/s5104a21/lib/log4c/include/log4c/rc.h:
-
-/usr/include/linux/limits.h:
-
-/scratch/s5104a21/lib/log4c/include/log4c/buffer.h:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison/equal.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/utility:
 
-/usr/include/sys/time.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/vector:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_fwd.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_bvector.h:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/repetition/enum_trailing_params.hpp:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/vector.tcc:
 
-/scratch/s5104a21/lib/log4c/include/log4c/rollingpolicy.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h:
 
-/scratch/s5104a21/lib/log4c/include/log4c/priority.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/map:
 
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/apply.hpp:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/slot.hpp:
 
-/scratch/s5104a21/lib/mercury/include/na_config.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_tree.h:
 
-/usr/include/fcntl.h:
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/invoke.h:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.h:
+/apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h:
 
-/usr/include/bits/fcntl.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/confname.h:
-
-/scratch/s5104a21/lib/mercury/include/boost/preprocessor/facilities/is_empty_variadic.hpp:
-
-/usr/include/getopt.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/iostream:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ostream_insert.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/ostream:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ios_base.h:
+/scratch/s5104a21/lib/log4c/include/log4c.h:
