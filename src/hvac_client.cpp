@@ -72,7 +72,7 @@ static void __attribute((destructor)) hvac_client_shutdown()
 bool hvac_track_file(const char *path, int flags, int fd)
 {      
 	 
-		L4C_INFO("track_file enter\n");
+//		L4C_INFO("track_file enter\n");
         if (strstr(path, ".ports.cfg.") != NULL)
         {
             return false;
@@ -91,7 +91,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
 	try {
 
 		std::string ppath = std::filesystem::canonical(path).parent_path();
-	L4C_INFO("ppath: %s", ppath.c_str());	
+//	L4C_INFO("ppath: %s", ppath.c_str());	
 		// Check if current file exists in HVAC_DATA_DIR
 		if (hvac_data_dir != NULL){
 			std::string test = std::filesystem::canonical(hvac_data_dir);
@@ -211,13 +211,19 @@ void hvac_remote_close(int fd){
 
 bool hvac_file_tracked(int fd)
 {
+	if(fd_map.empty()){
+        return false;
+    }
 	return (fd_map.find(fd) != fd_map.end());
 }
 
 const char * hvac_get_path(int fd)
 {
-		
-	L4C_INFO("fd: %d\n", fd);		
+	
+	if(fd_map.empty()){
+		return NULL;
+	}	
+//	L4C_INFO("fd: %d\n", fd);		
 	if (fd_map.find(fd) != fd_map.end())
 	{
 		return fd_map[fd].c_str();

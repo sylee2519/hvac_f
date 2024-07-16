@@ -109,11 +109,11 @@ void hvac_shutdown_comm()
 	if (hg_context == NULL)
 		return;
 //below lines were commented before
-//    ret = HG_Context_destroy(hg_context);
-//    assert(ret == HG_SUCCESS);
+    ret = HG_Context_destroy(hg_context);
+    assert(ret == HG_SUCCESS);
 
-//    ret = HG_Finalize(hg_class);
-//    assert(ret == HG_SUCCESS);
+    ret = HG_Finalize(hg_class);
+    assert(ret == HG_SUCCESS);
 
 }
 
@@ -247,8 +247,9 @@ hvac_rpc_handler(hg_handle_t handle)
 
     //Reduce size of transfer to what was actually read 
     //We may need to revisit this.
-    hvac_rpc_state_p->size = readbytes;
-
+	if(readbytes != -1){
+    	hvac_rpc_state_p->size = readbytes;
+	}
     /* initiate bulk transfer from client to server */
     ret = HG_Bulk_transfer(hgi->context, hvac_rpc_handler_bulk_cb, hvac_rpc_state_p,
         HG_BULK_PUSH, hgi->addr, hvac_rpc_state_p->in.bulk_handle, 0,

@@ -223,7 +223,7 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
 	{                
 		L4C_INFO("pread to tracked file %s",path);
 		ret = hvac_remote_pread(fd, buf, count, offset);
-		ret = __real_pread(fd,buf,count,offset);
+	//	ret = __real_pread(fd,buf,count,offset);
 	}
 	else
 	{
