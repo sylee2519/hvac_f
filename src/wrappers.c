@@ -191,9 +191,6 @@ int WRAP_DECL(close)(int fd)
 		hvac_remove_fd(fd);
 	}
 
-	//hvac_remote_close(fd);
-
-	/* Close the passed in file-descriptor tracked or not */
 	if ((ret = __real_close(fd)) != 0)
 	{
 		L4C_PERROR("Error from close");
@@ -229,7 +226,7 @@ ssize_t WRAP_DECL(read)(int fd, void *buf, size_t count)
     return ret;
 }
 
-
+/* sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size) {
     const char *hex_digits = "0123456789ABCDEF";
     const unsigned char *buffer = (const unsigned char *)buf;
@@ -275,23 +272,17 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
             }
 			
                 L4C_INFO("offset %d bytesRead original %d bytesRead hvac %d\n", offset, cnt, ret);
-				return cnt;	
 		if(ret < 0){
 			
 			L4C_INFO("remote pread_error returned %s",path);
 			ret = __real_pread(fd,buf,count,offset);
 			L4C_INFO("readbytes %d\n", ret);
 		}
-//		ret = __real_pread(fd,buf,count,offset);
 	}
 	else
-//	if (ret == -1)
 	{
 		ret = __real_pread(fd,buf,count,offset);
 	}
-//	if (ret == -1){
-//		ret = __real_pread(fd,buf,count,offset);
-//	}
 
 	return ret;
 }

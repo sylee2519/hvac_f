@@ -64,6 +64,8 @@ hvac_open_cb(const struct hg_cb_info *info)
     HG_Free_output(info->info.forward.handle, &out);
     HG_Destroy(info->info.forward.handle);
 
+    /* signal to main() that we are done */
+	// sy: modified logic 
     pthread_mutex_lock(hvac_open_state_p->mutex);
     *(hvac_open_state_p->done) = HG_TRUE;
     pthread_cond_signal(hvac_open_state_p->cond);
@@ -71,11 +73,6 @@ hvac_open_cb(const struct hg_cb_info *info)
 
     free(hvac_open_state_p);
 
-    /* signal to main() that we are done */
-//    pthread_mutex_lock(&done_mutex);
-//    done++;
-//    pthread_cond_signal(&done_cond);
-//    pthread_mutex_unlock(&done_mutex);  
     return HG_SUCCESS;
 }
 
@@ -86,7 +83,6 @@ hvac_read_cb(const struct hg_cb_info *info)
 {
 	hg_return_t ret;
     hvac_rpc_out_t out;
-//    ssize_t bytes_read = -1;
     struct hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)info->arg;
 
     assert(info->ret == HG_SUCCESS);
@@ -101,7 +97,6 @@ hvac_read_cb(const struct hg_cb_info *info)
    		}
 		else {
 			*(hvac_rpc_state_p->bytes_read) = out.ret;
-    	//	bytes_read = out.ret;
 			L4C_INFO("out.ret %d\n", out.ret);
 			if (out.ret < 0) {
             	L4C_INFO("Server-side read failed with result: %zd", out.ret);
@@ -111,31 +106,17 @@ hvac_read_cb(const struct hg_cb_info *info)
 		}
 	} 
 	
-//     char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->bytes_read);
-//            if (hex_buf) {
- //               L4C_INFO("Buffer content after rpc transfer: %s", hex_buf);
- //               free(hex_buf);
-  //          }
-
    /* clean up resources consumed by this rpc */
     ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	assert(ret == HG_SUCCESS);
 	L4C_INFO("INFO: Freeing Bulk Handle"); //Does this deregister memory?
 
-//    ret = HG_Free_output(info->info.forward.handle, &out);
-//	assert(ret == HG_SUCCESS);
-    
 	ret = HG_Destroy(info->info.forward.handle);
 	assert(ret == HG_SUCCESS);
     
 	
     /* signal to main() that we are done */
-//    pthread_mutex_lock(&done_mutex);
-//    done++;
-//    read_ret=bytes_read;
-//    pthread_cond_signal(&done_cond);
-//    pthread_mutex_unlock(&done_mutex);  
-
+	// sy: modified logic
 	pthread_mutex_lock(hvac_rpc_state_p->mutex);
     *(hvac_rpc_state_p->done) = HG_TRUE;
     pthread_cond_signal(hvac_rpc_state_p->cond);
@@ -159,21 +140,18 @@ void hvac_client_comm_register_rpc()
 void hvac_client_block(hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     /* wait for callbacks to finish */
-
+	// sy: modified logic
 	pthread_mutex_lock(mutex);
 	while(*done != HG_TRUE){
 		pthread_cond_wait(cond, mutex);
 	}
 	pthread_mutex_unlock(mutex);
 
-//    pthread_mutex_lock(&done_mutex);
-//    while (done <= 0)
-//        pthread_cond_wait(&done_cond, &done_mutex);
-//    pthread_mutex_unlock(&done_mutex);
 }
 
 ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
+	// sy: modified logic
 	L4C_INFO("before readblock\n");
 	pthread_mutex_lock(mutex);
 
@@ -185,18 +163,6 @@ ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *co
 	L4C_INFO("outside readblock\n");
     return result;
 	
-/*
-    ssize_t bytes_read;
-    // wait for callbacks to finish 
-		L4C_INFO("before readblock\n");
-    pthread_mutex_lock(&done_mutex);
-    while (done <= 0)
-        pthread_cond_wait(&done_cond, &done_mutex);
-    bytes_read = read_ret;
-    pthread_mutex_unlock(&done_mutex);
-		L4C_INFO("outside readblock\n");
-    return bytes_read;
-*/
 }
 
 
@@ -242,10 +208,10 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd)
 
 void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p)
 {
+	// sy: modified logic
     hg_addr_t svr_addr;
     hvac_open_in_t in;
     hg_handle_t handle;
- //   struct hvac_open_state *hvac_open_state_p;
     int ret;
 
 
@@ -253,7 +219,6 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_
     svr_addr = hvac_client_comm_lookup_addr(svr_hash);    
 
     /* Allocate args for callback pass through */
-//    hvac_open_state_p = (struct hvac_open_state *)malloc(sizeof(*hvac_open_state_p));
     hvac_open_state_p->local_fd = fd;
 
     /* create create handle to represent this rpc operation */    
@@ -276,27 +241,15 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_
 
 void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p)
 {
+	//sy: modified logic
     hg_addr_t svr_addr;
     hvac_rpc_in_t in;
     const struct hg_info *hgi;
     int ret;
-//    struct hvac_rpc_state *hvac_rpc_state_p;
-
-//	pthread_mutex_lock(&done_mutex);
-//    read_ret = -1; //sy: include this inside the mutex
-//		done = HG_FALSE;
-//	pthread_mutex_unlock(&done_mutex);
-
-//	pthread_mutex_lock(hvac_rpc_state_p->mutex);
-//	*(hvac_rpc_state_p->bytes_read) = -1;
- //   *(hvac_rpc_state_p->done) = HG_FALSE;
-  //  pthread_mutex_unlock(hvac_rpc_state_p->mutex);
-
-    /* Get address */
+	
     svr_addr = hvac_client_comm_lookup_addr(svr_hash);
 
     /* set up state structure */
-//    hvac_rpc_state_p = (struct hvac_rpc_state *)malloc(sizeof(*hvac_rpc_state_p));
     hvac_rpc_state_p->size = count;
 
 
@@ -304,7 +257,6 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
     hvac_rpc_state_p->buffer = buffer;
     assert(hvac_rpc_state_p->buffer);
 	hvac_rpc_state_p->bulk_handle = HG_BULK_NULL;
-    //hvac_rpc_state_p->value = 5;
 
     /* create create handle to represent this rpc operation */
     hvac_comm_create_handle(svr_addr, hvac_client_rpc_id, &(hvac_rpc_state_p->handle));

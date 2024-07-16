@@ -18,12 +18,12 @@ struct hvac_rpc_state_t_client {
     void *buffer;
     hg_bulk_t bulk_handle;
     hg_handle_t handle;
-    int local_fd;
-    int offset;
-    ssize_t *bytes_read;
-    hg_bool_t *done;
-    pthread_cond_t *cond;
-    pthread_mutex_t *mutex;
+    int local_fd; //sy: add
+    int offset; //sy: add
+    ssize_t *bytes_read; //sy: add
+    hg_bool_t *done; //sy: add
+    pthread_cond_t *cond; //sy: add
+    pthread_mutex_t *mutex; //sy: add
 };
 
 // Carry CB Information for CB
@@ -79,6 +79,7 @@ ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *co
 ssize_t hvac_seek_block();
 
 
+/*sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size);
 
 

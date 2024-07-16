@@ -122,6 +122,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			hvac_client_comm_register_rpc();
 			g_mercury_init = true;
 		}
+		// sy: modified logic
 		hvac_open_state_t *hvac_open_state_p = (hvac_open_state_t *)malloc(sizeof(hvac_open_state_t));
         hvac_open_state_p->done = &done;
         hvac_open_state_p->cond = &cond;
@@ -155,7 +156,8 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		L4C_INFO("Remote read - Host %d", host);		
-
+		
+		// sy: modified logic
         hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
         hvac_rpc_state_p->bytes_read = &bytes_read;
         hvac_rpc_state_p->done = &done;
@@ -188,7 +190,8 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		L4C_INFO("Remote pread - Host %d", host);		
-		
+
+		//sy: modified logic		
         hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
         hvac_rpc_state_p->bytes_read = &bytes_read;
         hvac_rpc_state_p->done = &done;
