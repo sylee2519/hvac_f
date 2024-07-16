@@ -12,18 +12,6 @@ extern "C" {
 #include <string>
 #include <iostream>
 #include <map>	
-#include <unistd.h> 
-#include <fcntl.h> 
-#include <chrono>
-#include <fstream>
-#include <iostream>
-
-struct LogEntry {
-    std::string operation;
-    long long time_ns;
-};
-
-std::vector<LogEntry> log_buffer;
 
 
 static hg_class_t *hg_class = NULL;
@@ -41,41 +29,25 @@ struct hvac_rpc_state {
     hvac_rpc_in_t in;
 };
 
-void append_to_file(int server_rank) {
-	std::string log_file = "operation_times_" + std::to_string(server_rank) + ".log";
-    std::ofstream outfile;
-    outfile.open(log_file, std::ios_base::app); // Append mode
-    for (const auto& entry : log_buffer) {
-        outfile << entry.operation << " " << entry.time_ns << "ns" << std::endl;
-    }
-    log_buffer.clear();
-}
-
 //Initialize communication for both the client and server
 //processes
 //This is based on the rpc_engine template provided by the mercury lib
-
 void hvac_init_comm(hg_bool_t listen)
 {
-	L4C_INFO("init\n");
 	const char *info_string = "ofi+tcp://";  
-	char *rank_str = getenv("PMI_RANK"); //PMIX_RANK
-	
-    if (rank_str == NULL) {
-        L4C_FATAL("RANK environment variable is not set\n");
-        exit(EXIT_FAILURE);
-	}
-  
+	char *rank_str = getenv("PMI_RANK");  
     server_rank = atoi(rank_str);
     pthread_t hvac_progress_tid;
 
     HG_Set_log_level("DEBUG");
 
+    /* Initialize Mercury with the desired network abstraction class */
     hg_class = HG_Init(info_string, listen);
 	if (hg_class == NULL){
 		L4C_FATAL("Failed to initialize HG_CLASS Listen Mode : %d\n", listen);
 	}
 
+    /* Create HG context */
     hg_context = HG_Context_create(hg_class);
 	if (hg_context == NULL){
 		L4C_FATAL("Failed to initialize HG_CONTEXT\n");
@@ -108,12 +80,13 @@ void hvac_shutdown_comm()
 
 	if (hg_context == NULL)
 		return;
-//below lines were commented before
-    ret = HG_Context_destroy(hg_context);
-    assert(ret == HG_SUCCESS);
 
-    ret = HG_Finalize(hg_class);
-    assert(ret == HG_SUCCESS);
+//    ret = HG_Context_destroy(hg_context);
+//    assert(ret == HG_SUCCESS);
+
+//    ret = HG_Finalize(hg_class);
+//    assert(ret == HG_SUCCESS);
+
 
 }
 
@@ -168,6 +141,22 @@ void hvac_comm_list_addr()
 }
 
 
+char *buffer_to_hex(const void *buf, size_t size) {
+    const char *hex_digits = "0123456789ABCDEF";
+    const unsigned char *buffer = (const unsigned char *)buf;
+
+    char *hex_str = (char *)malloc(size * 2 + 1); // 2 hex chars per byte + null terminator
+    if (!hex_str) {
+        perror("malloc");
+        return NULL;
+    }
+    for (size_t i = 0; i < size; ++i) {
+        hex_str[i * 2] = hex_digits[(buffer[i] >> 4) & 0xF];
+        hex_str[i * 2 + 1] = hex_digits[buffer[i] & 0xF];
+    }
+    hex_str[size * 2] = '\0'; // Null terminator
+    return hex_str;
+}
 
 /* callback triggered upon completion of bulk transfer */
 static hg_return_t
@@ -177,12 +166,22 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     int ret;
     hvac_rpc_out_t out;
     out.ret = hvac_rpc_state_p->size;
-
+	L4C_INFO("out.ret server %d\n", out.ret);
     assert(info->ret == 0);
-
-
+// sy: commented
+	
+//	 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+  //          if (hex_buf) {
+    //            L4C_INFO("Buffer content before rpc transfer: %s", hex_buf);
+      //          free(hex_buf);
+        //    }
     ret = HG_Respond(hvac_rpc_state_p->handle, NULL, NULL, &out);
     assert(ret == HG_SUCCESS);        
+//	char *hex_buff = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+  //          if (hex_buff) {
+    //            L4C_INFO("Buffer content after rpc transfer: %s", hex_buff);
+      //          free(hex_buff);
+        //    }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	L4C_INFO("Info Server: Freeing Bulk Handle\n");
@@ -191,7 +190,6 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     free(hvac_rpc_state_p);
     return (hg_return_t)0;
 }
-
 
 
 static hg_return_t
@@ -224,37 +222,49 @@ hvac_rpc_handler(hg_handle_t handle)
     assert(ret == 0);
 
     if (hvac_rpc_state_p->in.offset == -1){
-		auto start = std::chrono::high_resolution_clock::now();
         readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-        auto end = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-
-    log_buffer.push_back({"read", duration});
-		L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
+        L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
+		if (readbytes < 0) {
+            readbytes = read(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
+		}
     }else
-    {	
-		auto start = std::chrono::high_resolution_clock::now();
+    {
         readbytes = pread(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
-        auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-
-    log_buffer.push_back({"pread", duration});
-		L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
-    }
-	if (log_buffer.size() >= 10) { // Example condition to flush buffer to file
-    	append_to_file(server_rank);
+        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
+		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+            if (hex_buf) {
+                L4C_INFO("Buffer content after remote read: %s", hex_buf);
+                free(hex_buf);
+            }
+	
+		if (readbytes < 0) { //sy: add
+        const char* original_path = fd_to_path[hvac_rpc_state_p->in.accessfd].c_str();
+        int original_fd = open(original_path, O_RDONLY);
+        if (original_fd != -1) {
+            readbytes = pread(original_fd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
+            L4C_DEBUG("Server Rank %d : Retry PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
+            close(original_fd);
+        } else {
+			readbytes = pread(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
+            if(readbytes<0){
+				L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
+			}
+        }
+    	}
 	}
 
     //Reduce size of transfer to what was actually read 
     //We may need to revisit this.
-	if(readbytes != -1){
-    	hvac_rpc_state_p->size = readbytes;
-	}
+    hvac_rpc_state_p->size = readbytes;
+	L4C_DEBUG("readbytes before transfer %d\n", readbytes);
     /* initiate bulk transfer from client to server */
     ret = HG_Bulk_transfer(hgi->context, hvac_rpc_handler_bulk_cb, hvac_rpc_state_p,
         HG_BULK_PUSH, hgi->addr, hvac_rpc_state_p->in.bulk_handle, 0,
         hvac_rpc_state_p->bulk_handle, 0, hvac_rpc_state_p->size, HG_OP_ID_IGNORE);
+ 
     assert(ret == 0);
+
     (void) ret;
 
     return (hg_return_t)ret;
@@ -271,24 +281,16 @@ hvac_open_rpc_handler(hg_handle_t handle)
     int ret = HG_Get_input(handle, &in);
     assert(ret == 0);
     string redir_path = in.path;
-
+	
+	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(redir_path) != path_cache_map.end())
     {
         L4C_INFO("Server Rank %d : Successful Redirection %s to %s", server_rank, redir_path.c_str(), path_cache_map[redir_path].c_str());
         redir_path = path_cache_map[redir_path];
-    	log_buffer.push_back({"redirect", 0});
     }
+	pthread_mutex_unlock(&path_map_mutex); //sy: add
     L4C_INFO("Server Rank %d : Successful Open %s", server_rank, in.path);    
-	 auto start = std::chrono::high_resolution_clock::now();
-    out.ret_status = open(redir_path.c_str(),O_RDONLY); 
-	auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-
-    log_buffer.push_back({"open", duration});
-	
-	 if (log_buffer.size() >= 10) { // Example condition to flush buffer to file
-         append_to_file(server_rank);
-     } 
+    out.ret_status = open(redir_path.c_str(),O_RDONLY);  
     fd_to_path[out.ret_status] = in.path;  
     HG_Respond(handle,NULL,NULL,&out);
 
@@ -304,27 +306,21 @@ hvac_close_rpc_handler(hg_handle_t handle)
     assert(ret == HG_SUCCESS);
 
     L4C_INFO("Closing File %d\n",in.fd);
-	auto start = std::chrono::high_resolution_clock::now();
     ret = close(in.fd);
-	auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-
-    log_buffer.push_back({"close", duration});
     assert(ret == 0);
-	
-	 if (log_buffer.size() >= 10) { // Example condition to flush buffer to file
-         append_to_file(server_rank);
-     }
 
     //Signal to the data mover to copy the file
+	
+	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(fd_to_path[in.fd]) == path_cache_map.end())
     {
         L4C_INFO("Caching %s",fd_to_path[in.fd].c_str());
         pthread_mutex_lock(&data_mutex);
-        pthread_cond_signal(&data_cond);
         data_queue.push(fd_to_path[in.fd]);
+        pthread_cond_signal(&data_cond);
         pthread_mutex_unlock(&data_mutex);
     }
+	pthread_mutex_unlock(&path_map_mutex); //sy: add
 
 	fd_to_path.erase(in.fd);
     return (hg_return_t)ret;

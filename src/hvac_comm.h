@@ -9,6 +9,32 @@ extern "C" {
 
 #include <string>
 using namespace std;
+
+
+/* struct used to carry state of overall operation across callbacks */
+struct hvac_rpc_state_t_client {
+    uint32_t value;
+    hg_size_t size;
+    void *buffer;
+    hg_bulk_t bulk_handle;
+    hg_handle_t handle;
+    int local_fd;
+    int offset;
+    ssize_t *bytes_read;
+    hg_bool_t *done;
+    pthread_cond_t *cond;
+    pthread_mutex_t *mutex;
+};
+
+// Carry CB Information for CB
+struct hvac_open_state_t{
+    uint32_t local_fd;
+    hg_bool_t *done;
+    pthread_cond_t *cond;
+    pthread_mutex_t *mutex;
+
+};
+
 /* visible API for example RPC operation */
 
 //RPC Open Handler
@@ -17,7 +43,7 @@ MERCURY_GEN_PROC(hvac_open_in_t, ((hg_string_t)(path)))
 
 //BULK Read Handler
 MERCURY_GEN_PROC(hvac_rpc_out_t, ((int32_t)(ret)))
-MERCURY_GEN_PROC(hvac_rpc_in_t, ((int32_t)(input_val))((hg_bulk_t)(bulk_handle))((int32_t)(accessfd))((int64_t)(offset)))
+MERCURY_GEN_PROC(hvac_rpc_in_t, ((int32_t)(input_val))((hg_bulk_t)(bulk_handle))((int32_t)(accessfd))((int32_t)(localfd))((int64_t)(offset)))
 
 //RPC Seek Handler
 MERCURY_GEN_PROC(hvac_seek_out_t, ((int32_t)(ret)))
@@ -43,14 +69,17 @@ hg_context_t *hvac_comm_get_context();
 
 //Client
 void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int whence);
-void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void* buffer, ssize_t count, off_t offset);
-void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd);
+void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void* buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p);
+void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p);
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd);
 hg_addr_t hvac_client_comm_lookup_addr(int rank);
 void hvac_client_comm_register_rpc();
-void hvac_client_block();
-ssize_t hvac_read_block();
+void hvac_client_block(hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex);
+ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex);
 ssize_t hvac_seek_block();
+
+
+char *buffer_to_hex(const void *buf, size_t size);
 
 
 
