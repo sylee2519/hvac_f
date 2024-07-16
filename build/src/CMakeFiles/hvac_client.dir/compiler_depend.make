@@ -196,6 +196,9 @@ src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o: /scratch/s5104a21/hvactest/src
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_ops.h \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/iostream \
   /usr/include/assert.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/mutex \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/std_mutex.h \
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unique_lock.h \
   /scratch/s5104a21/hvactest/src/hvac_internal.h \
   /usr/include/unistd.h \
   /usr/include/bits/posix_opt.h \
@@ -941,17 +944,7 @@ src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/h
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_ios.tcc \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ostream.tcc \
   /apps/compiler/gcc/10.2.0/include/c++/10.2.0/istream \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/istream.tcc \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/chrono \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ratio \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ctime \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/parse_numbers.h \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/fstream \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/codecvt.h \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/basic_file.h \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++io.h \
-  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fstream.tcc
+  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/istream.tcc
 
 src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o: /scratch/s5104a21/hvactest/src/hvac_comm_client.cpp \
   /usr/include/stdc-predef.h \
@@ -1725,7 +1718,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
   /usr/include/string.h \
   /usr/include/xlocale.h \
   /usr/include/assert.h \
-  /scratch/s5104a21/hvactest/src/hvac_internal.h \
   /usr/include/stdio.h \
   /usr/include/bits/types.h \
   /usr/include/bits/typesizes.h \
@@ -1735,11 +1727,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
   /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h \
   /usr/include/bits/stdio_lim.h \
   /usr/include/bits/sys_errlist.h \
-  /usr/include/unistd.h \
-  /usr/include/bits/posix_opt.h \
-  /usr/include/bits/environments.h \
-  /usr/include/bits/confname.h \
-  /usr/include/getopt.h \
   /usr/include/stdlib.h \
   /usr/include/bits/waitflags.h \
   /usr/include/bits/waitstatus.h \
@@ -1757,16 +1744,23 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
   /usr/include/bits/pthreadtypes.h \
   /usr/include/alloca.h \
   /usr/include/bits/stdlib-float.h \
-  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h \
-  /usr/include/stdint.h \
-  /usr/include/bits/wchar.h \
-  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /usr/include/fcntl.h \
   /usr/include/bits/fcntl.h \
   /usr/include/bits/fcntl-linux.h \
   /usr/include/bits/uio.h \
   /usr/include/linux/falloc.h \
   /usr/include/bits/stat.h \
+  /usr/include/unistd.h \
+  /usr/include/bits/posix_opt.h \
+  /usr/include/bits/environments.h \
+  /usr/include/bits/confname.h \
+  /usr/include/getopt.h \
+  /usr/include/sys/stat.h \
+  /scratch/s5104a21/hvactest/src/hvac_internal.h \
+  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h \
+  /usr/include/stdint.h \
+  /usr/include/bits/wchar.h \
+  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /usr/include/sys/uio.h \
   /usr/include/sys/mman.h \
   /usr/include/bits/mman.h \
@@ -1803,10 +1797,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /scratch/s5104a21/lib/log4c/include/log4c/rollingpolicy_type_sizewin.h:
 
 /scratch/s5104a21/lib/log4c/include/log4c/appender_type_rollingfile.h:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fstream.tcc:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/basic_file.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h:
 
@@ -1904,13 +1894,17 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_params.hpp:
 
-/usr/include/bits/confname.h:
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_params.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_binary_params.hpp:
 
 /usr/include/unistd.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/time_members.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/fold_right.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/mutex:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_trailing_params.hpp:
 
@@ -1942,8 +1936,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /usr/include/bits/types.h:
 
-/usr/include/getopt.h:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_facets.tcc:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/streambuf_iterator.h:
@@ -1970,11 +1962,13 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/log4c/include/log4c/defs.h:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/config/config.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_path.h:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/system_error:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/fstream:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/pop_back.hpp:
 
@@ -1987,6 +1981,10 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/allocator.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/detail/limits/fold_left_256.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_r.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/filter.hpp:
 
@@ -2061,6 +2059,8 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/limits/fold_left_256.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/error_constants.h:
+
+/usr/include/sys/stat.h:
 
 /usr/include/bits/byteswap-16.h:
 
@@ -2171,10 +2171,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/optional:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/exception.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum.hpp:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/deduce_r.hpp:
 
 /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stddef.h:
 
@@ -2304,6 +2300,14 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/functexcept.h:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/subseq.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cxxabi_forced.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/va_opt.hpp:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.tcc:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/comparison.hpp:
@@ -2336,14 +2340,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/array/detail/get_data.hpp:
 
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/filter.hpp:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitnor.hpp:
-
-/usr/include/bits/environments.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/elem_64.hpp:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/uses_allocator.h:
 
 /usr/include/wchar.h:
@@ -2355,6 +2351,8 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/range_access.h:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/sstream:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unique_lock.h:
 
 /usr/include/assert.h:
 
@@ -2422,8 +2420,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/for.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/c++io.h:
-
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/cstdint:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list.hpp:
@@ -2444,6 +2440,18 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /usr/include/bits/timex.h:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/filter.hpp:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/bitnor.hpp:
+
+/usr/include/bits/environments.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/variadic/limits/elem_64.hpp:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/stdlib.h:
 
 /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h:
@@ -2461,14 +2469,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/detail/is_binary.hpp:
 
 /usr/include/sys/mman.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/seq/subseq.hpp:
-
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/cxxabi_forced.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/va_opt.hpp:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition.hpp:
 
 /apps/compiler/gcc/10.2.0/include/c++/10.2.0/debug/debug.h:
 
@@ -2556,6 +2556,14 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/mercury2/include/mercury_proc.h:
 
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_list.hpp:
+
+/usr/include/string.h:
+
+/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp:
+
+/scratch/s5104a21/lib/mercury2/include/mercury_proc_bulk.h:
+
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/push_back.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor.hpp:
@@ -2576,14 +2584,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/debug/assert.hpp:
 
-/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/fs_path.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/config/config.hpp:
-
-/usr/include/string.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/tuple/to_list.hpp:
-
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/logical/or.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/dec.hpp:
@@ -2599,10 +2599,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/arithmetic/limits/inc_256.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/control/iif.hpp:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_shifted_params.hpp:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/repetition/enum_binary_params.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/cat.hpp:
 
@@ -2704,10 +2700,6 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/is_begin_parens.hpp:
 
-/scratch/s5104a21/lib/mercury2/include/mercury_proc_bulk.h:
-
-/scratch/s5104a21/lib/boost/include/boost/preprocessor/punctuation/detail/is_begin_parens.hpp:
-
 /scratch/s5104a21/lib/log4c/include/log4c/priority.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/facilities/detail/is_empty.hpp:
@@ -2769,6 +2761,8 @@ src/CMakeFiles/hvac_client.dir/wrappers.c.o: /scratch/s5104a21/hvactest/src/wrap
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/iteration.hpp:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/size.hpp:
+
+/apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/std_mutex.h:
 
 /scratch/s5104a21/lib/boost/include/boost/preprocessor/list/enum.hpp:
 
