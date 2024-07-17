@@ -1,5 +1,6 @@
 //Starting to use CPP functionality
 
+
 #include <map>
 #include <string>
 #include <filesystem>
@@ -11,14 +12,11 @@
 #include "hvac_logging.h"
 #include "hvac_comm.h"
 
-
-#define HVAC_CLIENT 1
 __thread bool tl_disable_redirect = false;
 bool g_disable_redirect = true;
 bool g_hvac_initialized = false;
 bool g_hvac_comm_initialized = false;
 bool g_mercury_init=false;
-
 
 uint32_t g_hvac_server_count = 0;
 char *hvac_data_dir = NULL;
@@ -27,6 +25,8 @@ pthread_mutex_t init_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 std::map<int,std::string> fd_map;
 std::map<int, int > fd_redir_map;
+//sy: add
+const int TIMEOUT_LIMIT = 3;
 
 /* Devise a way to safely call this and initialize early */
 static void __attribute__((constructor)) hvac_client_init()
@@ -57,7 +57,7 @@ static void __attribute__((constructor)) hvac_client_init()
 		snprintf(hvac_data_dir, strlen(hvac_data_dir_c) + 1, "%s", hvac_data_dir_c);
     }
     
-
+	initialize_timeout_counters(g_hvac_server_count); //sy: add
     g_hvac_initialized = true;
     pthread_mutex_unlock(&init_mutex);
     
@@ -68,6 +68,12 @@ static void __attribute((destructor)) hvac_client_shutdown()
 {
     hvac_shutdown_comm();
 }
+
+//sy: add. initialization function for timeout counter
+void initialize_timeout_counters(int num_nodes) {
+    timeout_counters.resize(num_nodes, 0);
+}
+
 
 bool hvac_track_file(const char *path, int flags, int fd)
 {       
@@ -120,6 +126,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			/* I think I only need to do this once */
 			hvac_client_comm_register_rpc();
 			g_mercury_init = true;
+			initialize_timeout_counters(g_hvac_server_count);
 		}
 		// sy: modified logic
 		hvac_open_state_t *hvac_open_state_p = (hvac_open_state_t *)malloc(sizeof(hvac_open_state_t));
@@ -128,8 +135,20 @@ bool hvac_track_file(const char *path, int flags, int fd)
         hvac_open_state_p->mutex = &mutex;	
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		L4C_INFO("Remote open - Host %d", host);
+		
+		{
+            std::lock_guard<std::mutex> lock(timeout_mutex);
+			
+//			L4C_INFO("host %d\n", host);
+//			L4C_INFO("cnt %d\n",timeout_counters[host]);
+            if (timeout_counters[host] >= TIMEOUT_LIMIT) {
+                L4C_INFO("Host %d reached timeout limit, skipping", host);
+                return false; // sy: Skip further processing for this node
+            }
+        }
+
 		hvac_client_comm_gen_open_rpc(host, fd_map[fd], fd, hvac_open_state_p);
-		hvac_client_block(&done, &cond, &mutex);
+		hvac_client_block(host, &done, &cond, &mutex);
 	}
 
 
@@ -155,7 +174,15 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		L4C_INFO("Remote read - Host %d", host);		
-		
+
+		{
+            std::lock_guard<std::mutex> lock(timeout_mutex);
+            if (timeout_counters[host] >= TIMEOUT_LIMIT) {
+                L4C_INFO("Host %d reached timeout limit, skipping", host);
+                return bytes_read; // sy: Skip further processing for this node
+            }
+        }	
+	
 		// sy: modified logic
         hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
         hvac_rpc_state_p->bytes_read = &bytes_read;
@@ -164,7 +191,7 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
         hvac_rpc_state_p->mutex = &mutex;
 
 		hvac_client_comm_gen_read_rpc(host, fd, buf, count, -1, hvac_rpc_state_p);
-		bytes_read = hvac_read_block(&done, &bytes_read, &cond, &mutex);		
+		bytes_read = hvac_read_block(host, &done, &bytes_read, &cond, &mutex);		
 	}
 	/* Non-HVAC Reads come from base */
 	return bytes_read;
@@ -189,7 +216,13 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		L4C_INFO("Remote pread - Host %d", host);		
-
+		{
+            std::lock_guard<std::mutex> lock(timeout_mutex);
+            if (timeout_counters[host] >= TIMEOUT_LIMIT) {
+                L4C_INFO("Host %d reached timeout limit, skipping", host);
+                return bytes_read; // sy: Skip further processing for this node
+            }
+        }
 		//sy: modified logic		
         hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
         hvac_rpc_state_p->bytes_read = &bytes_read;
@@ -198,7 +231,7 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
         hvac_rpc_state_p->mutex = &mutex;
 
 		hvac_client_comm_gen_read_rpc(host, fd, buf, count, offset, hvac_rpc_state_p);
-		bytes_read = hvac_read_block(&done, &bytes_read, &cond, &mutex);   	
+		bytes_read = hvac_read_block(host, &done, &bytes_read, &cond, &mutex);   	
 	}
 	/* Non-HVAC Reads come from base */
 	return bytes_read;
@@ -226,7 +259,19 @@ ssize_t hvac_remote_lseek(int fd, int offset, int whence)
 void hvac_remote_close(int fd){
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		hvac_client_comm_gen_close_rpc(host, fd);             	
+		{
+            std::lock_guard<std::mutex> lock(timeout_mutex);
+            if (timeout_counters[host] >= TIMEOUT_LIMIT) {
+                L4C_INFO("Host %d reached timeout limit, skipping", host);
+                return; // sy: Skip further processing for this node
+            }
+        }
+		// sy: add
+		hvac_rpc_state_t_close *rpc_state = (hvac_rpc_state_t_close *)malloc(sizeof(hvac_rpc_state_t_close));
+    	rpc_state->done = false;
+    	rpc_state->timeout = false;
+		rpc_state->host = 0;
+		hvac_client_comm_gen_close_rpc(host, fd, rpc_state);             	
 	}
 }
 

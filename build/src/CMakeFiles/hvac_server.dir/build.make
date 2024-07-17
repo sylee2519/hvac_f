@@ -156,6 +156,12 @@ src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_logging.c.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/build.make
+src/hvac_server: /scratch/s5104a21/lib/log4c/lib/liblog4c.so
+src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libmercury_hl.so
+src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libmercury.so
+src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libmchecksum.so
+src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libmercury_util.so
+src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libna.so
 src/hvac_server: src/CMakeFiles/hvac_server.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable hvac_server"
 	cd /scratch/s5104a21/hvactest/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hvac_server.dir/link.txt --verbose=$(VERBOSE)

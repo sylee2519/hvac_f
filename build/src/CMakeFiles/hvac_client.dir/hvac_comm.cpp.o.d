@@ -349,39 +349,51 @@ src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o: \
  /usr/include/asm-generic/errno-base.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/charconv.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_string.tcc \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/map \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_tree.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/aligned_buffer.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/node_handle.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/optional \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/utility \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_relops.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/enable_special_members.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_map.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/tuple \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/array \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/uses_allocator.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/invoke.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_multimap.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/erase_if.h \
- /scratch/s5104a21/hvactest/src/hvac_data_mover_internal.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/queue \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/deque \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_uninitialized.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_deque.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/deque.tcc \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/vector \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_uninitialized.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_vector.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_bvector.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/vector.tcc \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/mutex \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/tuple \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/utility \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_relops.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/array \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/uses_allocator.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/invoke.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/chrono \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ratio \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ctime \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/parse_numbers.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/system_error \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/error_constants.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/stdexcept \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/std_mutex.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unique_lock.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/condition_variable \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/concurrence.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unique_ptr.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/shared_ptr.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/shared_ptr_base.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/allocated_ptr.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/refwrap.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/ext/aligned_buffer.h \
+ /scratch/s5104a21/hvactest/src/hvac_data_mover_internal.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/queue \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/deque \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_deque.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/deque.tcc \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_heap.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_queue.h \
- /scratch/s5104a21/hvactest/src/hvac_fault.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/unordered_map \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/hashtable_policy.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/limits \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/unordered_map.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/map \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_tree.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/node_handle.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/optional \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/enable_special_members.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_map.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/stl_multimap.h \
+ /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/erase_if.h \
  /scratch/s5104a21/hvactest/src/hvac_logging.h \
  /apps/compiler/gcc/10.2.0/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
  /scratch/s5104a21/lib/log4c/include/log4c.h \
@@ -411,9 +423,6 @@ src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o: \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/ios_base.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.h \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/locale_classes.tcc \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/system_error \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/x86_64-pc-linux-gnu/bits/error_constants.h \
- /apps/compiler/gcc/10.2.0/include/c++/10.2.0/stdexcept \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/streambuf \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/streambuf.tcc \
  /apps/compiler/gcc/10.2.0/include/c++/10.2.0/bits/basic_ios.h \

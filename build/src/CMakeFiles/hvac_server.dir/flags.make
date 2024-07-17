@@ -5,13 +5,13 @@
 # compile CXX with /apps/compiler/gcc/10.2.0/bin/g++
 C_DEFINES = -DHVAC_SERVER -D_GNU_SOURCE
 
-C_INCLUDES = -I/scratch/s5104a21/lib/mercury2/include -I/scratch/s5104a21/lib/boost/include -I/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include -I/scratch/s5104a21/lib/log4c/include -I/scratch/s5104a21/hvactest/include
+C_INCLUDES = -I/scratch/s5104a21/hvactest/include -isystem /scratch/s5104a21/lib/mercury2/include -isystem /scratch/s5104a21/lib/boost/include -isystem /apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include -isystem /scratch/s5104a21/lib/log4c/include
 
 C_FLAGS =  -fcommon -g -std=gnu11
 
 CXX_DEFINES = -DHVAC_SERVER -D_GNU_SOURCE
 
-CXX_INCLUDES = -I/scratch/s5104a21/lib/mercury2/include -I/scratch/s5104a21/lib/boost/include -I/apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include -I/scratch/s5104a21/lib/log4c/include -I/scratch/s5104a21/hvactest/include
+CXX_INCLUDES = -I/scratch/s5104a21/hvactest/include -isystem /scratch/s5104a21/lib/mercury2/include -isystem /scratch/s5104a21/lib/boost/include -isystem /apps/compiler/gcc/10.2.0/mpi/openmpi/4.1.1/include -isystem /scratch/s5104a21/lib/log4c/include
 
 CXX_FLAGS =  -fcommon -g -Wall -DDEBUG -std=gnu++17
 

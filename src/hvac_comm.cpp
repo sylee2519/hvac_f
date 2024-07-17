@@ -302,12 +302,14 @@ static hg_return_t
 hvac_close_rpc_handler(hg_handle_t handle)
 {
     hvac_close_in_t in;
+//    hvac_close_out_t out;
     int ret = HG_Get_input(handle, &in);
     assert(ret == HG_SUCCESS);
 
     L4C_INFO("Closing File %d\n",in.fd);
     ret = close(in.fd);
     assert(ret == 0);
+//	out.done = ret;
 
     //Signal to the data mover to copy the file
 	
@@ -321,8 +323,8 @@ hvac_close_rpc_handler(hg_handle_t handle)
         pthread_mutex_unlock(&data_mutex);
     }
 	pthread_mutex_unlock(&path_map_mutex); //sy: add
-
 	fd_to_path.erase(in.fd);
+//	HG_Respond(handle,NULL,NULL,&out);
     return (hg_return_t)ret;
 }
 

@@ -116,12 +116,12 @@ tests/clean: tests/CMakeFiles/basic_test.dir/clean
 src/CMakeFiles/hvac_client.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=3,4,5,6,7,8,9,10,11 "Built target hvac_client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=3,4,5,6,7,8,9,10 "Built target hvac_client"
 .PHONY : src/CMakeFiles/hvac_client.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/hvac_client.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/s5104a21/hvactest/build/CMakeFiles 9
+	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/s5104a21/hvactest/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/hvac_client.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /scratch/s5104a21/hvactest/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/hvac_client.dir/rule
@@ -142,7 +142,7 @@ src/CMakeFiles/hvac_client.dir/clean:
 src/CMakeFiles/hvac_server.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=12,13,14,15,16,17 "Built target hvac_server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=11,12,13,14,15,16 "Built target hvac_server"
 .PHONY : src/CMakeFiles/hvac_server.dir/all
 
 # Build rule for subdir invocation for target.

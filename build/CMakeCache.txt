@@ -242,7 +242,7 @@ PKG_CONFIG_ARGN:STRING=
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
 //Dependencies for the target
-hvac_client_LIB_DEPENDS:STATIC=general;pthread;general;dl;general;log4c;general;mercury_hl;general;mercury;general;mchecksum;general;mercury_util;general;na;
+hvac_client_LIB_DEPENDS:STATIC=general;pthread;general;dl;
 
 //Path to a library.
 pkgcfg_lib_LOG4C_log4c:FILEPATH=/scratch/s5104a21/lib/log4c/lib/liblog4c.so
@@ -490,8 +490,8 @@ PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
-__pkg_config_arguments_LOG4C:INTERNAL=REQUIRED;log4c
-__pkg_config_arguments_MERCURY:INTERNAL=REQUIRED;mercury
+__pkg_config_arguments_LOG4C:INTERNAL=REQUIRED;IMPORTED_TARGET;log4c
+__pkg_config_arguments_MERCURY:INTERNAL=REQUIRED;IMPORTED_TARGET;mercury
 __pkg_config_checked_LOG4C:INTERNAL=1
 __pkg_config_checked_MERCURY:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_LOG4C_log4c

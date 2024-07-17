@@ -8,6 +8,9 @@ extern "C" {
 }
 
 #include <string>
+#include <vector>
+#include <mutex>
+#include <condition_variable>
 using namespace std;
 
 
@@ -32,8 +35,22 @@ struct hvac_open_state_t{
     hg_bool_t *done;
     pthread_cond_t *cond;
     pthread_mutex_t *mutex;
-
 };
+
+struct hvac_rpc_state_t_close {
+    bool done;
+    bool timeout;
+	int local_fd;
+    uint32_t host;
+    hg_addr_t addr;
+    std::condition_variable cond;
+    std::mutex mutex;
+    hg_handle_t handle;
+};
+
+// sy: For detecting the failure
+extern std::vector<int> timeout_counters;
+extern mutex timeout_mutex;
 
 /* visible API for example RPC operation */
 
@@ -52,6 +69,7 @@ MERCURY_GEN_PROC(hvac_seek_in_t, ((int32_t)(fd))((int32_t)(offset))((int32_t)(wh
 
 //Close Handler input arg
 MERCURY_GEN_PROC(hvac_close_in_t, ((int32_t)(fd)))
+//MERCURY_GEN_PROC(hvac_close_out_t, ((int32_t)(done)))
 
 
 //General
@@ -66,19 +84,20 @@ void hvac_comm_free_addr(hg_addr_t addr);
 hg_class_t *hvac_comm_get_class();
 hg_context_t *hvac_comm_get_context();
 
-
 //Client
 void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int whence);
 void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void* buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p);
 void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p);
-void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd);
+void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state);
 hg_addr_t hvac_client_comm_lookup_addr(int rank);
 void hvac_client_comm_register_rpc();
-void hvac_client_block(hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex);
-ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex);
+void hvac_client_block(uint32_t host, hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex);
+ssize_t hvac_read_block(uint32_t host, hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex);
 ssize_t hvac_seek_block();
 
-
+//For FT
+void initialize_timeout_counters(int num_nodes);
+void monitor_timeout(hvac_rpc_state_t_close* rpc_state);
 /*sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size);
 

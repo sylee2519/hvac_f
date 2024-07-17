@@ -318,30 +318,6 @@ hvac_data_mover.cpp.s:
 	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.s
 .PHONY : hvac_data_mover.cpp.s
 
-hvac_fault_client.o: hvac_fault_client.cpp.o
-.PHONY : hvac_fault_client.o
-
-# target to build an object file
-hvac_fault_client.cpp.o:
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/hvac_fault_client.cpp.o
-.PHONY : hvac_fault_client.cpp.o
-
-hvac_fault_client.i: hvac_fault_client.cpp.i
-.PHONY : hvac_fault_client.i
-
-# target to preprocess a source file
-hvac_fault_client.cpp.i:
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/hvac_fault_client.cpp.i
-.PHONY : hvac_fault_client.cpp.i
-
-hvac_fault_client.s: hvac_fault_client.cpp.s
-.PHONY : hvac_fault_client.s
-
-# target to generate assembly for a file
-hvac_fault_client.cpp.s:
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/hvac_fault_client.cpp.s
-.PHONY : hvac_fault_client.cpp.s
-
 hvac_logging.o: hvac_logging.c.o
 .PHONY : hvac_logging.o
 
@@ -446,9 +422,6 @@ help:
 	@echo "... hvac_data_mover.o"
 	@echo "... hvac_data_mover.i"
 	@echo "... hvac_data_mover.s"
-	@echo "... hvac_fault_client.o"
-	@echo "... hvac_fault_client.i"
-	@echo "... hvac_fault_client.s"
 	@echo "... hvac_logging.o"
 	@echo "... hvac_logging.i"
 	@echo "... hvac_logging.s"

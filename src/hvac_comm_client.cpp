@@ -2,11 +2,10 @@
 #include <string>
 #include <iostream>
 #include <map>	
+#include <thread>
 
 #include "hvac_comm.h"
 #include "hvac_data_mover_internal.h"
-// sy: add
-#include "hvac_fault.h"
 
 extern "C" {
 #include "hvac_logging.h"
@@ -27,16 +26,43 @@ static hg_id_t hvac_client_rpc_id;
 static hg_id_t hvac_client_open_id;
 static hg_id_t hvac_client_close_id;
 static hg_id_t hvac_client_seek_id;
-// sy: add
-static hg_id_t hvac_client_update_id;
 ssize_t read_ret = -1;
 
 /* Mercury Data Caching */
 std::map<int, std::string> address_cache;
 extern std::map<int, int > fd_redir_map;
-// sy: add
-std::map<std::string, std::string> exclusive_data;
-int tmp = 0;
+
+/* for Fault tolerance */
+std::vector<int> timeout_counters;
+std::mutex timeout_mutex;
+
+/* sy: Monitor function to detect the timeout for asyncronous close operation */
+void monitor_timeout(hvac_rpc_state_t_close* rpc_state) {
+    std::unique_lock<std::mutex> lock(rpc_state->mutex);
+    if (!rpc_state->done) {
+        if (rpc_state->cond.wait_for(lock, std::chrono::seconds(TIMEOUT_SECONDS)) == std::cv_status::timeout) {
+            L4C_INFO("TIMEOUT: HVAC remote close operation failed due to timeout");
+            rpc_state->timeout = true;
+			rpc_state->done = true;
+			{
+				std::lock_guard<std::mutex> timeout_lock(timeout_mutex);
+            	timeout_counters[rpc_state->host]++;
+			}
+            HG_Cancel(rpc_state->handle); // Cancel the RPC
+        }
+    }
+    // Wait for the callback to confirm completion if it wasn't a timeout
+    while (!rpc_state->done) {
+        rpc_state->cond.wait(lock);
+    }
+    // Perform cleanup
+	fd_redir_map.erase(rpc_state->local_fd);
+    HG_Destroy(rpc_state->handle);
+    hvac_comm_free_addr(rpc_state->addr);
+    // Clean up the allocated memory
+    free(rpc_state);
+}
+
 
 static hg_return_t
 hvac_seek_cb(const struct hg_cb_info *info)
@@ -138,6 +164,20 @@ hvac_read_cb(const struct hg_cb_info *info)
     return HG_SUCCESS;
 }
 
+// sy: add for timeout monitoring
+static hg_return_t
+hvac_close_cb(const struct hg_cb_info *info)
+{
+    hvac_rpc_state_t_close* rpc_state = (hvac_rpc_state_t_close*)info->arg;
+    std::lock_guard<std::mutex> lock(rpc_state->mutex);
+    rpc_state->done = true;
+    rpc_state->cond.notify_all();
+
+
+	return HG_SUCCESS;
+}
+
+
 void hvac_client_comm_register_rpc()
 {   
     hvac_client_open_id = hvac_open_rpc_register();
@@ -146,54 +186,62 @@ void hvac_client_comm_register_rpc()
     hvac_client_seek_id = hvac_seek_rpc_register();
 }
 
-void hvac_client_block(hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex)
+void hvac_client_block(uint32_t host, hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     /* wait for callbacks to finish */
-	// sy: modified logic
+	// sy: modified logic + jh: timeout logic
 	int wait_status;
+    
     struct timespec timeout;
     clock_gettime(CLOCK_REALTIME, &timeout);
     timeout.tv_sec += TIMEOUT_SECONDS;
 
-	
-	pthread_mutex_lock(mutex);
-	while(*done != HG_TRUE){
-//		pthread_cond_wait(cond, mutex);
-		wait_status = pthread_cond_timedwait(cond, mutex, &timeout);
-		if (wait_status == ETIMEDOUT){
+    pthread_mutex_lock(mutex);
+    while (*done != HG_TRUE){
+	    wait_status = pthread_cond_timedwait(cond, mutex, &timeout);
+	    if (wait_status == ETIMEDOUT){
 		    L4C_INFO("TIMEOUT: Timeout period elapsed in hvac_client_block");
-		    break;
+			// Timeout counter update
+			{
+				std::lock_guard<std::mutex> lock(timeout_mutex);
+            	timeout_counters[host]++;
+			}
+            pthread_mutex_unlock(mutex);
+		    return;
 	    }
-	}
-	pthread_mutex_unlock(mutex);
+     }
+     pthread_mutex_unlock(mutex);
 
 }
 
-ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex)
+ssize_t hvac_read_block(uint32_t host, hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
-	// sy: modified logic
-	ssize_t bytes_read;
-    struct timespec timeout;
-    int wait_status;
+	// sy: modified logic + jh: timeout logic
+
+	struct timespec timeout;
+	int wait_status;
     clock_gettime(CLOCK_REALTIME, &timeout);
     timeout.tv_sec += TIMEOUT_SECONDS;
 
-//	L4C_INFO("before readblock\n");
+	L4C_INFO("before readblock\n");
 	pthread_mutex_lock(mutex);
 
     while (*done != HG_TRUE) {
- //       pthread_cond_wait(cond, mutex);
-		wait_status = pthread_cond_timedwait(&done_cond, &done_mutex, &timeout);
-        if (wait_status == ETIMEDOUT)
-	    {
-	    	L4C_INFO("TIMEOUT: HVAC remote read failed due to timeout; it will be redirected to pfs"); //Does this deregister memory?
+		wait_status = pthread_cond_timedwait(cond, mutex, &timeout);
+        if (wait_status == ETIMEDOUT){
+	    	L4C_INFO("TIMEOUT: HVAC remote read failed due to timeout; it will be redirected to pfs");
+			// Timeout counter update
+			{
+				std::lock_guard<std::mutex> lock(timeout_mutex);
+            	timeout_counters[host]++;
+			}
 		    pthread_mutex_unlock(mutex);
 		    return -1;
     	}
     }
     ssize_t result = *bytes_read;
     pthread_mutex_unlock(mutex);
-//	L4C_INFO("outside readblock\n");
+	L4C_INFO("outside readblock\n");
     return result;
 	
 }
@@ -212,7 +260,7 @@ ssize_t hvac_seek_block()
 }
 
 
-void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd)
+void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state)
 {   
     hg_addr_t svr_addr; 
     hvac_close_in_t in;
@@ -221,17 +269,24 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd)
 
     /* Get address */
     svr_addr = hvac_client_comm_lookup_addr(svr_hash);        
+	rpc_state->addr = svr_addr;	//sy: add
+	rpc_state->host = svr_hash;
 
     /* create create handle to represent this rpc operation */
     hvac_comm_create_handle(svr_addr, hvac_client_close_id, &handle);
+	rpc_state->handle = handle; //sy: add
 
     in.fd = fd_redir_map[fd];
-
+	rpc_state->local_fd = fd;
     ret = HG_Forward(handle, NULL, NULL, &in);
+//    ret = HG_Forward(handle, hvac_close_cb, rpc_state, &in); //sy: modified
     assert(ret == 0);
 
-    fd_redir_map.erase(fd);
+	/* Spawn a thread to monitor the timeout */
+//    std::thread timeout_thread(monitor_timeout, rpc_state);
+//    timeout_thread.detach(); // Detach to allow independent execution
 
+    fd_redir_map.erase(fd);
     HG_Destroy(handle);
     hvac_comm_free_addr(svr_addr);
 
