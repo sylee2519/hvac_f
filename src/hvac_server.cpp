@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "hvac_comm.h"
 #include "hvac_data_mover_internal.h"
-#include "hvac_fault.h"
+
 
 #define HVAC_SERVER 1
 
@@ -14,7 +14,6 @@ extern "C" {
 
 __thread bool tl_disable_redirect = false;
 uint32_t hvac_server_count = 0;
-std::unordered_map<hg_addr_t, std::vector<Data>> data_storage;
 
 struct hvac_lookup_arg {
 	hg_class_t *hg_class;
@@ -44,7 +43,7 @@ int hvac_start_comm_server(void)
     hvac_open_rpc_register();
     hvac_close_rpc_register();
     hvac_seek_rpc_register();
-    hvac_update_rpc_register(); // sy: add
+
 
 
     while (1)

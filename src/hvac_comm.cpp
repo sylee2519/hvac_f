@@ -1,6 +1,5 @@
 #include "hvac_comm.h"
 #include "hvac_data_mover_internal.h"
-#include "hvac_fault.h"
 
 extern "C" {
 #include "hvac_logging.h"
@@ -13,14 +12,13 @@ extern "C" {
 #include <string>
 #include <iostream>
 #include <map>	
-#include <unordered_map>
+
 
 static hg_class_t *hg_class = NULL;
 static hg_context_t *hg_context = NULL;
 static int hvac_progress_thread_shutdown_flags = 0;
 static int hvac_server_rank = -1;
 static int server_rank = -1;
-hg_addr_t my_address = HG_ADDR_NULL;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -28,68 +26,28 @@ struct hvac_rpc_state {
     void *buffer;
     hg_bulk_t bulk_handle;
     hg_handle_t handle;
-	hg_addr_t node;
-    char path[256];
     hvac_rpc_in_t in;
 };
-
-struct hvac_update_rpc_state {
-    hg_size_t size;
-    void *buffer;
-    hg_bulk_t bulk_handle;
-    hg_handle_t handle;
-	hg_addr_t node;
-    char path[256];
-    hvac_update_in_t in;
-};
-
-// sy: add
-std::map<std::string, std::string> deserialize_map(void* buffer, hg_size_t size) {
-    std::map<std::string, std::string> map;
-    char* ptr = (char*)buffer;
-    char* end = ptr + size;
-
-    while (ptr < end) {
-        std::string first = std::string(ptr);
-        ptr += first.size() + 1;
-        std::string second = std::string(ptr);
-        ptr += second.size() + 1;
-        map[first] = second;
-    }
-	L4C_INFO("deserialization\n");
-	for (const auto& pair : map) {
-        L4C_INFO("Key: %s, Value: %s\n", pair.first.c_str(), pair.second.c_str());
-    }
-
-    return map;
-}
-
 
 //Initialize communication for both the client and server
 //processes
 //This is based on the rpc_engine template provided by the mercury lib
-
 void hvac_init_comm(hg_bool_t listen)
 {
-	L4C_INFO("init\n");
 	const char *info_string = "ofi+tcp://";  
-	char *rank_str = getenv("PMI_RANK"); //PMIX_RANK
-	
-    if (rank_str == NULL) {
-        L4C_FATAL("RANK environment variable is not set\n");
-        exit(EXIT_FAILURE);
-	}
-  
+	char *rank_str = getenv("PMI_RANK");  
     server_rank = atoi(rank_str);
     pthread_t hvac_progress_tid;
 
     HG_Set_log_level("DEBUG");
 
+    /* Initialize Mercury with the desired network abstraction class */
     hg_class = HG_Init(info_string, listen);
 	if (hg_class == NULL){
 		L4C_FATAL("Failed to initialize HG_CLASS Listen Mode : %d\n", listen);
 	}
 
+    /* Create HG context */
     hg_context = HG_Context_create(hg_class);
 	if (hg_context == NULL){
 		L4C_FATAL("Failed to initialize HG_CONTEXT\n");
@@ -183,6 +141,22 @@ void hvac_comm_list_addr()
 }
 
 
+char *buffer_to_hex(const void *buf, size_t size) {
+    const char *hex_digits = "0123456789ABCDEF";
+    const unsigned char *buffer = (const unsigned char *)buf;
+
+    char *hex_str = (char *)malloc(size * 2 + 1); // 2 hex chars per byte + null terminator
+    if (!hex_str) {
+        perror("malloc");
+        return NULL;
+    }
+    for (size_t i = 0; i < size; ++i) {
+        hex_str[i * 2] = hex_digits[(buffer[i] >> 4) & 0xF];
+        hex_str[i * 2 + 1] = hex_digits[buffer[i] & 0xF];
+    }
+    hex_str[size * 2] = '\0'; // Null terminator
+    return hex_str;
+}
 
 /* callback triggered upon completion of bulk transfer */
 static hg_return_t
@@ -192,12 +166,22 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     int ret;
     hvac_rpc_out_t out;
     out.ret = hvac_rpc_state_p->size;
-
+	L4C_INFO("out.ret server %d\n", out.ret);
     assert(info->ret == 0);
-
-
+// sy: commented
+	
+//	 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+  //          if (hex_buf) {
+    //            L4C_INFO("Buffer content before rpc transfer: %s", hex_buf);
+      //          free(hex_buf);
+        //    }
     ret = HG_Respond(hvac_rpc_state_p->handle, NULL, NULL, &out);
     assert(ret == HG_SUCCESS);        
+//	char *hex_buff = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+  //          if (hex_buff) {
+    //            L4C_INFO("Buffer content after rpc transfer: %s", hex_buff);
+      //          free(hex_buff);
+        //    }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	L4C_INFO("Info Server: Freeing Bulk Handle\n");
@@ -206,7 +190,6 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     free(hvac_rpc_state_p);
     return (hg_return_t)0;
 }
-
 
 
 static hg_return_t
@@ -229,8 +212,6 @@ hvac_rpc_handler(hg_handle_t handle)
     hvac_rpc_state_p->size = hvac_rpc_state_p->in.input_val;
     hvac_rpc_state_p->handle = handle;
 
-
-
     /* register local target buffer for bulk access */
 
     hgi = HG_Get_info(handle);
@@ -243,25 +224,53 @@ hvac_rpc_handler(hg_handle_t handle)
     if (hvac_rpc_state_p->in.offset == -1){
         readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
         L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
+		if (readbytes < 0) {
+            readbytes = read(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
+		}
     }else
     {
         readbytes = pread(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
-        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
-    }
+        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
+		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+            if (hex_buf) {
+                L4C_INFO("Buffer content after remote read: %s", hex_buf);
+                free(hex_buf);
+            }
+	
+		if (readbytes < 0) { //sy: add
+        const char* original_path = fd_to_path[hvac_rpc_state_p->in.accessfd].c_str();
+        int original_fd = open(original_path, O_RDONLY);
+        if (original_fd != -1) {
+            readbytes = pread(original_fd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
+            L4C_DEBUG("Server Rank %d : Retry PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
+            close(original_fd);
+        } else {
+			readbytes = pread(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
+            if(readbytes<0){
+				L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
+			}
+        }
+    	}
+	}
 
     //Reduce size of transfer to what was actually read 
     //We may need to revisit this.
     hvac_rpc_state_p->size = readbytes;
-
+	L4C_DEBUG("readbytes before transfer %d\n", readbytes);
     /* initiate bulk transfer from client to server */
     ret = HG_Bulk_transfer(hgi->context, hvac_rpc_handler_bulk_cb, hvac_rpc_state_p,
         HG_BULK_PUSH, hgi->addr, hvac_rpc_state_p->in.bulk_handle, 0,
         hvac_rpc_state_p->bulk_handle, 0, hvac_rpc_state_p->size, HG_OP_ID_IGNORE);
+ 
     assert(ret == 0);
+
     (void) ret;
 
     return (hg_return_t)ret;
 }
+
+
 
 
 static hg_return_t
@@ -272,18 +281,21 @@ hvac_open_rpc_handler(hg_handle_t handle)
     int ret = HG_Get_input(handle, &in);
     assert(ret == 0);
     string redir_path = in.path;
-
+	
+	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(redir_path) != path_cache_map.end())
     {
         L4C_INFO("Server Rank %d : Successful Redirection %s to %s", server_rank, redir_path.c_str(), path_cache_map[redir_path].c_str());
         redir_path = path_cache_map[redir_path];
     }
+	pthread_mutex_unlock(&path_map_mutex); //sy: add
     L4C_INFO("Server Rank %d : Successful Open %s", server_rank, in.path);    
     out.ret_status = open(redir_path.c_str(),O_RDONLY);  
     fd_to_path[out.ret_status] = in.path;  
     HG_Respond(handle,NULL,NULL,&out);
 
     return (hg_return_t)ret;
+
 }
 
 static hg_return_t
@@ -298,14 +310,17 @@ hvac_close_rpc_handler(hg_handle_t handle)
     assert(ret == 0);
 
     //Signal to the data mover to copy the file
+	
+	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(fd_to_path[in.fd]) == path_cache_map.end())
     {
         L4C_INFO("Caching %s",fd_to_path[in.fd].c_str());
         pthread_mutex_lock(&data_mutex);
-        pthread_cond_signal(&data_cond);
         data_queue.push(fd_to_path[in.fd]);
+        pthread_cond_signal(&data_cond);
         pthread_mutex_unlock(&data_mutex);
     }
+	pthread_mutex_unlock(&path_map_mutex); //sy: add
 
 	fd_to_path.erase(in.fd);
     return (hg_return_t)ret;
@@ -324,163 +339,6 @@ hvac_seek_rpc_handler(hg_handle_t handle)
     HG_Respond(handle,NULL,NULL,&out);
 
     return (hg_return_t)ret;
-}
-
-static hg_return_t bulk_transfer_cb(const struct hg_cb_info *info) {
-    if (info->ret != HG_SUCCESS) {
-        fprintf(stderr, "Bulk transfer failed with error %d\n", info->ret);
-        return info->ret;
-    }
-
-    hvac_update_rpc_state *state = (hvac_update_rpc_state *)info->arg;
-	if (!state) {
-        fprintf(stderr, "Invalid state in bulk_transfer_cb\n");
-        return HG_PROTOCOL_ERROR;
-    }	
-
-//	HG_Bulk_free(state->bulk_handle);
-
-	std::map<std::string, std::string> tmp_map = deserialize_map(state->buffer, state->size);
-
-	for (const auto& entry : tmp_map) {
-        L4C_INFO("Received path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-    }
-
-    // Retrieve the address of the originator
-	const struct hg_info *hgi = HG_Get_info(state->handle);
-	if (!hgi) {
-        fprintf(stderr, "Failed to get hg_info in bulk_transfer_cb\n");
-        return HG_PROTOCOL_ERROR;
-    }
-
-    hg_addr_t client_addr = hgi->addr;
-    hvac_get_addr();
-    int cmp_result = HG_Addr_cmp(hgi->hg_class, client_addr, my_address);
-
-	// Update path_cache_map
-	if (cmp_result == 0) {
-        L4C_INFO("path_cache_map before update:");
-        for (const auto& entry : path_cache_map) {
-			if (entry.first.empty() || entry.second.empty()) {
-            	L4C_INFO("Invalid path or cache value: path=%s, cache=%s", entry.first.c_str(), entry.second.c_str());
-            	continue;
-        	}
-        	if (entry.first.data() == nullptr || entry.second.data() == nullptr) {
-            	L4C_INFO("Null data encountered: path=%s, cache=%s", entry.first.c_str(), entry.second.c_str());
-            	continue;
-        	}
-        	L4C_INFO("Updating path_cache_map with path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-        	path_cache_map[entry.first] = entry.second;
-        }
-
-        L4C_INFO("path_cache_map after update:");
-        for (const auto& entry : path_cache_map) {
-            L4C_INFO("path: %s, cache: %s", entry.first.c_str(), entry.second.c_str());
-        }
-    }
-	else { // Exclusive copy
-        L4C_INFO("Exclusive copy received\n:");
-        std::vector<Data> data_vector;
-		for (const auto& entry : path_cache_map) {
-            if (entry.first.empty() || entry.second.empty()) {
-            	L4C_INFO("Invalid path or cache value: path=%s, cache=%s", entry.first.c_str(), entry.second.c_str());
-            	continue;
-        	}
-			Data data;
-			strncpy(data.file_path, entry.first.c_str(), sizeof(data.file_path));
-            data.file_path[sizeof(data.file_path) - 1] = '\0';  // Ensure null termination
-            data.size = entry.second.size();
-            data.value = malloc(data.size);
-            if (data.value) {
-                memcpy(data.value, entry.second.c_str(), data.size);
-            }
-            data_vector.push_back(data);
-        }
-		// This part is to append the exclusive data to the memory data structure
-		auto it = data_storage.find(client_addr);
-    	if (it != data_storage.end()) {
-        	it->second.insert(it->second.end(), data_vector.begin(), data_vector.end());
-    	} 
-		else {
-        	data_storage[client_addr] = data_vector;
-    	}
-    }
-	HG_Bulk_free(state->bulk_handle);
-    free(state->buffer);
-    HG_Free_input(state->handle, &state->in);
-    HG_Destroy(state->handle);
-	hg_return_t ret = HG_Addr_free(HG_Get_info(state->handle)->hg_class, state->node);
-    free(state);
-
-    return HG_SUCCESS;
-}
-
-// sy: add
-// update rpc handler (server-side)
-static hg_return_t 
-hvac_update_rpc_handler(hg_handle_t handle) {
-    hvac_update_in_t in;
-
-    int ret = HG_Get_input(handle, &in);
-    if (ret != HG_SUCCESS) {
-        fprintf(stderr, "Error in HG_Get_input\n");
-        return (hg_return_t)ret;
-    }
-
-    hg_size_t bulk_size = in.bulk_size;;
-    void* bulk_buf = malloc(bulk_size);
-    if (!bulk_buf) {
-        fprintf(stderr, "Failed to allocate buffer for bulk transfer\n");
-        HG_Free_input(handle, &in);
-        return HG_NOMEM_ERROR;
-    }
-
-	// bulk hander creation
-	hg_bulk_t local_bulk_handle;
-    ret = HG_Bulk_create(HG_Get_info(handle)->hg_class, 1, &bulk_buf, &bulk_size, HG_BULK_READWRITE, &local_bulk_handle);
-    if (ret != HG_SUCCESS) {
-        fprintf(stderr, "Error in HG_Bulk_create\n");
-        free(bulk_buf);
-        HG_Free_input(handle, &in);
-        return (hg_return_t)ret;
-    }
-
-	hvac_update_rpc_state *state = (hvac_update_rpc_state *)malloc(sizeof(hvac_update_rpc_state));
-    state->buffer = bulk_buf;
-    state->bulk_handle = local_bulk_handle;
-    state->handle = handle;
-    state->in = in;
-
-    // Perform bulk transfer from client to server
-    const struct hg_info* hgi = HG_Get_info(handle);
-    ret = HG_Bulk_transfer(hgi->context, bulk_transfer_cb, state, HG_BULK_PULL, hgi->addr, in.bulk_handle, 0, local_bulk_handle, 0, bulk_size, HG_OP_ID_IGNORE);
-	if (ret != HG_SUCCESS) {
-        fprintf(stderr, "Error in HG_Bulk_transfer\n");
-        HG_Bulk_free(local_bulk_handle);
-		free(bulk_buf);
-        HG_Free_input(handle, &in);
-        return (hg_return_t)ret;
-    }
-  
-    return HG_SUCCESS;
-}
-
-void hvac_get_addr() {
-
-    if(my_address == HG_ADDR_NULL){
-        L4C_INFO("my_address empty\n");
-        hg_addr_t client_addr;
-        hg_size_t size = PATH_MAX;
-        char addr_buffer[PATH_MAX];
-
-        HG_Addr_self(hvac_comm_get_class(), &client_addr);
-        HG_Addr_to_string(hvac_comm_get_class(), addr_buffer, &size, client_addr);
-        HG_Addr_free(hvac_comm_get_class(), client_addr);
-
-        std::string address = std::string(addr_buffer);
-        HG_Addr_lookup2(hvac_comm_get_class(), address.c_str(), &my_address);
-        L4C_INFO("my_address %s\n", address.c_str());
-    }
 }
 
 
@@ -534,22 +392,6 @@ hvac_seek_rpc_register(void)
 
     return tmp;
 }
-
-/* This function is to update the file paths in server side */
-hg_id_t
-hvac_update_rpc_register(void)
-{
-    hg_id_t tmp;
-
-    tmp = MERCURY_REGISTER(
-        hg_class, "hvac_update_rpc", hvac_update_in_t, void, hvac_update_rpc_handler);
-	
-	int ret =  HG_Registered_disable_response(hg_class, tmp,
-                                           HG_TRUE);
-	assert(ret == HG_SUCCESS);
-    return tmp;
-}
-
 
 /* Create context even for client */
 void
