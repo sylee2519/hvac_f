@@ -63,7 +63,6 @@ static void __attribute__((constructor)) hvac_client_init()
     }
     
 	/* sy: add */
-	initialize_timeout_counters(g_hvac_server_count);
 	initialize_hash_ring(g_hvac_server_count, VIRTUAL_NODE_CNT);
 
     g_hvac_initialized = true;
@@ -78,11 +77,7 @@ static void __attribute((destructor)) hvac_client_shutdown()
 	delete hashRing;
 }
 
-//sy: add. initialization function for timeout counter
-void initialize_timeout_counters(int num_nodes) {
-    timeout_counters.resize(num_nodes, 0);
-}
-
+//sy: add. initialization function for hash ring & timeout counter
 void initialize_hash_ring(int serverCount, int vnodes) {
     hashRing = new HashRing<string, string>(vnodes);
     for (int i = 1; i <= serverCount; ++i) {
@@ -144,7 +139,6 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			/* I think I only need to do this once */
 			hvac_client_comm_register_rpc();
 			g_mercury_init = true;
-			initialize_timeout_counters(g_hvac_server_count);
 			initialize_hash_ring(g_hvac_server_count, VIRTUAL_NODE_CNT);
 		}
 		// sy: modified logic
@@ -165,10 +159,9 @@ bool hvac_track_file(const char *path, int flags, int fd)
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
 				hashRing->RemoveNode(hostname);
 				failure_flags[host] = true;
-				hostname = hashRing->GetNode(fd_map[fd]);
+				hostname = hashRing->GetNode(fd_map[fd]); // sy: Imediately directed to the new node
                 host = hashRing->ConvertHostToNumber(hostname);
 				L4C_INFO("new host %d\n", host);
-//                return false; // sy: Skip further processing for this node
             }
         }
 
@@ -196,6 +189,9 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 	pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
+	/* sy: Determine the node failure by checking the timeout limit and failure flags.
+			If the failure is detected, 1) remove the node from the hash ring
+			2) erase the fd from the fd_map */
 	if (hvac_file_tracked(fd)){
 //		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		string hostname = hashRing->GetNode(fd_map[fd]);
@@ -246,6 +242,9 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
     pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
+    /* sy: Determine the node failure by checking the timeout limit and failure flags.
+            If the failure is detected, 1) remove the node from the hash ring
+            2) erase the fd from the fd_map */
 	if (hvac_file_tracked(fd)){
 //		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		string hostname = hashRing->GetNode(fd_map[fd]);

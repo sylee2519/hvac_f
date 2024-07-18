@@ -95,7 +95,6 @@ ssize_t hvac_read_block(uint32_t host, hg_bool_t *done, ssize_t *bytes_read, pth
 ssize_t hvac_seek_block();
 
 //For FT
-void initialize_timeout_counters(int num_nodes);
 void initialize_hash_ring(int serverCount, int vnodes);
 /*sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size);
