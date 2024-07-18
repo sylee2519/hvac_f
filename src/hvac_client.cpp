@@ -210,9 +210,10 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
-                hostname = hashRing->GetNode(fd_map[fd]);
-                host = hashRing->ConvertHostToNumber(hostname);
-                L4C_INFO("new host %d\n", host);
+//                hostname = hashRing->GetNode(fd_map[fd]);
+//                host = hashRing->ConvertHostToNumber(hostname);
+				fd_map.erase(fd);
+				return bytes_read;;				
             }
         }	
 		// sy: modified logic
@@ -259,9 +260,11 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
-                hostname = hashRing->GetNode(fd_map[fd]);
-                host = hashRing->ConvertHostToNumber(hostname);
-                L4C_INFO("new host %d\n", host);
+//                hostname = hashRing->GetNode(fd_map[fd]);
+//                host = hashRing->ConvertHostToNumber(hostname);
+//                L4C_INFO("new host %d\n", host);
+				fd_map.erase(fd);
+				return bytes_read;
             }
         }
 		//sy: modified logic		
