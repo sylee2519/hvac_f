@@ -36,34 +36,6 @@ extern std::map<int, int > fd_redir_map;
 std::vector<int> timeout_counters;
 std::mutex timeout_mutex;
 
-/* sy: Monitor function to detect the timeout for asyncronous close operation */
-void monitor_timeout(hvac_rpc_state_t_close* rpc_state) {
-    std::unique_lock<std::mutex> lock(rpc_state->mutex);
-    if (!rpc_state->done) {
-        if (rpc_state->cond.wait_for(lock, std::chrono::seconds(TIMEOUT_SECONDS)) == std::cv_status::timeout) {
-            L4C_INFO("TIMEOUT: HVAC remote close operation failed due to timeout");
-            rpc_state->timeout = true;
-			rpc_state->done = true;
-			{
-				std::lock_guard<std::mutex> timeout_lock(timeout_mutex);
-            	timeout_counters[rpc_state->host]++;
-			}
-            HG_Cancel(rpc_state->handle); // Cancel the RPC
-        }
-    }
-    // Wait for the callback to confirm completion if it wasn't a timeout
-    while (!rpc_state->done) {
-        rpc_state->cond.wait(lock);
-    }
-    // Perform cleanup
-	fd_redir_map.erase(rpc_state->local_fd);
-    HG_Destroy(rpc_state->handle);
-    hvac_comm_free_addr(rpc_state->addr);
-    // Clean up the allocated memory
-    free(rpc_state);
-}
-
-
 static hg_return_t
 hvac_seek_cb(const struct hg_cb_info *info)
 {
@@ -163,20 +135,6 @@ hvac_read_cb(const struct hg_cb_info *info)
 	
     return HG_SUCCESS;
 }
-
-// sy: add for timeout monitoring
-static hg_return_t
-hvac_close_cb(const struct hg_cb_info *info)
-{
-    hvac_rpc_state_t_close* rpc_state = (hvac_rpc_state_t_close*)info->arg;
-    std::lock_guard<std::mutex> lock(rpc_state->mutex);
-    rpc_state->done = true;
-    rpc_state->cond.notify_all();
-
-
-	return HG_SUCCESS;
-}
-
 
 void hvac_client_comm_register_rpc()
 {   
@@ -279,12 +237,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     in.fd = fd_redir_map[fd];
 	rpc_state->local_fd = fd;
     ret = HG_Forward(handle, NULL, NULL, &in);
-//    ret = HG_Forward(handle, hvac_close_cb, rpc_state, &in); //sy: modified
     assert(ret == 0);
-
-	/* Spawn a thread to monitor the timeout */
-//    std::thread timeout_thread(monitor_timeout, rpc_state);
-//    timeout_thread.detach(); // Detach to allow independent execution
 
     fd_redir_map.erase(fd);
     HG_Destroy(handle);
