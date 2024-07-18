@@ -14,7 +14,7 @@ extern "C" {
 #include <unistd.h>
 }
 
-#define TIMEOUT_SECONDS 1 
+#define TIMEOUT_SECONDS 2 
 
 /* RPC Block Constructs */
 static hg_bool_t done = HG_FALSE;

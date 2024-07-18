@@ -98,6 +98,7 @@ ssize_t hvac_seek_block();
 //For FT
 void initialize_timeout_counters(int num_nodes);
 void monitor_timeout(hvac_rpc_state_t_close* rpc_state);
+void initialize_hash_ring(int serverCount, int vnodes);
 /*sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size);
 
