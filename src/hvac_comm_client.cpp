@@ -14,7 +14,7 @@ extern "C" {
 #include <unistd.h>
 }
 
-#define TIMEOUT_SECONDS 2 
+#define TIMEOUT_SECONDS 5 
 
 /* RPC Block Constructs */
 static hg_bool_t done = HG_FALSE;
@@ -65,6 +65,12 @@ hvac_open_cb(const struct hg_cb_info *info)
     struct hvac_open_state_t *hvac_open_state_p = (struct hvac_open_state_t *)info->arg;    
     
     assert(info->ret == HG_SUCCESS);
+	if (info->ret != HG_SUCCESS) {
+        L4C_INFO("RPC failed: %s", HG_Error_to_string(info->ret));
+//        HG_Destroy(info->info.forward.handle);
+ //       free(hvac_open_state_p);
+ //       return HG_FAULT;
+    }	
     HG_Get_output(info->info.forward.handle, &out);    
     fd_redir_map[hvac_open_state_p->local_fd] = out.ret_status;
 	L4C_INFO("Open RPC Returned FD %d\n",out.ret_status);
@@ -95,20 +101,29 @@ hvac_read_cb(const struct hg_cb_info *info)
     assert(info->ret == HG_SUCCESS);
 	if (info->ret != HG_SUCCESS) {
         L4C_INFO("RPC failed: %s", HG_Error_to_string(info->ret));
+//		ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
+//		ret = HG_Destroy(info->info.forward.handle);
+//		free(hvac_rpc_state_p);
+//		return HG_FAULT;						
 	} 
 	else{
     /* decode response */
     	ret = HG_Get_output(info->info.forward.handle, &out);
 		if (ret != HG_SUCCESS) {
-    		L4C_INFO("Failed to get output: %s", HG_Error_to_string(ret));
+    		L4C_INFO("Failed to get output: %s", HG_Error_to_string(ret));				
    		}
 		else {
 			*(hvac_rpc_state_p->bytes_read) = out.ret;
 			L4C_INFO("out.ret %d\n", out.ret);
 			if (out.ret < 0) {
             	L4C_INFO("Server-side read failed with result: %zd", out.ret);
+
 			}	
  	   		ret = HG_Free_output(info->info.forward.handle, &out);
+//			ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
+//			ret = HG_Destroy(info->info.forward.handle);
+//			free(hvac_rpc_state_p);
+//			return HG_FAULT;			
 			assert(ret == HG_SUCCESS);
 		}
 	} 
@@ -200,6 +215,10 @@ ssize_t hvac_read_block(uint32_t host, hg_bool_t *done, ssize_t *bytes_read, pth
     ssize_t result = *bytes_read;
     pthread_mutex_unlock(mutex);
 	L4C_INFO("outside readblock\n");
+	if (result < 0) {
+        L4C_INFO("HVAC remote read failed with error %zd; %zd returned\n", result, result);
+        return result;
+    }
     return result;
 	
 }

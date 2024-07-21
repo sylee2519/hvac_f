@@ -221,6 +221,8 @@ hvac_rpc_handler(hg_handle_t handle)
         &hvac_rpc_state_p->bulk_handle);
     assert(ret == 0);
 
+	hvac_rpc_out_t out;
+
     if (hvac_rpc_state_p->in.offset == -1){
         readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
         L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
@@ -245,15 +247,27 @@ hvac_rpc_handler(hg_handle_t handle)
             readbytes = pread(original_fd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
             L4C_DEBUG("Server Rank %d : Retry PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
             close(original_fd);
-        } else {
+        } 
+		else {
 			readbytes = pread(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
             if(readbytes<0){
 				L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
 			}
         }
+		if(readbytes<0){
+			L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
+                HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
+                free(hvac_rpc_state_p->buffer);
+                L4C_DEBUG("server read failed -1\n");
+                out.ret = -1;  // Indicate failure
+                HG_Respond(handle, NULL, NULL, &out);
+                free(hvac_rpc_state_p);
+                return HG_SUCCESS;
+		}
+
     	}
 	}
-
+	
     //Reduce size of transfer to what was actually read 
     //We may need to revisit this.
     hvac_rpc_state_p->size = readbytes;
@@ -308,7 +322,7 @@ hvac_close_rpc_handler(hg_handle_t handle)
 
     L4C_INFO("Closing File %d\n",in.fd);
     ret = close(in.fd);
-    assert(ret == 0);
+//    assert(ret == 0);
 //	out.done = ret;
 
     //Signal to the data mover to copy the file

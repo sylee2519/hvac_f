@@ -250,7 +250,6 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
 	MAP_OR_FAIL(pread);
 
 	const char *path = hvac_get_path(fd);
-	
 
 	if (path)
 	{                

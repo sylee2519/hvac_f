@@ -209,7 +209,7 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 //                hostname = hashRing->GetNode(fd_map[fd]);
 //                host = hashRing->ConvertHostToNumber(hostname);
 				fd_map.erase(fd);
-				return bytes_read;;				
+				return bytes_read;	
             }
         }	
 		// sy: modified logic
@@ -221,6 +221,9 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 
 		hvac_client_comm_gen_read_rpc(host, fd, buf, count, -1, hvac_rpc_state_p);
 		bytes_read = hvac_read_block(host, &done, &bytes_read, &cond, &mutex);		
+		if(bytes_read == -1){
+            fd_map.erase(fd);
+        }
 	}
 	/* Non-HVAC Reads come from base */
 	return bytes_read;
@@ -275,6 +278,9 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 
 		hvac_client_comm_gen_read_rpc(host, fd, buf, count, offset, hvac_rpc_state_p);
 		bytes_read = hvac_read_block(host, &done, &bytes_read, &cond, &mutex);   	
+		if(bytes_read == -1){
+			fd_map.erase(fd);
+		}
 	}
 	/* Non-HVAC Reads come from base */
 	return bytes_read;
