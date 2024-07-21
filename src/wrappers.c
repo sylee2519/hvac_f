@@ -93,6 +93,7 @@ int WRAP_DECL(open)(const char *pathname, int flags, ...)
 	int ret = 0;
 	va_list ap;
 	int mode = 0;
+
 	int use_mode = 0; //sy: add // you can revert this change
 
 	if (flags & O_CREAT)
@@ -113,13 +114,15 @@ int WRAP_DECL(open)(const char *pathname, int flags, ...)
 		}
 	}
 
+
+
 	/* For now pass the open to GPFS  - I think the open is cheap
 	 * possibly asychronous.
 	 * If this impedes performance we can investigate a cheap way of generating
 	 * an FD
 	 */
+		ret = use_mode ? __real_open(pathname, flags, mode) : __real_open(pathname, flags); //sy: add
 	//ret = __real_open(pathname, flags, mode); //original code
-	ret = use_mode ? __real_open(pathname, flags, mode) : __real_open(pathname, flags); //sy: add
 
 	// C++ code determines whether to track
 	if (ret != -1){

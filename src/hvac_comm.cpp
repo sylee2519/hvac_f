@@ -168,20 +168,9 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     out.ret = hvac_rpc_state_p->size;
 	L4C_INFO("out.ret server %d\n", out.ret);
     assert(info->ret == 0);
-// sy: commented
-	
-//	 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-  //          if (hex_buf) {
-    //            L4C_INFO("Buffer content before rpc transfer: %s", hex_buf);
-      //          free(hex_buf);
-        //    }
-    ret = HG_Respond(hvac_rpc_state_p->handle, NULL, NULL, &out);
+  
+  	ret = HG_Respond(hvac_rpc_state_p->handle, NULL, NULL, &out);
     assert(ret == HG_SUCCESS);        
-//	char *hex_buff = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-  //          if (hex_buff) {
-    //            L4C_INFO("Buffer content after rpc transfer: %s", hex_buff);
-      //          free(hex_buff);
-        //    }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	L4C_INFO("Info Server: Freeing Bulk Handle\n");
@@ -221,6 +210,8 @@ hvac_rpc_handler(hg_handle_t handle)
         &hvac_rpc_state_p->bulk_handle);
     assert(ret == 0);
 
+	hvac_rpc_out_t out;
+
     if (hvac_rpc_state_p->in.offset == -1){
         readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
         L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
@@ -251,6 +242,17 @@ hvac_rpc_handler(hg_handle_t handle)
 				L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
 			}
         }
+
+		if(readbytes<0){
+			L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
+                HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
+                free(hvac_rpc_state_p->buffer);
+                L4C_DEBUG("server read failed -1\n");
+                out.ret = -1;  // Indicate failure
+                HG_Respond(handle, NULL, NULL, &out);
+                free(hvac_rpc_state_p);
+                return HG_SUCCESS;
+		}
     	}
 	}
 

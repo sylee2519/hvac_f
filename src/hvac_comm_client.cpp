@@ -14,7 +14,7 @@ extern "C" {
 #include <unistd.h>
 }
 
-#define TIMEOUT_SECONDS 1 
+#define TIMEOUT_SECONDS 5 
 
 /* RPC Block Constructs */
 static hg_bool_t done = HG_FALSE;
@@ -200,6 +200,10 @@ ssize_t hvac_read_block(uint32_t host, hg_bool_t *done, ssize_t *bytes_read, pth
     ssize_t result = *bytes_read;
     pthread_mutex_unlock(mutex);
 	L4C_INFO("outside readblock\n");
+	if (result < 0) {
+        L4C_INFO("HVAC remote read failed with error %zd; %zd returned\n", result, result);
+        return result;
+    }
     return result;
 	
 }
