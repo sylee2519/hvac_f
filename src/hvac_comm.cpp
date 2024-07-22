@@ -166,7 +166,7 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     int ret;
     hvac_rpc_out_t out;
     out.ret = hvac_rpc_state_p->size;
-	L4C_INFO("out.ret server %d\n", out.ret);
+//	L4C_INFO("out.ret server %d\n", out.ret);
     assert(info->ret == 0);
 // sy: commented
 	
@@ -184,7 +184,7 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
         //    }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
-	L4C_INFO("Info Server: Freeing Bulk Handle\n");
+//	L4C_INFO("Info Server: Freeing Bulk Handle\n");
     HG_Destroy(hvac_rpc_state_p->handle);
     free(hvac_rpc_state_p->buffer);
     free(hvac_rpc_state_p);
@@ -226,17 +226,18 @@ hvac_rpc_handler(hg_handle_t handle)
         L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
 		if (readbytes < 0) {
             readbytes = read(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
+//            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
 		}
     }else
     {
         readbytes = pread(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
-        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
-		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+  //      L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
+/*		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
             if (hex_buf) {
                 L4C_INFO("Buffer content after remote read: %s", hex_buf);
                 free(hex_buf);
             }
+*/
 	
 		if (readbytes < 0) { //sy: add
         const char* original_path = fd_to_path[hvac_rpc_state_p->in.accessfd].c_str();
@@ -257,7 +258,7 @@ hvac_rpc_handler(hg_handle_t handle)
     //Reduce size of transfer to what was actually read 
     //We may need to revisit this.
     hvac_rpc_state_p->size = readbytes;
-	L4C_DEBUG("readbytes before transfer %d\n", readbytes);
+//	L4C_DEBUG("readbytes before transfer %d\n", readbytes);
     /* initiate bulk transfer from client to server */
     ret = HG_Bulk_transfer(hgi->context, hvac_rpc_handler_bulk_cb, hvac_rpc_state_p,
         HG_BULK_PUSH, hgi->addr, hvac_rpc_state_p->in.bulk_handle, 0,
@@ -285,11 +286,11 @@ hvac_open_rpc_handler(hg_handle_t handle)
 	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(redir_path) != path_cache_map.end())
     {
-        L4C_INFO("Server Rank %d : Successful Redirection %s to %s", server_rank, redir_path.c_str(), path_cache_map[redir_path].c_str());
+ //       L4C_INFO("Server Rank %d : Successful Redirection %s to %s", server_rank, redir_path.c_str(), path_cache_map[redir_path].c_str());
         redir_path = path_cache_map[redir_path];
     }
 	pthread_mutex_unlock(&path_map_mutex); //sy: add
-    L4C_INFO("Server Rank %d : Successful Open %s", server_rank, in.path);    
+//    L4C_INFO("Server Rank %d : Successful Open %s", server_rank, in.path);    
     out.ret_status = open(redir_path.c_str(),O_RDONLY);  
     fd_to_path[out.ret_status] = in.path;  
     HG_Respond(handle,NULL,NULL,&out);
@@ -305,7 +306,7 @@ hvac_close_rpc_handler(hg_handle_t handle)
     int ret = HG_Get_input(handle, &in);
     assert(ret == HG_SUCCESS);
 
-    L4C_INFO("Closing File %d\n",in.fd);
+ //   L4C_INFO("Closing File %d\n",in.fd);
     ret = close(in.fd);
     assert(ret == 0);
 
@@ -314,7 +315,7 @@ hvac_close_rpc_handler(hg_handle_t handle)
 	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(fd_to_path[in.fd]) == path_cache_map.end())
     {
-        L4C_INFO("Caching %s",fd_to_path[in.fd].c_str());
+ //       L4C_INFO("Caching %s",fd_to_path[in.fd].c_str());
         pthread_mutex_lock(&data_mutex);
         data_queue.push(fd_to_path[in.fd]);
         pthread_cond_signal(&data_cond);

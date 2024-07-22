@@ -95,12 +95,12 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			if (ppath.find(test) != std::string::npos)
 			{
 				//L4C_FATAL("Got a file want a stack trace");
-				L4C_INFO("Traacking used HV_DD file %s",path);
+//				L4C_INFO("Traacking used HV_DD file %s",path);
 				fd_map[fd] = std::filesystem::canonical(path);
 				tracked = true;
 			}		
 		}else if (ppath == std::filesystem::current_path()) {       
-			L4C_INFO("Traacking used CWD file %s",path);
+//			L4C_INFO("Traacking used CWD file %s",path);
 			fd_map[fd] = std::filesystem::canonical(path);
 			tracked = true;
 		}
@@ -128,7 +128,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
         hvac_open_state_p->cond = &cond;
         hvac_open_state_p->mutex = &mutex;	
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		L4C_INFO("Remote open - Host %d", host);
+//		L4C_INFO("Remote open - Host %d", host);
 		hvac_client_comm_gen_open_rpc(host, fd_map[fd], fd, hvac_open_state_p);
 		hvac_client_block(&done, &cond, &mutex);
 	}
@@ -155,7 +155,7 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		L4C_INFO("Remote read - Host %d", host);		
+//		L4C_INFO("Remote read - Host %d", host);		
 		
 		// sy: modified logic
         hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
@@ -189,7 +189,7 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		L4C_INFO("Remote pread - Host %d", host);		
+//		L4C_INFO("Remote pread - Host %d", host);		
 
 		//sy: modified logic		
         hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));

@@ -60,7 +60,7 @@ hvac_open_cb(const struct hg_cb_info *info)
     assert(info->ret == HG_SUCCESS);
     HG_Get_output(info->info.forward.handle, &out);    
     fd_redir_map[hvac_open_state_p->local_fd] = out.ret_status;
-	L4C_INFO("Open RPC Returned FD %d\n",out.ret_status);
+//	L4C_INFO("Open RPC Returned FD %d\n",out.ret_status);
     HG_Free_output(info->info.forward.handle, &out);
     HG_Destroy(info->info.forward.handle);
 
@@ -97,9 +97,9 @@ hvac_read_cb(const struct hg_cb_info *info)
    		}
 		else {
 			*(hvac_rpc_state_p->bytes_read) = out.ret;
-			L4C_INFO("out.ret %d\n", out.ret);
+//			L4C_INFO("out.ret %d\n", out.ret);
 			if (out.ret < 0) {
-            	L4C_INFO("Server-side read failed with result: %zd", out.ret);
+//            	L4C_INFO("Server-side read failed with result: %zd", out.ret);
 			}	
  	   		ret = HG_Free_output(info->info.forward.handle, &out);
 			assert(ret == HG_SUCCESS);
@@ -109,7 +109,7 @@ hvac_read_cb(const struct hg_cb_info *info)
    /* clean up resources consumed by this rpc */
     ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
 	assert(ret == HG_SUCCESS);
-	L4C_INFO("INFO: Freeing Bulk Handle"); //Does this deregister memory?
+//	L4C_INFO("INFO: Freeing Bulk Handle"); //Does this deregister memory?
 
 	ret = HG_Destroy(info->info.forward.handle);
 	assert(ret == HG_SUCCESS);
@@ -123,8 +123,8 @@ hvac_read_cb(const struct hg_cb_info *info)
     pthread_mutex_unlock(hvac_rpc_state_p->mutex);	
  
 	free(hvac_rpc_state_p);
-	L4C_INFO("after signaling\n");
-	L4C_INFO("done %d\n", done);
+//	L4C_INFO("after signaling\n");
+//	L4C_INFO("done %d\n", done);
 	
     return HG_SUCCESS;
 }
@@ -152,7 +152,7 @@ void hvac_client_block(hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *m
 ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
 	// sy: modified logic
-	L4C_INFO("before readblock\n");
+//	L4C_INFO("before readblock\n");
 	pthread_mutex_lock(mutex);
 
     while (*done != HG_TRUE) {
@@ -160,7 +160,7 @@ ssize_t hvac_read_block(hg_bool_t *done, ssize_t *bytes_read, pthread_cond_t *co
     }
     ssize_t result = *bytes_read;
     pthread_mutex_unlock(mutex);
-	L4C_INFO("outside readblock\n");
+//	L4C_INFO("outside readblock\n");
     return result;
 	
 }
@@ -349,7 +349,7 @@ hg_addr_t hvac_client_comm_lookup_addr(int rank)
 	while (fscanf(na_config, "%d %s\n",&svr_rank, svr_str) == 2)
 	{
 		if (svr_rank == rank){
-			L4C_INFO("Connecting to %s %d\n", svr_str, svr_rank);            
+//			L4C_INFO("Connecting to %s %d\n", svr_str, svr_rank);            
 			svr_found = true;
             break;
 		}
