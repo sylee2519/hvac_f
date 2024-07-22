@@ -54,6 +54,7 @@ void hvac_init_comm(hg_bool_t listen)
 	}
 
 	//Only for server processes
+
 	if (listen)
 	{
 		if (rank_str != NULL){
@@ -119,10 +120,10 @@ void hvac_comm_list_addr()
 	FILE *na_config = NULL;
 	hg_size_t self_addr_string_size = PATH_MAX;
 //	char *stepid = getenv("PMI_NAMESPACE");
-//	char *jobid = getenv("SLURM_JOBID");
+	char *jobid = getenv("SLURM_JOBID");
 	
-	sprintf(filename, "./.ports.cfg");
-//	sprintf(filename, "./.ports.cfg.%s", stepid);
+//	sprintf(filename, "./.ports.cfg");
+	sprintf(filename, "./.ports.cfg.%s", jobid);
 	/* Get self addr to tell client about */
     HG_Addr_self(hg_class, &self_addr);
     HG_Addr_to_string(

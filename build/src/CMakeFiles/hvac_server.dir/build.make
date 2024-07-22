@@ -69,24 +69,10 @@ include src/CMakeFiles/hvac_server.dir/progress.make
 # Include the compile flags for this target's objects.
 include src/CMakeFiles/hvac_server.dir/flags.make
 
-src/CMakeFiles/hvac_server.dir/hvac.cpp.o: src/CMakeFiles/hvac_server.dir/flags.make
-src/CMakeFiles/hvac_server.dir/hvac.cpp.o: /scratch/s5104a21/hvactest/src/hvac.cpp
-src/CMakeFiles/hvac_server.dir/hvac.cpp.o: src/CMakeFiles/hvac_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac.cpp.o"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_server.dir/hvac.cpp.o -MF CMakeFiles/hvac_server.dir/hvac.cpp.o.d -o CMakeFiles/hvac_server.dir/hvac.cpp.o -c /scratch/s5104a21/hvactest/src/hvac.cpp
-
-src/CMakeFiles/hvac_server.dir/hvac.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hvac_server.dir/hvac.cpp.i"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /scratch/s5104a21/hvactest/src/hvac.cpp > CMakeFiles/hvac_server.dir/hvac.cpp.i
-
-src/CMakeFiles/hvac_server.dir/hvac.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hvac_server.dir/hvac.cpp.s"
-	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /scratch/s5104a21/hvactest/src/hvac.cpp -o CMakeFiles/hvac_server.dir/hvac.cpp.s
-
 src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: src/CMakeFiles/hvac_server.dir/flags.make
 src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: /scratch/s5104a21/hvactest/src/hvac_server.cpp
 src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o: src/CMakeFiles/hvac_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o"
 	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o -MF CMakeFiles/hvac_server.dir/hvac_server.cpp.o.d -o CMakeFiles/hvac_server.dir/hvac_server.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_server.cpp
 
 src/CMakeFiles/hvac_server.dir/hvac_server.cpp.i: cmake_force
@@ -100,7 +86,7 @@ src/CMakeFiles/hvac_server.dir/hvac_server.cpp.s: cmake_force
 src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o: src/CMakeFiles/hvac_server.dir/flags.make
 src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o: /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp
 src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o: src/CMakeFiles/hvac_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o"
 	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o -MF CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o.d -o CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_data_mover.cpp
 
 src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.i: cmake_force
@@ -114,7 +100,7 @@ src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.s: cmake_force
 src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: src/CMakeFiles/hvac_server.dir/flags.make
 src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: /scratch/s5104a21/hvactest/src/hvac_comm.cpp
 src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o: src/CMakeFiles/hvac_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o"
 	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o -MF CMakeFiles/hvac_server.dir/hvac_comm.cpp.o.d -o CMakeFiles/hvac_server.dir/hvac_comm.cpp.o -c /scratch/s5104a21/hvactest/src/hvac_comm.cpp
 
 src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.i: cmake_force
@@ -128,7 +114,7 @@ src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.s: cmake_force
 src/CMakeFiles/hvac_server.dir/hvac_logging.c.o: src/CMakeFiles/hvac_server.dir/flags.make
 src/CMakeFiles/hvac_server.dir/hvac_logging.c.o: /scratch/s5104a21/hvactest/src/hvac_logging.c
 src/CMakeFiles/hvac_server.dir/hvac_logging.c.o: src/CMakeFiles/hvac_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object src/CMakeFiles/hvac_server.dir/hvac_logging.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object src/CMakeFiles/hvac_server.dir/hvac_logging.c.o"
 	cd /scratch/s5104a21/hvactest/build/src && /apps/compiler/gcc/10.2.0/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/hvac_server.dir/hvac_logging.c.o -MF CMakeFiles/hvac_server.dir/hvac_logging.c.o.d -o CMakeFiles/hvac_server.dir/hvac_logging.c.o -c /scratch/s5104a21/hvactest/src/hvac_logging.c
 
 src/CMakeFiles/hvac_server.dir/hvac_logging.c.i: cmake_force
@@ -141,7 +127,6 @@ src/CMakeFiles/hvac_server.dir/hvac_logging.c.s: cmake_force
 
 # Object files for target hvac_server
 hvac_server_OBJECTS = \
-"CMakeFiles/hvac_server.dir/hvac.cpp.o" \
 "CMakeFiles/hvac_server.dir/hvac_server.cpp.o" \
 "CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o" \
 "CMakeFiles/hvac_server.dir/hvac_comm.cpp.o" \
@@ -150,7 +135,6 @@ hvac_server_OBJECTS = \
 # External object files for target hvac_server
 hvac_server_EXTERNAL_OBJECTS =
 
-src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac.cpp.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_server.cpp.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_comm.cpp.o
@@ -163,7 +147,7 @@ src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libmchecksum.so
 src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libmercury_util.so
 src/hvac_server: /scratch/s5104a21/lib/mercury2/lib/libna.so
 src/hvac_server: src/CMakeFiles/hvac_server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable hvac_server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/scratch/s5104a21/hvactest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable hvac_server"
 	cd /scratch/s5104a21/hvactest/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hvac_server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

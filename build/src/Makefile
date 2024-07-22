@@ -189,33 +189,6 @@ hvac_server/fast:
 	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/build
 .PHONY : hvac_server/fast
 
-hvac.o: hvac.cpp.o
-.PHONY : hvac.o
-
-# target to build an object file
-hvac.cpp.o:
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/hvac.cpp.o
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/hvac.cpp.o
-.PHONY : hvac.cpp.o
-
-hvac.i: hvac.cpp.i
-.PHONY : hvac.i
-
-# target to preprocess a source file
-hvac.cpp.i:
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/hvac.cpp.i
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/hvac.cpp.i
-.PHONY : hvac.cpp.i
-
-hvac.s: hvac.cpp.s
-.PHONY : hvac.s
-
-# target to generate assembly for a file
-hvac.cpp.s:
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_client.dir/build.make src/CMakeFiles/hvac_client.dir/hvac.cpp.s
-	cd /scratch/s5104a21/hvactest/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/hvac_server.dir/build.make src/CMakeFiles/hvac_server.dir/hvac.cpp.s
-.PHONY : hvac.cpp.s
-
 hvac_client.o: hvac_client.cpp.o
 .PHONY : hvac_client.o
 
@@ -407,9 +380,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... hvac_client"
 	@echo "... hvac_server"
-	@echo "... hvac.o"
-	@echo "... hvac.i"
-	@echo "... hvac.s"
 	@echo "... hvac_client.o"
 	@echo "... hvac_client.i"
 	@echo "... hvac_client.s"

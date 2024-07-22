@@ -1,6 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/hvac_server.dir/hvac.cpp.o"
-  "CMakeFiles/hvac_server.dir/hvac.cpp.o.d"
   "CMakeFiles/hvac_server.dir/hvac_comm.cpp.o"
   "CMakeFiles/hvac_server.dir/hvac_comm.cpp.o.d"
   "CMakeFiles/hvac_server.dir/hvac_data_mover.cpp.o"

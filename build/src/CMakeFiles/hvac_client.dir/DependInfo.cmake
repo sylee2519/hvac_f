@@ -10,7 +10,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/scratch/s5104a21/hvactest/src/hvac_logging.c" "src/CMakeFiles/hvac_client.dir/hvac_logging.c.o" "gcc" "src/CMakeFiles/hvac_client.dir/hvac_logging.c.o.d"
   "/scratch/s5104a21/hvactest/src/wrappers.c" "src/CMakeFiles/hvac_client.dir/wrappers.c.o" "gcc" "src/CMakeFiles/hvac_client.dir/wrappers.c.o.d"
-  "/scratch/s5104a21/hvactest/src/hvac.cpp" "src/CMakeFiles/hvac_client.dir/hvac.cpp.o" "gcc" "src/CMakeFiles/hvac_client.dir/hvac.cpp.o.d"
   "/scratch/s5104a21/hvactest/src/hvac_client.cpp" "src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o" "gcc" "src/CMakeFiles/hvac_client.dir/hvac_client.cpp.o.d"
   "/scratch/s5104a21/hvactest/src/hvac_comm.cpp" "src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o" "gcc" "src/CMakeFiles/hvac_client.dir/hvac_comm.cpp.o.d"
   "/scratch/s5104a21/hvactest/src/hvac_comm_client.cpp" "src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o" "gcc" "src/CMakeFiles/hvac_client.dir/hvac_comm_client.cpp.o.d"

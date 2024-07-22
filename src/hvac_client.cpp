@@ -47,7 +47,8 @@ static void __attribute__((constructor)) hvac_client_init()
     else
     {        
         L4C_FATAL("Please set enviroment variable HVAC_SERVER_COUNT\n");
-        exit(-1);
+		return;
+//        exit(-1);
     }
 
 
