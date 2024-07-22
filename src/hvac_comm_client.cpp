@@ -383,11 +383,13 @@ hg_addr_t hvac_client_comm_lookup_addr(int rank)
 	char filename[PATH_MAX];
 	char svr_str[PATH_MAX];
 	int svr_rank = -1;
-	char *jobid = getenv("SLURM_JOBID");
+//	char *stepid = getenv("PMI_NAMESPACE");
+//	char *jobid = getenv("SLURM_JOBID");
 	hg_addr_t target_server;
 	bool svr_found = false;
 	FILE *na_config = NULL;
-	sprintf(filename, "./.ports.cfg.%s", jobid);
+//	sprintf(filename, "./.ports.cfg.%s", stepid);
+	sprintf(filename, "./.ports.cfg");
 	na_config = fopen(filename,"r+");
     
 
