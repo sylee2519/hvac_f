@@ -167,7 +167,18 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     hvac_rpc_out_t out;
     out.ret = hvac_rpc_state_p->size;
 	L4C_INFO("out.ret server %d\n", out.ret);
-    assert(info->ret == 0);
+//    assert(info->ret == 0);
+
+	if (info->ret != 0) {
+        L4C_DEBUG("Callback info contains an error: %d\n", info->ret);
+        // Free resources and return the error
+        HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
+        HG_Destroy(hvac_rpc_state_p->handle);
+        free(hvac_rpc_state_p->buffer);
+        free(hvac_rpc_state_p);
+        return (hg_return_t)info->ret;
+    }
+
 // sy: commented
 	
 //	 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
@@ -176,7 +187,18 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
       //          free(hex_buf);
         //    }
     ret = HG_Respond(hvac_rpc_state_p->handle, NULL, NULL, &out);
-    assert(ret == HG_SUCCESS);        
+//    assert(ret == HG_SUCCESS);        
+
+	if (ret != HG_SUCCESS) {
+        L4C_DEBUG("Failed to send response: %d\n", ret);
+        // Free resources and return the error
+        HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
+        HG_Destroy(hvac_rpc_state_p->handle);
+        free(hvac_rpc_state_p->buffer);
+        free(hvac_rpc_state_p);
+        return (hg_return_t)ret;
+    }
+
 //	char *hex_buff = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
   //          if (hex_buff) {
     //            L4C_INFO("Buffer content after rpc transfer: %s", hex_buff);
