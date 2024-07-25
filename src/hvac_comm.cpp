@@ -35,8 +35,8 @@ struct hvac_rpc_state {
 void hvac_init_comm(hg_bool_t listen)
 {
 	const char *info_string = "ofi+tcp://";  
-	char *rank_str = getenv("PMI_RANK");  
-    server_rank = atoi(rank_str);
+//	char *rank_str = getenv("PMI_RANK");  
+//    server_rank = atoi(rank_str);
     pthread_t hvac_progress_tid;
 
     HG_Set_log_level("DEBUG");
@@ -56,6 +56,8 @@ void hvac_init_comm(hg_bool_t listen)
 	//Only for server processes
 	if (listen)
 	{
+		char *rank_str = getenv("PMI_RANK");  
+    	server_rank = atoi(rank_str);
 		if (rank_str != NULL){
 			hvac_server_rank = atoi(rank_str);
 		}else
