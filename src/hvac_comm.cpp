@@ -56,7 +56,9 @@ void extract_ip_portion(const char* full_address, char* ip_portion, size_t max_l
 // sy: add - logging function
 void initialize_log(int rank, const char *type) {
     char log_filename[64];
-    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, rank);
+//    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, rank);
+	const char *logdir = getenv("HVAC_LOG_DIR");
+    snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, rank);
 
     FILE *log_file = fopen(log_filename, "w");
     if (log_file == NULL) {
@@ -72,7 +74,10 @@ void initialize_log(int rank, const char *type) {
 void logging_info(log_info_t *info, const char *type) {
     FILE *log_file;
     char log_filename[64];
-    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, info->server_rank);
+	const char *logdir = getenv("HVAC_LOG_DIR");
+	snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, info->server_rank);
+
+//    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, info->server_rank);
 
     log_file = fopen(log_filename, "a");
     if (log_file == NULL) {
@@ -123,7 +128,7 @@ void hvac_init_comm(hg_bool_t listen)
 	//Only for server processes
 	if (listen)
 	{
-		char *rank_str = getenv("PMI_RANK");  
+		char *rank_str = getenv("PMIX_RANK");  
     	server_rank = atoi(rank_str);
 		if (rank_str != NULL){
 			hvac_server_rank = atoi(rank_str);
@@ -192,8 +197,10 @@ void hvac_comm_list_addr()
 //	char *stepid = getenv("PMIX_NAMESPACE");
 //	char *jobid = getenv("SLURM_JOBID");
 	char *jobid = getenv("MY_JOBID");
-	
-	sprintf(filename, "./.ports.cfg.%s", jobid);
+
+	const char *logdir = getenv("HVAC_LOG_DIR");	
+	snprintf(filename, sizeof(filename), "%s/.ports.cfg.%s", logdir, jobid);
+//	sprintf(filename, "./.ports.cfg.%s", jobid);
 	/* Get self addr to tell client about */
     HG_Addr_self(hg_class, &self_addr);
     HG_Addr_to_string(
