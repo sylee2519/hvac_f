@@ -20,6 +20,8 @@ static int hvac_progress_thread_shutdown_flags = 0;
 static int hvac_server_rank = -1;
 static int server_rank = -1;
 
+char server_addr_str[128]; 
+
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
     hg_size_t size;
@@ -28,6 +30,70 @@ struct hvac_rpc_state {
     hg_handle_t handle;
     hvac_rpc_in_t in;
 };
+
+
+// sy: add - Extract IP address for node checking
+void extract_ip_portion(const char* full_address, char* ip_portion, size_t max_len) {
+    const char* pos = strchr(full_address, ':');
+    if (pos) {
+        pos = strchr(pos + 1, ':');
+    }
+    if (pos) {
+        size_t len = pos - full_address + 1;
+        if (len < max_len) {
+            strncpy(ip_portion, full_address, len);
+            ip_portion[len] = '\0';
+        } else {
+            strncpy(ip_portion, full_address, max_len - 1);
+            ip_portion[max_len - 1] = '\0';
+        }
+    } else {
+        strncpy(ip_portion, full_address, max_len - 1);
+        ip_portion[max_len - 1] = '\0';
+    }
+}
+
+
+// sy: add - logging function
+void initialize_log(int rank, const char *type) {
+    char log_filename[64];
+    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, rank);
+
+    FILE *log_file = fopen(log_filename, "w");
+    if (log_file == NULL) {
+        perror("Failed to create log file");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(log_file, "Log file for %s rank %d\n", type, rank);
+    fclose(log_file);
+}
+
+// sy: add - logging function
+void logging_info(log_info_t *info, const char *type) {
+    FILE *log_file;
+    char log_filename[64];
+    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, info->server_rank);
+
+    log_file = fopen(log_filename, "a");
+    if (log_file == NULL) {
+        perror("Failed to open log file");
+        return;
+    }
+
+    fprintf(log_file, "[%s][%s][%d][%d][%d][%s][%d][%d][%ld.%06ld]\n",
+            info->filepath,
+            info->request,
+            info->flag,
+            info->client_rank,
+            info->server_rank,
+            info->expn,
+			info->n_epoch,
+			info->n_batch,
+            (long)info->clocktime.tv_sec, (long)info->clocktime.tv_usec);
+
+    fclose(log_file);
+}
 
 //Initialize communication for both the client and server
 //processes
@@ -61,6 +127,8 @@ void hvac_init_comm(hg_bool_t listen)
     	server_rank = atoi(rank_str);
 		if (rank_str != NULL){
 			hvac_server_rank = atoi(rank_str);
+			const char *type = "server";
+			initialize_log(hvac_server_rank, type);
 		}else
 		{
 			L4C_FATAL("Failed to extract rank\n");
@@ -122,7 +190,7 @@ void hvac_comm_list_addr()
 	FILE *na_config = NULL;
 	hg_size_t self_addr_string_size = PATH_MAX;
 //	char *stepid = getenv("PMI_NAMESPACE");
-	char *jobid = getenv("SLURM_JOBID");
+	char *jobid = getenv("MY_JOBID");
 	
 //	sprintf(filename, "./.ports.cfg");
 	sprintf(filename, "./.ports.cfg.%s", jobid);
@@ -132,6 +200,9 @@ void hvac_comm_list_addr()
         hg_class, self_addr_string, &self_addr_string_size, self_addr);
     HG_Addr_free(hg_class, self_addr);
     
+
+	extract_ip_portion(self_addr_string, server_addr_str, sizeof(server_addr_str));
+
 
     /* Write addr to a file */
     na_config = fopen(filename, "a+");
@@ -170,7 +241,6 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     int ret;
     hvac_rpc_out_t out;
     out.ret = hvac_rpc_state_p->size;
-	L4C_INFO("out.ret server %d\n", out.ret);
  //   assert(info->ret == 0);
 
 	if (info->ret != 0) {
@@ -197,7 +267,6 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
     }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
-	L4C_INFO("Info Server: Freeing Bulk Handle\n");
     HG_Destroy(hvac_rpc_state_p->handle);
     free(hvac_rpc_state_p->buffer);
     free(hvac_rpc_state_p);
@@ -212,12 +281,19 @@ hvac_rpc_handler(hg_handle_t handle)
     struct hvac_rpc_state *hvac_rpc_state_p;
     const struct hg_info *hgi;
     ssize_t readbytes;
-
-    hvac_rpc_state_p = (struct hvac_rpc_state*)malloc(sizeof(*hvac_rpc_state_p));
+	log_info_t log_info;
+	struct timeval tmp_time;   
+ 
+	hvac_rpc_state_p = (struct hvac_rpc_state*)malloc(sizeof(*hvac_rpc_state_p));
 
     /* decode input */
-    HG_Get_input(handle, &hvac_rpc_state_p->in);   
-    
+    ret = HG_Get_input(handle, &hvac_rpc_state_p->in);   
+	if (ret != HG_SUCCESS) {
+        L4C_DEBUG("HG_Get_input failed with error code %d\n", ret);
+        free(hvac_rpc_state_p);
+        return (hg_return_t)ret;
+    }
+    gettimeofday(&log_info.clocktime, NULL);
     /* This includes allocating a target buffer for bulk transfer */
     hvac_rpc_state_p->buffer = calloc(1, hvac_rpc_state_p->in.input_val);
     assert(hvac_rpc_state_p->buffer);
@@ -228,32 +304,69 @@ hvac_rpc_handler(hg_handle_t handle)
     /* register local target buffer for bulk access */
 
     hgi = HG_Get_info(handle);
-    assert(hgi);
+//    assert(hgi);
+	if (!hgi) {
+        L4C_DEBUG("HG_Get_info failed\n");
+        return (hg_return_t)ret;
+    }
+
     ret = HG_Bulk_create(hgi->hg_class, 1, &hvac_rpc_state_p->buffer,
         &hvac_rpc_state_p->size, HG_BULK_READ_ONLY,
         &hvac_rpc_state_p->bulk_handle);
     assert(ret == 0);
 
+
+	// sy: add - logging code
+	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", hvac_rpc_state_p->in.localfd); 
+    log_info.filepath[sizeof(log_info.filepath) - 1] = '\0';
+    strncpy(log_info.request, "read", sizeof(log_info.request) - 1);
+    log_info.request[sizeof(log_info.request) - 1] = '\0';
+
+//    hg_bool_t cmp_result = HG_Addr_cmp(hvac_comm_get_class(), hgi->addr, server_address);
+	char client_addr_str[128];
+    size_t client_addr_str_size = sizeof(client_addr_str);
+    ret = HG_Addr_to_string(hvac_comm_get_class(), client_addr_str, &client_addr_str_size, hgi->addr);
+	char client_ip[128];
+	extract_ip_portion(client_addr_str, client_ip, sizeof(client_ip));
+
+	log_info.flag = (strcmp(server_addr_str, client_ip) == 0) ? 1 : 0;
+
+    log_info.client_rank = hvac_rpc_state_p->in.client_rank;
+    log_info.server_rank = server_rank;
+    strncpy(log_info.expn, "SReceive", sizeof(log_info.expn) - 1);
+    log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+    log_info.n_epoch = -1;
+    log_info.n_batch = -1;
+    logging_info(&log_info, "server");
+
 	hvac_rpc_out_t out;
 
     if (hvac_rpc_state_p->in.offset == -1){
         readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-        L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
+//        L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
 		if (readbytes < 0) {
             readbytes = read(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
+//            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
 		}
     }else
     {
+    	gettimeofday(&log_info.clocktime, NULL);
+		strncpy(log_info.expn, "SSNVMeRequest", sizeof(log_info.expn) - 1);
+    	log_info.expn[sizeof(log_info.expn) - 1] = '\0';	
         readbytes = pread(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
-        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
-		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+		gettimeofday(&tmp_time, NULL);	
+//        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
+/*		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
             if (hex_buf) {
                 L4C_INFO("Buffer content after remote read: %s", hex_buf);
                 free(hex_buf);
             }
-	
+*/	
 		if (readbytes < 0) { //sy: add
+			strncpy(log_info.expn, "Fail", sizeof(log_info.expn) - 1);
+            log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+            logging_info(&log_info, "server");
+/*
         const char* original_path = fd_to_path[hvac_rpc_state_p->in.accessfd].c_str();
         int original_fd = open(original_path, O_RDONLY);
         if (original_fd != -1) {
@@ -267,8 +380,8 @@ hvac_rpc_handler(hg_handle_t handle)
 			}
         }
 
-		if(readbytes<0){
-			L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
+		if(readbytes<0){ */
+//			L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
                 HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
                 free(hvac_rpc_state_p->buffer);
                 L4C_DEBUG("server read failed -1\n");
@@ -276,14 +389,22 @@ hvac_rpc_handler(hg_handle_t handle)
                 HG_Respond(handle, NULL, NULL, &out);
                 free(hvac_rpc_state_p);
                 return HG_SUCCESS;
-		}
+//		}
     	}
+		else{
+			logging_info(&log_info, "server");
+			log_info.clocktime = tmp_time;
+			strncpy(log_info.expn, "SSNVMeReceive", sizeof(log_info.expn) - 1);
+        	log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+    		logging_info(&log_info, "server");	
+		}
+		
 	}
 
     //Reduce size of transfer to what was actually read 
     //We may need to revisit this.
     hvac_rpc_state_p->size = readbytes;
-	L4C_DEBUG("readbytes before transfer %d\n", readbytes);
+//	L4C_DEBUG("readbytes before transfer %d\n", readbytes);
     /* initiate bulk transfer from client to server */
     ret = HG_Bulk_transfer(hgi->context, hvac_rpc_handler_bulk_cb, hvac_rpc_state_p,
         HG_BULK_PUSH, hgi->addr, hvac_rpc_state_p->in.bulk_handle, 0,
@@ -297,26 +418,85 @@ hvac_rpc_handler(hg_handle_t handle)
 }
 
 
-
-
 static hg_return_t
 hvac_open_rpc_handler(hg_handle_t handle)
 {
     hvac_open_in_t in;
     hvac_open_out_t out;    
+	const struct hg_info *hgi;
+	int nvme_flag = 0;
+
     int ret = HG_Get_input(handle, &in);
     assert(ret == 0);
+//	if(ret == 0){
+//        L4C_DEBUG("open rpc input contains an error: %d\n",ret);
+        // Free resources and return the error
+//        return (hg_return_t)ret;
+//    }
+
+	hgi = HG_Get_info(handle);
+    if (!hgi) {
+        L4C_DEBUG("HG_Get_info failed\n");
+        return (hg_return_t)ret;
+    }
+
+	// sy: add - logging code
+    log_info_t log_info;
+    strncpy(log_info.filepath, in.path, sizeof(log_info.filepath) - 1);
+    log_info.filepath[sizeof(log_info.filepath) - 1] = '\0';
+    strncpy(log_info.request, "open", sizeof(log_info.request) - 1);
+    log_info.request[sizeof(log_info.request) - 1] = '\0';
+
+	char client_addr_str[128];
+    size_t client_addr_str_size = sizeof(client_addr_str);
+    ret = HG_Addr_to_string(hvac_comm_get_class(), client_addr_str, &client_addr_str_size, hgi->addr);
+    char client_ip[128];
+    extract_ip_portion(client_addr_str, client_ip, sizeof(client_ip));
+
+    log_info.flag = (strcmp(server_addr_str, client_ip) == 0) ? 1 : 0;
+
+
+    log_info.client_rank = in.client_rank;
+    log_info.server_rank = server_rank;
+    strncpy(log_info.expn, "SReceive", sizeof(log_info.expn) - 1);
+    log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+    log_info.n_epoch = in.localfd;
+    log_info.n_batch = -1;
+    gettimeofday(&log_info.clocktime, NULL);
+    logging_info(&log_info, "server");
+
     string redir_path = in.path;
-	
-	pthread_mutex_lock(&path_map_mutex); //sy: add
+    strncpy(log_info.expn, "SPFSRequest", sizeof(log_info.expn) - 1);
+    log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+
+    pthread_mutex_lock(&path_map_mutex);
     if (path_cache_map.find(redir_path) != path_cache_map.end())
     {
-        L4C_INFO("Server Rank %d : Successful Redirection %s to %s", server_rank, redir_path.c_str(), path_cache_map[redir_path].c_str());
+//        L4C_INFO("Server Rank %d : Successful Redirection %s to %s", server_rank, redir_path.c_str(), path_cache_map[redir_path].c_str());
         redir_path = path_cache_map[redir_path];
+        strncpy(log_info.expn, "SNVMeRequest", sizeof(log_info.expn) - 1);
+        log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+        nvme_flag = 1;
     }
-	pthread_mutex_unlock(&path_map_mutex); //sy: add
-    L4C_INFO("Server Rank %d : Successful Open %s", server_rank, in.path);    
-    out.ret_status = open(redir_path.c_str(),O_RDONLY);  
+    pthread_mutex_unlock(&path_map_mutex);
+
+//    L4C_INFO("Server Rank %d : Successful Open %s", server_rank, in.path);
+    gettimeofday(&log_info.clocktime, NULL);
+    logging_info(&log_info, "server");
+
+    out.ret_status = open(redir_path.c_str(), O_RDONLY);
+
+    gettimeofday(&log_info.clocktime, NULL);
+    if (nvme_flag) {
+        strncpy(log_info.expn, "SNVMeReceive", sizeof(log_info.expn) - 1);
+        log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+    } else {
+        strncpy(log_info.expn, "SPFSReceive", sizeof(log_info.expn) - 1);
+        log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+    }
+    logging_info(&log_info, "server");
+
+
     fd_to_path[out.ret_status] = in.path;  
     HG_Respond(handle,NULL,NULL,&out);
 
@@ -328,29 +508,94 @@ static hg_return_t
 hvac_close_rpc_handler(hg_handle_t handle)
 {
     hvac_close_in_t in;
-//    hvac_close_out_t out;
+    const struct hg_info *hgi;
+    int nvme_flag = 0;
+	struct timeval tmp_time;
+
+    log_info_t log_info;
+	gettimeofday(&log_info.clocktime, NULL);
     int ret = HG_Get_input(handle, &in);
-    assert(ret == HG_SUCCESS);
+	assert(ret == HG_SUCCESS);
+/*    if(ret == 0){
+        L4C_DEBUG("close rpc input contains an error: %d\n",ret);
+		fd_to_path.erase(in.fd);
+        return (hg_return_t)ret;
+    }
+*/
+    hgi = HG_Get_info(handle);
+    if (!hgi) {
+        L4C_DEBUG("HG_Get_info failed\n");
+		fd_to_path.erase(in.fd);
+        return (hg_return_t)ret;
+    }
+	// sy: add - logging code
+	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", in.fd);    
+    strncpy(log_info.request, "close", sizeof(log_info.request) - 1);
+    log_info.request[sizeof(log_info.request) - 1] = '\0';
 
-    L4C_INFO("Closing File %d\n",in.fd);
+
+	char client_addr_str[128];
+    size_t client_addr_str_size = sizeof(client_addr_str);
+    ret = HG_Addr_to_string(hvac_comm_get_class(), client_addr_str, &client_addr_str_size, hgi->addr);
+    char client_ip[128];
+    extract_ip_portion(client_addr_str, client_ip, sizeof(client_ip));
+
+    log_info.flag = (strcmp(server_addr_str, client_ip) == 0) ? 1 : 0;
+
+    log_info.client_rank = in.client_rank;
+    log_info.server_rank = server_rank;
+    strncpy(log_info.expn, "SReceive", sizeof(log_info.expn) - 1);
+    log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+    log_info.n_epoch = -1;
+    log_info.n_batch = -1;
+    logging_info(&log_info, "server");
+
+
+//    L4C_INFO("Closing File %d\n",in.fd);
+	gettimeofday(&log_info.clocktime, NULL);
+	strncpy(log_info.expn, "SReceive", sizeof(log_info.expn) - 1);
+    log_info.expn[sizeof(log_info.expn) - 1] = '\0';
     ret = close(in.fd);
-    assert(ret == 0);
-//	out.done = ret;
+	gettimeofday(&tmp_time, NULL);
 
+    assert(ret == 0);
+/*	if(ret == 0){
+        L4C_DEBUG("close failed\n");
+		fd_to_path.erase(in.fd);
+        return (hg_return_t)ret;
+    }
+*/
     //Signal to the data mover to copy the file
-	
 	pthread_mutex_lock(&path_map_mutex); //sy: add
     if (path_cache_map.find(fd_to_path[in.fd]) == path_cache_map.end())
     {
-        L4C_INFO("Caching %s",fd_to_path[in.fd].c_str());
+		strncpy(log_info.expn, "SNVMeRequest", sizeof(log_info.expn) - 1);
+    	log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+//        L4C_INFO("Caching %s",fd_to_path[in.fd].c_str());
         pthread_mutex_lock(&data_mutex);
         data_queue.push(fd_to_path[in.fd]);
         pthread_cond_signal(&data_cond);
         pthread_mutex_unlock(&data_mutex);
+		nvme_flag = 1;
     }
 	pthread_mutex_unlock(&path_map_mutex); //sy: add
+	if (nvme_flag) {
+		logging_info(&log_info, "server");
+		strncpy(log_info.expn, "SNVMeReceive", sizeof(log_info.expn) - 1);
+        log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+	}		
+	else{
+		strncpy(log_info.expn, "SPFSRequest", sizeof(log_info.expn) - 1);
+        log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+		logging_info(&log_info, "server");
+        strncpy(log_info.expn, "SPFSReceive", sizeof(log_info.expn) - 1);
+        log_info.expn[sizeof(log_info.expn) - 1] = '\0';
+
+	}	
+	log_info.clocktime = tmp_time;
+    logging_info(&log_info, "server");	
+
 	fd_to_path.erase(in.fd);
-//	HG_Respond(handle,NULL,NULL,&out);
     return (hg_return_t)ret;
 }
 

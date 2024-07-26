@@ -60,6 +60,7 @@ static void __attribute__((constructor)) hvac_client_init()
     
 	initialize_timeout_counters(g_hvac_server_count); //sy: add
     g_hvac_initialized = true;
+	hvac_get_addr();
     pthread_mutex_unlock(&init_mutex);
     
 	g_disable_redirect = false;
@@ -101,12 +102,12 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			if (ppath.find(test) != std::string::npos)
 			{
 				//L4C_FATAL("Got a file want a stack trace");
-				L4C_INFO("Traacking used HV_DD file %s",path);
+//				L4C_INFO("Traacking used HV_DD file %s",path);
 				fd_map[fd] = std::filesystem::canonical(path);
 				tracked = true;
 			}		
 		}else if (ppath == std::filesystem::current_path()) {       
-			L4C_INFO("Traacking used CWD file %s",path);
+//			L4C_INFO("Traacking used CWD file %s",path);
 			fd_map[fd] = std::filesystem::canonical(path);
 			tracked = true;
 		}
@@ -128,6 +129,11 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			hvac_client_comm_register_rpc();
 			g_mercury_init = true;
 			initialize_timeout_counters(g_hvac_server_count);
+			const char *type = "client"; 
+			const char *rank_str = getenv("HOROVOD_RANK");
+			int client_rank = atoi(rank_str);
+			initialize_log(client_rank, type);
+			hvac_get_addr();
 		}
 		// sy: modified logic
 		hvac_open_state_t *hvac_open_state_p = (hvac_open_state_t *)malloc(sizeof(hvac_open_state_t));
@@ -135,7 +141,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
         hvac_open_state_p->cond = &cond;
         hvac_open_state_p->mutex = &mutex;	
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		L4C_INFO("Remote open - Host %d", host);
+//		L4C_INFO("Remote open - Host %d", host);
 		
 		{
             std::lock_guard<std::mutex> lock(timeout_mutex);
@@ -174,7 +180,7 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		L4C_INFO("Remote read - Host %d", host);		
+//		L4C_INFO("Remote read - Host %d", host);		
 
 		{
             std::lock_guard<std::mutex> lock(timeout_mutex);
@@ -216,7 +222,7 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 
 	if (hvac_file_tracked(fd)){
 		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		L4C_INFO("Remote pread - Host %d", host);		
+//		L4C_INFO("Remote pread - Host %d", host);		
 		{
             std::lock_guard<std::mutex> lock(timeout_mutex);
             if (timeout_counters[host] >= TIMEOUT_LIMIT) {

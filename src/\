@@ -75,7 +75,7 @@ hvac_open_cb(const struct hg_cb_info *info)
     HG_Get_output(info->info.forward.handle, &out);    
     gettimeofday(&log_info.clocktime, NULL);
     fd_redir_map[hvac_open_state_p->local_fd] = out.ret_status;
-//	L4C_INFO("Open RPC Returned FD %d\n",out.ret_status);
+	L4C_INFO("Open RPC Returned FD %d\n",out.ret_status);
 
 	// sy: add - logging code
 	char server_addr[128];
