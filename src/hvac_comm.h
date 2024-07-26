@@ -11,6 +11,11 @@ extern "C" {
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/time.h>
+
 using namespace std;
 
 
@@ -27,11 +32,15 @@ struct hvac_rpc_state_t_client {
     hg_bool_t *done; //sy: add
     pthread_cond_t *cond; //sy: add
     pthread_mutex_t *mutex; //sy: add
+	char filepath[256]; //sy: add
+	uint32_t svr_hash; //sy: add
 };
 
 // Carry CB Information for CB
 struct hvac_open_state_t{
     uint32_t local_fd;
+	char filepath[256];
+	uint32_t svr_hash;
     hg_bool_t *done;
     pthread_cond_t *cond;
     pthread_mutex_t *mutex;
@@ -48,15 +57,31 @@ struct hvac_rpc_state_t_close {
     hg_handle_t handle;
 };
 
+// sy: add for logging
+typedef struct {
+    char filepath[256];
+    char request[256];
+    int flag;
+    int client_rank;
+    int server_rank;
+    char expn[256];
+	int n_epoch;
+	int n_batch;
+    struct timeval clocktime;
+} log_info_t;
+
 // sy: For detecting the failure
 extern std::vector<int> timeout_counters;
 extern mutex timeout_mutex;
+// sy: for logging
+extern hg_addr_t my_address;
+extern int client_rank;
 
 /* visible API for example RPC operation */
 
 //RPC Open Handler
 MERCURY_GEN_PROC(hvac_open_out_t, ((int32_t)(ret_status)))
-MERCURY_GEN_PROC(hvac_open_in_t, ((hg_string_t)(path)))
+MERCURY_GEN_PROC(hvac_open_in_t, ((hg_string_t)(path))((int32_t)(client_rank))((int32_t)(localfd)))
 
 //BULK Read Handler
 MERCURY_GEN_PROC(hvac_rpc_out_t, ((int32_t)(ret)))
@@ -68,8 +93,7 @@ MERCURY_GEN_PROC(hvac_seek_in_t, ((int32_t)(fd))((int32_t)(offset))((int32_t)(wh
 
 
 //Close Handler input arg
-MERCURY_GEN_PROC(hvac_close_in_t, ((int32_t)(fd)))
-
+MERCURY_GEN_PROC(hvac_close_in_t, ((int32_t)(fd))((int32_t)(client_rank)))
 
 //General
 void hvac_init_comm(hg_bool_t listen);
@@ -96,10 +120,14 @@ ssize_t hvac_seek_block();
 
 //For FT
 void initialize_hash_ring(int serverCount, int vnodes);
+void extract_ip_portion(const char* full_address, char* ip_portion, size_t max_len);
 /*sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size);
 
-
+/*sy: functions for logging */
+void initialize_log(int rank, const char *type);
+void logging_info(log_info_t *info, const char *type);
+void hvac_get_addr();
 
 //Mercury common RPC registration
 hg_id_t hvac_rpc_register(void);
