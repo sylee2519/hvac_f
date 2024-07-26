@@ -125,7 +125,7 @@ int WRAP_DECL(open)(const char *pathname, int flags, ...)
 	if (ret != -1){
 		if (hvac_track_file(pathname, flags, ret))
 		{
-			L4C_INFO("Open: Tracking File %s",pathname);
+//			L4C_INFO("Open: Tracking File %s",pathname);
 		}
 	}
 	
@@ -187,7 +187,7 @@ int WRAP_DECL(close)(int fd)
 	const char *path = hvac_get_path(fd);
 	if (path)
 	{
-		L4C_INFO("Close to file %s",path);
+//		L4C_INFO("Close to file %s",path);
 		hvac_remove_fd(fd);
 	}
 
@@ -215,7 +215,7 @@ ssize_t WRAP_DECL(read)(int fd, void *buf, size_t count)
 
 	if (path)
     {
-        L4C_INFO("Read to file %s of size %ld returning %ld bytes",path,count,ret);
+//        L4C_INFO("Read to file %s of size %ld returning %ld bytes",path,count,ret);
     }
 	
 	if (ret < 0)
@@ -253,10 +253,12 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
 
 	if (path)
 	{                
-		L4C_INFO("pread to tracked file %s",path);
+//		L4C_INFO("pread to tracked file %s",path);
 		
-		memset(buf, 0, count);
+//		memset(buf, 0, count);
 		ret = hvac_remote_pread(fd, buf, count, offset);
+
+/*
             if (ret >0) {
 		            char *hex_buf = buffer_to_hex(buf, ret);
                 L4C_INFO("Buffer content after remote read: %s\n", hex_buf);
@@ -271,6 +273,7 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
             }
 			
                 L4C_INFO("offset %d bytesRead original %d bytesRead hvac %d\n", offset, cnt, ret);
+*/
 		if(ret < 0){
 			
 			L4C_INFO("remote pread_error returned %s",path);

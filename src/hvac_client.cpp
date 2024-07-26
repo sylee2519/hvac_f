@@ -33,6 +33,7 @@ const int TIMEOUT_LIMIT = 3;
 HashRing<string, string>* hashRing; // ptr to the consistent hashing object
 vector<bool> failure_flags;
 
+
 /* Devise a way to safely call this and initialize early */
 static void __attribute__((constructor)) hvac_client_init()
 {	
@@ -65,7 +66,7 @@ static void __attribute__((constructor)) hvac_client_init()
     
 	/* sy: add */
 	initialize_hash_ring(g_hvac_server_count, VIRTUAL_NODE_CNT);
-
+	hvac_get_addr();
     g_hvac_initialized = true;
     pthread_mutex_unlock(&init_mutex);
     
@@ -114,12 +115,12 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			if (ppath.find(test) != std::string::npos)
 			{
 				//L4C_FATAL("Got a file want a stack trace");
-				L4C_INFO("Traacking used HV_DD file %s",path);
+//				L4C_INFO("Traacking used HV_DD file %s",path);
 				fd_map[fd] = std::filesystem::canonical(path);
 				tracked = true;
 			}		
 		}else if (ppath == std::filesystem::current_path()) {       
-			L4C_INFO("Traacking used CWD file %s",path);
+//			L4C_INFO("Traacking used CWD file %s",path);
 			fd_map[fd] = std::filesystem::canonical(path);
 			tracked = true;
 		}
@@ -141,6 +142,11 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			hvac_client_comm_register_rpc();
 			g_mercury_init = true;
 			initialize_hash_ring(g_hvac_server_count, VIRTUAL_NODE_CNT);
+			const char *type = "client"; 
+			const char *rank_str = getenv("HOROVOD_RANK");
+			int client_rank = atoi(rank_str);
+			initialize_log(client_rank, type);
+			hvac_get_addr();
 		}
 		// sy: modified logic
 		hvac_open_state_t *hvac_open_state_p = (hvac_open_state_t *)malloc(sizeof(hvac_open_state_t));
@@ -150,11 +156,11 @@ bool hvac_track_file(const char *path, int flags, int fd)
 //		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		string hostname = hashRing->GetNode(fd_map[fd]);
 		int host = hashRing->ConvertHostToNumber(hostname);
-		L4C_INFO("Remote open - Host %d", host);
+//		L4C_INFO("Remote open - Host %d", host);
 		{
             std::lock_guard<std::mutex> lock(timeout_mutex);
 			
-			L4C_INFO("host %d\n", host);
+//			L4C_INFO("host %d\n", host);
 //			L4C_INFO("cnt %d\n",timeout_counters[host]);
             if (timeout_counters[host] >= TIMEOUT_LIMIT && !failure_flags[host]) {
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
@@ -162,7 +168,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
 				failure_flags[host] = true;
 				hostname = hashRing->GetNode(fd_map[fd]); // sy: Imediately directed to the new node
                 host = hashRing->ConvertHostToNumber(hostname);
-				L4C_INFO("new host %d\n", host);
+//				L4C_INFO("new host %d\n", host);
             }
         }
 
@@ -197,11 +203,11 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
 //		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		string hostname = hashRing->GetNode(fd_map[fd]);
         int host = hashRing->ConvertHostToNumber(hostname);
-        L4C_INFO("Remote read - Host %d", host);
+//        L4C_INFO("Remote read - Host %d", host);
         {
             std::lock_guard<std::mutex> lock(timeout_mutex);
 
-            L4C_INFO("host %d\n", host);
+  //          L4C_INFO("host %d\n", host);
 //          L4C_INFO("cnt %d\n",timeout_counters[host]);
             if (timeout_counters[host] >= TIMEOUT_LIMIT && !failure_flags[host]) {
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
@@ -253,14 +259,14 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 //		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
 		string hostname = hashRing->GetNode(fd_map[fd]);
         int host = hashRing->ConvertHostToNumber(hostname);
-        L4C_INFO("Remote pread - Host %d", host);
+     //   L4C_INFO("Remote pread - Host %d", host);
         {
             std::lock_guard<std::mutex> lock(timeout_mutex);
 
-            L4C_INFO("host %d\n", host);
+//            L4C_INFO("host %d\n", host);
 //          L4C_INFO("cnt %d\n",timeout_counters[host]);
             if (timeout_counters[host] >= TIMEOUT_LIMIT && !failure_flags[host]) {
-                L4C_INFO("Host %d reached timeout limit, skipping", host);
+//                L4C_INFO("Host %d reached timeout limit, skipping", host);
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
 //                hostname = hashRing->GetNode(fd_map[fd]);
