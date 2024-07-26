@@ -425,6 +425,7 @@ hvac_open_rpc_handler(hg_handle_t handle)
     hvac_open_out_t out;    
 	const struct hg_info *hgi;
 	int nvme_flag = 0;
+    log_info_t log_info;
 
     int ret = HG_Get_input(handle, &in);
     assert(ret == 0);
@@ -434,6 +435,7 @@ hvac_open_rpc_handler(hg_handle_t handle)
 //        return (hg_return_t)ret;
 //    }
 
+    gettimeofday(&log_info.clocktime, NULL);
 	hgi = HG_Get_info(handle);
     if (!hgi) {
         L4C_DEBUG("HG_Get_info failed\n");
@@ -441,7 +443,6 @@ hvac_open_rpc_handler(hg_handle_t handle)
     }
 
 	// sy: add - logging code
-    log_info_t log_info;
     strncpy(log_info.filepath, in.path, sizeof(log_info.filepath) - 1);
     log_info.filepath[sizeof(log_info.filepath) - 1] = '\0';
     strncpy(log_info.request, "open", sizeof(log_info.request) - 1);
@@ -462,7 +463,6 @@ hvac_open_rpc_handler(hg_handle_t handle)
     log_info.expn[sizeof(log_info.expn) - 1] = '\0';
     log_info.n_epoch = in.localfd;
     log_info.n_batch = -1;
-    gettimeofday(&log_info.clocktime, NULL);
     logging_info(&log_info, "server");
 
     string redir_path = in.path;
@@ -513,9 +513,9 @@ hvac_close_rpc_handler(hg_handle_t handle)
 	struct timeval tmp_time;
 
     log_info_t log_info;
-	gettimeofday(&log_info.clocktime, NULL);
     int ret = HG_Get_input(handle, &in);
 	assert(ret == HG_SUCCESS);
+	gettimeofday(&log_info.clocktime, NULL);
 /*    if(ret == 0){
         L4C_DEBUG("close rpc input contains an error: %d\n",ret);
 		fd_to_path.erase(in.fd);
