@@ -127,7 +127,7 @@ void hvac_init_comm(hg_bool_t listen)
 
 	if (listen)
 	{
-		char *rank_str = getenv("PMIX_RANK");
+		char *rank_str = getenv("PMI_RANK");
     	server_rank = atoi(rank_str);
 		if (rank_str != NULL){
 			hvac_server_rank = atoi(rank_str);
@@ -197,9 +197,7 @@ void hvac_comm_list_addr()
 	char *jobid = getenv("MY_JOBID");
 	
 //	sprintf(filename, "./.ports.cfg");
-//	sprintf(filename, "./.ports.cfg.%s", jobid);
-	const char *logdir = getenv("HVAC_LOG_DIR");	
-	snprintf(filename, sizeof(filename), "%s/.ports.cfg.%s", logdir, jobid);
+	sprintf(filename, "./.ports.cfg.%s", jobid);
 	/* Get self addr to tell client about */
     HG_Addr_self(hg_class, &self_addr);
     HG_Addr_to_string(
