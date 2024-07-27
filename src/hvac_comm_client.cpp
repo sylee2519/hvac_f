@@ -541,9 +541,7 @@ hg_addr_t hvac_client_comm_lookup_addr(int rank)
 	hg_addr_t target_server;
 	bool svr_found = false;
 	FILE *na_config = NULL;
-	const char *logdir = getenv("HVAC_LOG_DIR");
-    snprintf(filename, sizeof(filename), "%s/.ports.cfg.%s", logdir, jobid);
-//	sprintf(filename, "./.ports.cfg.%s", jobid);
+	sprintf(filename, "./.ports.cfg.%s", jobid);
 	na_config = fopen(filename,"r+");
     
 

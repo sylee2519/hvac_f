@@ -198,9 +198,7 @@ void hvac_comm_list_addr()
 //	char *jobid = getenv("SLURM_JOBID");
 	char *jobid = getenv("MY_JOBID");
 
-	const char *logdir = getenv("HVAC_LOG_DIR");	
-	snprintf(filename, sizeof(filename), "%s/.ports.cfg.%s", logdir, jobid);
-//	sprintf(filename, "./.ports.cfg.%s", jobid);
+	sprintf(filename, "./.ports.cfg.%s", jobid);
 	/* Get self addr to tell client about */
     HG_Addr_self(hg_class, &self_addr);
     HG_Addr_to_string(
