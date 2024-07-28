@@ -13,7 +13,6 @@ extern "C" {
 #include <iostream>
 #include <map>	
 
-
 static hg_class_t *hg_class = NULL;
 static hg_context_t *hg_context = NULL;
 static int hvac_progress_thread_shutdown_flags = 0;
