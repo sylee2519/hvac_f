@@ -5,14 +5,11 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <algorithm>
+#include "hvac_comm.h"
 
-struct Data {
-    char file_path[256]; 
-    void *value;
-    ssize_t size;        
-};
-
-std::unordered_map<uint32_t, std::vector<Data>> data_storage;
-std::map<std::tring, std::string> path_cache_map;
-string my_address;
+std::vector<FileData> exclusive_to_send;
+std::unordered_map<uint32_t, std::vector<FileData>> data_storage;
+std::map<int, std::string> fd_path_map;
+//std::string my_address;
 #endif

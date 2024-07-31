@@ -36,14 +36,14 @@ int hvac_start_comm_server(void)
     hvac_init_comm(true);
 
     /* Post our address */
-    hvac_comm_list_addr();
+    hvac_comm_list_addr(true);
 
     /* Register basic RPC */
     hvac_rpc_register();
     hvac_open_rpc_register();
     hvac_close_rpc_register();
     hvac_seek_rpc_register();
-
+	hvac_write_rpc_register();
 
 
     while (1)

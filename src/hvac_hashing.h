@@ -26,6 +26,8 @@ public:
     const Node& GetNode(const Data& data) const;
     int AdjacentNodes(const Node& node) const;
     int ConvertHostToNumber(const Node& node) const;
+	const Node& SimulateNodeRemoval(const Data& data, int nodeNumberToRemove) const;
+
 private:
     string StringifyNode(const Node& node) const {
         if constexpr (is_same_v<Node, string>) {
@@ -108,6 +110,40 @@ int HashRing<Node, Data, Hash>::ConvertHostToNumber(const Node& node) const {
     }
     throw runtime_error("Invalid node name format");
 }
+
+template <class Node, class Data, class Hash>
+const Node& HashRing<Node, Data, Hash>::SimulateNodeRemoval(const Data& data, int nodeNumberToRemove) const {
+    if (ring_.empty()) {
+        throw runtime_error("Empty ring");
+    }
+
+    // Create a temporary copy of the ring
+    NodeMap tempRing = ring_;
+
+    // Find and remove the node with the given node number
+    for (auto it = tempRing.begin(); it != tempRing.end(); ) {
+        if (ConvertHostToNumber(it->second) == nodeNumberToRemove) {
+            it = tempRing.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    if (tempRing.empty()) {
+        throw runtime_error("Ring would be empty after removal");
+    }
+
+    // Find the responsible node in the modified ring
+    size_t dataHash = hash_(StringifyData(data).c_str());
+    auto responsibleIt = tempRing.lower_bound(dataHash);
+    if (responsibleIt == tempRing.end()) {
+        responsibleIt = tempRing.begin();
+    }
+
+    return responsibleIt->second;
+}
+
+extern HashRing<string, string>* hashRing;
 
 #endif // HASH_RING_H
 
