@@ -31,7 +31,6 @@ std::map<int, int > fd_redir_map;
 //sy: add
 const int TIMEOUT_LIMIT = 3;
 HashRing<string, string>* hashRing; // ptr to the consistent hashing object
-vector<bool> failure_flags;
 
 
 /* Devise a way to safely call this and initialize early */
@@ -167,6 +166,8 @@ bool hvac_track_file(const char *path, int flags, int fd)
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
 				hashRing->RemoveNode(hostname);
 				failure_flags[host] = true;
+				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
+				client_worldsize--;
 				hostname = hashRing->GetNode(fd_map[fd]); // sy: Imediately directed to the new node
                 host = hashRing->ConvertHostToNumber(hostname);
 //				L4C_INFO("new host %d\n", host);

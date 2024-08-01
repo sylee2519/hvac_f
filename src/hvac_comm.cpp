@@ -13,14 +13,20 @@ extern "C" {
 #include <iostream>
 #include <map>	
 
-static hg_class_t *hg_class = NULL;
+hg_class_t *hg_class = NULL;
 static hg_context_t *hg_context = NULL;
 static int hvac_progress_thread_shutdown_flags = 0;
 static int hvac_server_rank = -1;
 static int server_rank = -1;
 int client_rank = -1;
+int client_worldsize = -1;
 hg_addr_t my_address = HG_ADDR_NULL;
 char server_addr_str[128]; 
+
+/* for Fault tolerance */
+std::vector<int> timeout_counters;
+std::mutex timeout_mutex;
+vector<bool> failure_flags;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -33,7 +39,7 @@ struct hvac_rpc_state {
 	char path[256];
 };
 
-// sy: add - Extract IP address for node checking
+/* sy: add - Extract IP address for node checking */
 void extract_ip_portion(const char* full_address, char* ip_portion, size_t max_len) {
     const char* pos = strchr(full_address, ':');
     if (pos) {
@@ -233,6 +239,21 @@ void hvac_comm_list_addr(hg_bool_t server)
     fclose(na_config);
 }
 
+/* sy: add - */
+void read_client_addresses(const char *filename, char addresses[][PATH_MAX], int *count) {
+    FILE *na_config = fopen(filename, "r");
+    if (!na_config) {
+        fprintf(stderr, "Could not open config file from: %s\n", filename);
+        exit(0);
+    }
+    *count = 0;
+    while (fgets(addresses[*count], PATH_MAX, na_config)) {
+        addresses[*count][strcspn(addresses[*count], "\n")] = '\0'; // Remove newline character
+        (*count)++;
+    }
+    fclose(na_config);
+}
+
 
 char *buffer_to_hex(const void *buf, size_t size) {
     const char *hex_digits = "0123456789ABCDEF";
@@ -250,8 +271,6 @@ char *buffer_to_hex(const void *buf, size_t size) {
     hex_str[size * 2] = '\0'; // Null terminator
     return hex_str;
 }
-
-
 
 static hg_return_t hvac_rpc_handler_write_cb(const struct hg_cb_info *info) {
     struct hvac_rpc_state *hvac_rpc_state_p = (struct hvac_rpc_state*)info->arg;
@@ -756,7 +775,6 @@ hvac_seek_rpc_handler(hg_handle_t handle)
     return (hg_return_t)ret;
 }
 
-
 /* register this particular rpc type with Mercury */
 hg_id_t
 hvac_rpc_register(void)
@@ -819,7 +837,6 @@ hvac_write_rpc_register(void)
 
     return tmp;
 }
-
 
 /* Create context even for client */
 void

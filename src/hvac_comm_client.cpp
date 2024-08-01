@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <map>	
+#include <unordered_map>	
 #include <thread>
 
 #include "hvac_comm.h"
@@ -16,6 +17,7 @@ extern "C" {
 #include <unistd.h>
 }
 
+
 #define TIMEOUT_SECONDS 5 
 
 /* RPC Block Constructs */
@@ -29,19 +31,22 @@ static hg_id_t hvac_client_open_id;
 static hg_id_t hvac_client_close_id;
 static hg_id_t hvac_client_seek_id;
 static hg_id_t hvac_client_write_id;
+static hg_id_t hvac_client_broadcast_id;
 ssize_t read_ret = -1;
 
 /* Mercury Data Caching */
-std::map<int, std::string> address_cache;
+//std::map<int, std::string> address_cache;
+std::unordered_map<int, std::string> server_address_cache;
+std::unordered_map<int, std::string> client_address_cache;
 extern std::map<int, int > fd_redir_map;
-
-/* for Fault tolerance */
-std::vector<int> timeout_counters;
-std::mutex timeout_mutex;
 
 /* for logging */
 char client_address[128];
 
+/* sy: add - helper function */
+bool is_failed(const std::vector<bool>& failure_flags, int rank) {
+    return failure_flags[rank];
+}
 
 /* sy: add - function to update the exclusive buffer for a given fd */
 void update_buffer(int fd, off_t offset, const char* data, size_t length) {
@@ -338,6 +343,7 @@ void hvac_client_comm_register_rpc()
     hvac_client_close_id = hvac_close_rpc_register();
     hvac_client_seek_id = hvac_seek_rpc_register();
 	hvac_client_write_id = hvac_write_rpc_register();
+	hvac_client_broadcast_id = hvac_broadcast_rpc_register();
 }
 
 void hvac_client_block(uint32_t host, hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex)
@@ -419,6 +425,83 @@ ssize_t hvac_seek_block()
     return bytes_read;
 }
 
+hg_id_t
+hvac_broadcast_rpc_register(void)
+{
+    hg_id_t tmp;
+
+    tmp = MERCURY_REGISTER(hg_class, "hvac_broadcast_rpc", hvac_broadcast_in_t, void, hvac_broadcast_rpc_handler);
+
+    return tmp;
+}
+
+hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
+    hg_return_t ret;
+    hvac_broadcast_in_t in;
+
+    ret = HG_Get_input(handle, &in);
+    if (ret != HG_SUCCESS) {
+        return ret;
+    }
+
+    L4C_INFO("Received message: rank_failed = %d\n", in.rank_failed);
+
+    {
+        std::lock_guard<std::mutex> lock(timeout_mutex);
+
+        if(!failure_flags[in.rank_failed]){
+            failure_flags[in.rank_failed] = true;
+            hvac_client_comm_gen_broadcast_rpc(in.rank_failed, client_worldsize);
+            client_worldsize--;
+        }
+    }
+
+
+    HG_Free_input(handle, &in);
+    HG_Destroy(handle);
+
+    return HG_SUCCESS;
+}
+
+/* sy: add - Failure broadcast RPC for clients */
+void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count) {
+    hg_addr_t svr_addr;
+    hg_return_t ret;
+    hg_handle_t handle;
+    hvac_broadcast_in_t in;
+    in.rank_failed = rank_failed;
+
+    // Butterfly broadcast pattern
+    for (int step = 1; step < count; step *= 2) {
+        int partner = client_rank ^ step;
+
+        if (partner < count && !is_failed(failure_flags, partner)) {
+            // Normal case, send to partner
+            svr_addr = hvac_client_comm_lookup_addr(partner, false);
+            hvac_comm_create_handle(svr_addr, hvac_client_broadcast_id, &handle);
+            ret = HG_Forward(handle, NULL, NULL, &in);
+            assert(ret == 0);
+
+            HG_Destroy(handle);
+            hvac_comm_free_addr(svr_addr);
+        } else if (is_failed(failure_flags, partner)) {
+            // If the partner is a failed node, take over its responsibilities
+            for (int inner_step = step; inner_step < count; inner_step *= 2) {
+                int alternative_partner = partner ^ inner_step;
+                if (alternative_partner < count && !is_failed(failure_flags, alternative_partner) && alternative_partner != client_rank) {
+                    svr_addr = hvac_client_comm_lookup_addr(alternative_partner, false);
+                    hvac_comm_create_handle(svr_addr, hvac_client_broadcast_id, &handle);
+                    ret = HG_Forward(handle, NULL, NULL, &in);
+                    assert(ret == 0);
+
+                    HG_Destroy(handle);
+                    hvac_comm_free_addr(svr_addr);
+                }
+            }
+        }
+    }
+}
+
 
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state)
 {   
@@ -428,7 +511,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     int ret;
 
     /* Get address */
-    svr_addr = hvac_client_comm_lookup_addr(svr_hash);        
+    svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);        
 	rpc_state->addr = svr_addr;	//sy: add
 	rpc_state->host = svr_hash;
 
@@ -489,7 +572,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
 		 hvac_rpc_state_p->file_data_to_erase = &(*file_it);
 
 		// Call hvac_client_comm_gen_write_rpc with the retrieved buffer and size
-//		hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p);
+		hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p);
 
 		} else {
 			L4C_DEBUG("File data not found in exclusive_to_send for path: %s\n", fd_path_map[fd].c_str());
@@ -517,7 +600,7 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_
 
 
     /* Get address */
-    svr_addr = hvac_client_comm_lookup_addr(svr_hash);    
+    svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);    
 
     /* Allocate args for callback pass through */
     hvac_open_state_p->local_fd = fd;
@@ -573,7 +656,7 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
     const struct hg_info *hgi;
     int ret;
 	
-    svr_addr = hvac_client_comm_lookup_addr(svr_hash);
+    svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);
 
     /* set up state structure */
     hvac_rpc_state_p->size = count;
@@ -648,7 +731,7 @@ void hvac_client_comm_gen_write_rpc(uint32_t svr_hash, uint32_t rank_origin, str
     const struct hg_info *hgi;
     int ret;
 
-    svr_addr = hvac_client_comm_lookup_addr(svr_hash);
+    svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);
 
     /* set up state structure */
     hvac_rpc_state_p->size = size;
@@ -725,7 +808,7 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
     done = HG_FALSE;
 	pthread_mutex_unlock(&done_mutex);
     /* Get address */
-    svr_addr = hvac_client_comm_lookup_addr(svr_hash);    
+    svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);    
 
     /* Allocate args for callback pass through */    
     /* create create handle to represent this rpc operation */    
@@ -750,44 +833,55 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 //We've converted the filename to a rank
 //Using standard c++ hashing modulo servers
 //Find the address
-hg_addr_t hvac_client_comm_lookup_addr(int rank)
-{
-	if (address_cache.find(rank) != address_cache.end())
-	{
-        hg_addr_t target_server;
-        HG_Addr_lookup2(hvac_comm_get_class(), address_cache[rank].c_str(), &target_server);
-		return target_server;
-	}
-
-	/* The hardway */
-	char filename[PATH_MAX];
-	char svr_str[PATH_MAX];
-	int svr_rank = -1;
-	char *jobid = getenv("MY_JOBID");
-	hg_addr_t target_server;
-	bool svr_found = false;
-	FILE *na_config = NULL;
-	sprintf(filename, "./.ports.cfg.%s", jobid);
-	na_config = fopen(filename,"r+");
+hg_addr_t hvac_client_comm_lookup_addr(int rank, bool is_server) {
+    auto& address_cache = is_server ? server_address_cache : client_address_cache;
     
+    if (address_cache.find(rank) != address_cache.end()) {
+        hg_addr_t target_addr;
+        HG_Addr_lookup2(hvac_comm_get_class(), address_cache[rank].c_str(), &target_addr);
+        return target_addr;
+    }
 
-	while (fscanf(na_config, "%d %s\n",&svr_rank, svr_str) == 2)
-	{
-		if (svr_rank == rank){
-			L4C_INFO("Connecting to %s %d\n", svr_str, svr_rank);            
-			svr_found = true;
+    /* The hard way */
+    char filename[PATH_MAX];
+    char addr_str[PATH_MAX];
+    int addr_rank = -1;
+    char *jobid = getenv("MY_JOBID");
+    hg_addr_t target_addr;
+    bool addr_found = false;
+    FILE *na_config = NULL;
+
+    if (is_server) {
+        sprintf(filename, "./.ports.cfg.%s", jobid);
+    } else {
+        sprintf(filename, "./.c.ports.cfg.%s", jobid);
+    }
+
+    na_config = fopen(filename, "r+");
+    if (!na_config) {
+        fprintf(stderr, "Could not open config file from: %s\n", filename);
+        exit(0);
+    }
+
+    while (fscanf(na_config, "%d %s\n", &addr_rank, addr_str) == 2) {
+        if (addr_rank == rank) {
+            printf("Connecting to %s %d\n", addr_str, addr_rank);
+            addr_found = true;
             break;
-		}
-	}
+        }
+    }
 
-	if (svr_found){
-		//Do something
-        address_cache[rank] = svr_str;
-        HG_Addr_lookup2(hvac_comm_get_class(),svr_str,&target_server);		
-	}
+    fclose(na_config);
 
-	return target_server;
+    if (addr_found) {
+        // Cache the address
+        address_cache[rank] = addr_str;
+        HG_Addr_lookup2(hvac_comm_get_class(), addr_str, &target_addr);
+    }
+
+    return target_addr;
 }
+
 
 void hvac_get_addr() {
 
@@ -806,6 +900,8 @@ void hvac_get_addr() {
 		extract_ip_portion(addr_buffer, client_address, sizeof(client_address));
 	
 		const char *rank_str = getenv("HOROVOD_RANK");
+		const char *world_str = getenv("WORLD_SIZE");
     	client_rank = (rank_str != NULL) ? atoi(rank_str) : -1;
+		client_worldsize = (world_str != NULL) ? atoi(world_str) : -1;		
     }
 }
