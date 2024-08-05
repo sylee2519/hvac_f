@@ -33,7 +33,8 @@ int hvac_start_comm_server(void)
 	}
 
     /* True means we're a listener */
-    hvac_init_comm(true);
+    hvac_init_comm(true, true);
+	hvac_start_progress_thread(hg_context);
 
     /* Post our address */
     hvac_comm_list_addr(true);

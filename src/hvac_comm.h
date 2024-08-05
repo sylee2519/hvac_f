@@ -15,6 +15,7 @@ extern "C" {
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <unordered_set>
 
 using namespace std;
 
@@ -80,6 +81,12 @@ typedef struct {
 extern std::vector<int> timeout_counters;
 extern mutex timeout_mutex;
 extern std::vector<bool> failure_flags;
+extern hg_id_t hvac_client_broadcast_id;
+
+extern hg_context_t *hg_context;
+extern std::unordered_set<hg_handle_t> active_handles;
+extern pthread_mutex_t handles_mutex;
+
 
 // sy: for logging
 extern hg_addr_t my_address;
@@ -112,7 +119,7 @@ MERCURY_GEN_PROC(hvac_broadcast_in_t, ((int32_t)(rank_failed)))
 
 
 //General
-void hvac_init_comm(hg_bool_t listen);
+void hvac_init_comm(hg_bool_t listen, hg_bool_t server);
 void *hvac_progress_fn(void *args);
 void hvac_comm_list_addr(hg_bool_t server);
 void hvac_comm_create_handle(hg_addr_t addr, hg_id_t id, hg_handle_t *handle);
@@ -142,6 +149,7 @@ void initialize_hash_ring(int serverCount, int vnodes);
 void extract_ip_portion(const char* full_address, char* ip_portion, size_t max_len);
 /*sy: function for debugging */
 char *buffer_to_hex(const void *buf, size_t size);
+int hvac_start_progress_thread(hg_context_t *hg_context);
 
 /*sy: functions for logging */
 void initialize_log(int rank, const char *type);
@@ -157,6 +165,8 @@ hg_id_t hvac_write_rpc_register(void);
 // For Client
 hg_id_t hvac_broadcast_rpc_register(void);
 hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle);
-
+void destroy_all_handles();
+void initialize_rank_mapping();
+int get_server_rank_by_client_rank(int client_rank);
 #endif
 

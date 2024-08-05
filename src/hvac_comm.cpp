@@ -14,7 +14,7 @@ extern "C" {
 #include <map>	
 
 hg_class_t *hg_class = NULL;
-static hg_context_t *hg_context = NULL;
+hg_context_t *hg_context = NULL;
 static int hvac_progress_thread_shutdown_flags = 0;
 static int hvac_server_rank = -1;
 static int server_rank = -1;
@@ -27,6 +27,9 @@ char server_addr_str[128];
 std::vector<int> timeout_counters;
 std::mutex timeout_mutex;
 vector<bool> failure_flags;
+hg_id_t hvac_client_broadcast_id;
+std::unordered_set<hg_handle_t> active_handles;
+pthread_mutex_t handles_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -112,12 +115,12 @@ void logging_info(log_info_t *info, const char *type) {
 //Initialize communication for both the client and server
 //processes
 //This is based on the rpc_engine template provided by the mercury lib
-void hvac_init_comm(hg_bool_t listen)
+void hvac_init_comm(hg_bool_t listen, hg_bool_t server)
 {
 	const char *info_string = "ofi+tcp://";  
 //	char *rank_str = getenv("PMI_RANK");  
 //    server_rank = atoi(rank_str);
-    pthread_t hvac_progress_tid;
+//    pthread_t hvac_progress_tid;
 
     HG_Set_log_level("DEBUG");
 
@@ -134,7 +137,7 @@ void hvac_init_comm(hg_bool_t listen)
 	}
 
 	//Only for server processes
-	if (listen)
+	if (server)
 	{
 		char *rank_str = getenv("PMI_RANK");  
     	server_rank = atoi(rank_str);
@@ -147,14 +150,30 @@ void hvac_init_comm(hg_bool_t listen)
 			L4C_FATAL("Failed to extract rank\n");
 		}
 	}
-
-	L4C_INFO("Mecury initialized");
-	//TODO The engine creates a pthread here to do the listening and progress work
-	//I need to understand this better I don't want to create unecessary work for the client
-	if (pthread_create(&hvac_progress_tid, NULL, hvac_progress_fn, NULL) != 0){
-		L4C_FATAL("Failed to initialized mecury progress thread\n");
-	}
 }
+
+int hvac_start_progress_thread(hg_context_t *hg_context) {
+    pthread_t hvac_progress_tid;
+    L4C_INFO("Mercury initialized");
+
+    // Create the progress thread
+    if (pthread_create(&hvac_progress_tid, NULL, hvac_progress_fn, hg_context) != 0) {
+        L4C_FATAL("Failed to initialize Mercury progress thread\n");
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+void destroy_all_handles() {
+    pthread_mutex_lock(&handles_mutex);
+    for (auto handle : active_handles) {
+        HG_Destroy(handle);
+    }
+    active_handles.clear();
+    pthread_mutex_unlock(&handles_mutex);
+}
+
 
 void hvac_shutdown_comm()
 {
@@ -165,13 +184,14 @@ void hvac_shutdown_comm()
 	if (hg_context == NULL)
 		return;
 
+//	destroy_all_handles();
 	hvac_comm_free_addr(my_address);
 
-    ret = HG_Context_destroy(hg_context);
-   assert(ret == HG_SUCCESS);
+  //  ret = HG_Context_destroy(hg_context);
+ //  assert(ret == HG_SUCCESS);
 
-    ret = HG_Finalize(hg_class);
-    assert(ret == HG_SUCCESS);
+   // ret = HG_Finalize(hg_class);
+  //  assert(ret == HG_SUCCESS);
 
 
 }

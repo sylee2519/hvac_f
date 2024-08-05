@@ -26,6 +26,7 @@ public:
     const Node& GetNode(const Data& data) const;
     int AdjacentNodes(const Node& node) const;
     int ConvertHostToNumber(const Node& node) const;
+	Node ConvertNumberToHost(int number) const;
 	const Node& SimulateNodeRemoval(const Data& data, int nodeNumberToRemove) const;
 
 private:
@@ -109,6 +110,14 @@ int HashRing<Node, Data, Hash>::ConvertHostToNumber(const Node& node) const {
         return stoi(nodestr.substr(6)) - 1;
     }
     throw runtime_error("Invalid node name format");
+}
+
+template <class Node, class Data, class Hash>
+Node HashRing<Node, Data, Hash>::ConvertNumberToHost(int number) const {
+    if (number < 0) {
+        throw std::runtime_error("Invalid number for host");
+    }
+    return "server" + std::to_string(number + 1);
 }
 
 template <class Node, class Data, class Hash>

@@ -31,21 +31,45 @@ static hg_id_t hvac_client_open_id;
 static hg_id_t hvac_client_close_id;
 static hg_id_t hvac_client_seek_id;
 static hg_id_t hvac_client_write_id;
-static hg_id_t hvac_client_broadcast_id;
+//static hg_id_t hvac_client_broadcast_id;
 ssize_t read_ret = -1;
 
 /* Mercury Data Caching */
 //std::map<int, std::string> address_cache;
 std::unordered_map<int, std::string> server_address_cache;
 std::unordered_map<int, std::string> client_address_cache;
+std::unordered_map<int, int> client_to_server_rank;
+bool rank_mapping_initialized = false;
 extern std::map<int, int > fd_redir_map;
 
 /* for logging */
 char client_address[128];
 
+void track_handle(hg_handle_t handle) {
+    pthread_mutex_lock(&handles_mutex);
+    active_handles.insert(handle);
+    pthread_mutex_unlock(&handles_mutex);
+}
+
+void untrack_handle(hg_handle_t handle) {
+    pthread_mutex_lock(&handles_mutex);
+    active_handles.erase(handle);
+    pthread_mutex_unlock(&handles_mutex);
+}
+
 /* sy: add - helper function */
 bool is_failed(const std::vector<bool>& failure_flags, int rank) {
-    return failure_flags[rank];
+    // Convert the client rank into server rank
+    int server_rank = get_server_rank_by_client_rank(rank);
+    L4C_INFO("client rank %d\n server rank %d\n", rank, server_rank);
+
+    // Check if the server_rank is valid
+    if (server_rank < 0 || server_rank >= static_cast<int>(failure_flags.size())) {
+        L4C_FATAL("Invalid server rank: %d\n", server_rank);
+        return false; // Or handle the error appropriately
+    }
+
+    return failure_flags[server_rank];
 }
 
 /* sy: add - function to update the exclusive buffer for a given fd */
@@ -343,7 +367,6 @@ void hvac_client_comm_register_rpc()
     hvac_client_close_id = hvac_close_rpc_register();
     hvac_client_seek_id = hvac_seek_rpc_register();
 	hvac_client_write_id = hvac_write_rpc_register();
-	hvac_client_broadcast_id = hvac_broadcast_rpc_register();
 }
 
 void hvac_client_block(uint32_t host, hg_bool_t *done, pthread_cond_t *cond, pthread_mutex_t *mutex)
@@ -440,18 +463,21 @@ hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
     hvac_broadcast_in_t in;
 
     ret = HG_Get_input(handle, &in);
+    assert(ret == 0);
     if (ret != HG_SUCCESS) {
         return ret;
     }
 
-    L4C_INFO("Received message: rank_failed = %d\n", in.rank_failed);
+    L4C_INFO("broadcast received message: rank_failed = %d\n", in.rank_failed);
 
     {
         std::lock_guard<std::mutex> lock(timeout_mutex);
 
         if(!failure_flags[in.rank_failed]){
+			std::string hostname = hashRing->ConvertNumberToHost(in.rank_failed);
+			hashRing->RemoveNode(hostname);
             failure_flags[in.rank_failed] = true;
-            hvac_client_comm_gen_broadcast_rpc(in.rank_failed, client_worldsize);
+           	hvac_client_comm_gen_broadcast_rpc(in.rank_failed, client_worldsize);
             client_worldsize--;
         }
     }
@@ -463,6 +489,24 @@ hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
     return HG_SUCCESS;
 }
 
+
+hg_return_t broadcast_rpc_cb(const struct hg_cb_info *info) {
+    hg_handle_t handle = info->info.forward.handle;
+
+	assert(info->ret == HG_SUCCESS);
+	L4C_INFO("Broadcast RPC callback received\n");
+
+    if (info->ret != HG_SUCCESS) {
+        L4C_DEBUG("Broadcast RPC failed in callback\n");
+    }
+
+    HG_Destroy(handle);
+    untrack_handle(handle);
+
+    return HG_SUCCESS;
+}
+
+
 /* sy: add - Failure broadcast RPC for clients */
 void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count) {
     hg_addr_t svr_addr;
@@ -471,37 +515,48 @@ void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count) {
     hvac_broadcast_in_t in;
     in.rank_failed = rank_failed;
 
+    L4C_INFO("Broadcast RPC generation entered, rank failed %d\n", rank_failed);
+	
     // Butterfly broadcast pattern
     for (int step = 1; step < count; step *= 2) {
+		L4C_INFO("Client: %d\n", client_rank);
         int partner = client_rank ^ step;
-
-        if (partner < count && !is_failed(failure_flags, partner)) {
+        L4C_INFO("Partner client: %d\n", partner);
+        if (partner < count && !is_failed(failure_flags, partner) && partner != client_rank) {
             // Normal case, send to partner
             svr_addr = hvac_client_comm_lookup_addr(partner, false);
             hvac_comm_create_handle(svr_addr, hvac_client_broadcast_id, &handle);
-            ret = HG_Forward(handle, NULL, NULL, &in);
-            assert(ret == 0);
+			track_handle(handle);
+            ret = HG_Forward(handle, broadcast_rpc_cb, NULL, &in);
+            if (ret != HG_SUCCESS) {
+                L4C_FATAL("Failed to forward RPC to partner %d\n", partner);
+                HG_Destroy(handle);
+				untrack_handle(handle);
+            }
 
-            HG_Destroy(handle);
             hvac_comm_free_addr(svr_addr);
-        } else if (is_failed(failure_flags, partner)) {
+        } else if (partner < count && is_failed(failure_flags, partner) && partner != client_rank) {
+            L4C_INFO("My partner (client rank) has failed: %d\n", partner);
             // If the partner is a failed node, take over its responsibilities
             for (int inner_step = step; inner_step < count; inner_step *= 2) {
                 int alternative_partner = partner ^ inner_step;
                 if (alternative_partner < count && !is_failed(failure_flags, alternative_partner) && alternative_partner != client_rank) {
                     svr_addr = hvac_client_comm_lookup_addr(alternative_partner, false);
                     hvac_comm_create_handle(svr_addr, hvac_client_broadcast_id, &handle);
-                    ret = HG_Forward(handle, NULL, NULL, &in);
-                    assert(ret == 0);
+					track_handle(handle);
+                    ret = HG_Forward(handle, broadcast_rpc_cb, NULL, &in);
+                    if (ret != HG_SUCCESS) {
+                        L4C_FATAL("Failed to forward RPC to alternative partner %d\n", alternative_partner);
+                    	HG_Destroy(handle);
+						untrack_handle(handle);
+                    }
 
-                    HG_Destroy(handle);
                     hvac_comm_free_addr(svr_addr);
                 }
             }
         }
     }
 }
-
 
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state)
 {   
@@ -572,7 +627,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
 		 hvac_rpc_state_p->file_data_to_erase = &(*file_it);
 
 		// Call hvac_client_comm_gen_write_rpc with the retrieved buffer and size
-		hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p);
+//		hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p);
 
 		} else {
 			L4C_DEBUG("File data not found in exclusive_to_send for path: %s\n", fd_path_map[fd].c_str());
@@ -829,10 +884,101 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 
 }
 
+void initialize_rank_mapping() {
+    if (rank_mapping_initialized) return;
+
+    char client_filename[PATH_MAX];
+    char server_filename[PATH_MAX];
+    char addr_str[PATH_MAX];
+    char ip_portion[PATH_MAX];
+    int addr_rank = -1;
+    char *jobid = getenv("MY_JOBID");
+    FILE *na_config = NULL;
+
+    // Read server addresses
+    sprintf(server_filename, "./.ports.cfg.%s", jobid);
+    na_config = fopen(server_filename, "r+");
+    if (!na_config) {
+        L4C_DEBUG("Could not open server config file from: %s\n", server_filename);
+        return;
+    }
+
+    std::unordered_map<std::string, int> ip_to_server_rank;
+    while (fscanf(na_config, "%d %s\n", &addr_rank, addr_str) == 2) {
+        extract_ip_portion(addr_str, ip_portion, sizeof(ip_portion));
+        ip_to_server_rank[ip_portion] = addr_rank;
+        server_address_cache[addr_rank] = addr_str;
+    }
+    fclose(na_config);
+
+    // Read client addresses
+    sprintf(client_filename, "./.c.ports.cfg.%s", jobid);
+    na_config = fopen(client_filename, "r+");
+    if (!na_config) {
+        L4C_DEBUG("Could not open client config file from: %s\n", client_filename);
+        return;;
+    }
+
+    std::unordered_map<std::string, int> ip_to_client_rank;
+    while (fscanf(na_config, "%d %s\n", &addr_rank, addr_str) == 2) {
+        extract_ip_portion(addr_str, ip_portion, sizeof(ip_portion));
+        ip_to_client_rank[ip_portion] = addr_rank;
+        client_address_cache[addr_rank] = addr_str;
+    }
+    fclose(na_config);
+
+    // Create client to server rank mapping based on IP address
+    for (const auto& entry : ip_to_client_rank) {
+        const std::string& ip = entry.first;
+        int client_rank = entry.second;
+        if (ip_to_server_rank.find(ip) != ip_to_server_rank.end()) {
+            int server_rank = ip_to_server_rank[ip];
+            client_to_server_rank[client_rank] = server_rank;
+        }
+    }
+
+    rank_mapping_initialized = true;
+}
+
 
 //We've converted the filename to a rank
 //Using standard c++ hashing modulo servers
 //Find the address
+hg_addr_t hvac_client_comm_lookup_addr(int rank, bool is_server) {
+    // Initialize rank mapping if not already done
+    initialize_rank_mapping();
+
+    auto& address_cache = is_server ? server_address_cache : client_address_cache;
+
+    if (address_cache.find(rank) != address_cache.end()) {
+        hg_addr_t target_addr;
+        HG_Addr_lookup2(hvac_comm_get_class(), address_cache[rank].c_str(), &target_addr);
+        return target_addr;
+    }
+
+    // If it's a client rank but we need the server address
+    if (!is_server && client_to_server_rank.find(rank) != client_to_server_rank.end()) {
+        int server_rank = client_to_server_rank[rank];
+        return hvac_client_comm_lookup_addr(server_rank, true);
+    }
+
+    L4C_DEBUG("Could not find address for rank: %d\n", rank);
+    return HG_ADDR_NULL; 
+}
+
+
+int get_server_rank_by_client_rank(int client_rank) {
+    initialize_rank_mapping();
+
+    if (client_to_server_rank.find(client_rank) != client_to_server_rank.end()) {
+        return client_to_server_rank[client_rank];
+    }
+
+    L4C_DEBUG("Could not find server rank for client rank: %d\n", client_rank);
+    return -1; 
+}
+
+/*
 hg_addr_t hvac_client_comm_lookup_addr(int rank, bool is_server) {
     auto& address_cache = is_server ? server_address_cache : client_address_cache;
     
@@ -842,7 +988,6 @@ hg_addr_t hvac_client_comm_lookup_addr(int rank, bool is_server) {
         return target_addr;
     }
 
-    /* The hard way */
     char filename[PATH_MAX];
     char addr_str[PATH_MAX];
     int addr_rank = -1;
@@ -881,7 +1026,7 @@ hg_addr_t hvac_client_comm_lookup_addr(int rank, bool is_server) {
 
     return target_addr;
 }
-
+*/
 
 void hvac_get_addr() {
 

@@ -136,7 +136,9 @@ bool hvac_track_file(const char *path, int flags, int fd)
 	// Send RPC to tell server to open file 
 	if (tracked){
 		if (!g_mercury_init){
-			hvac_init_comm(false);	
+			hvac_init_comm(true, false);		
+			hvac_client_broadcast_id = hvac_broadcast_rpc_register();
+			hvac_start_progress_thread(hg_context);
 			/* I think I only need to do this once */
 			hvac_client_comm_register_rpc();
 			g_mercury_init = true;
@@ -215,6 +217,7 @@ ssize_t hvac_remote_read(int fd, void *buf, size_t count)
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
+				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
 //                hostname = hashRing->GetNode(fd_map[fd]);
 //                host = hashRing->ConvertHostToNumber(hostname);
 				fd_map.erase(fd);
@@ -268,9 +271,10 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
 //            L4C_INFO("host %d\n", host);
 //          L4C_INFO("cnt %d\n",timeout_counters[host]);
             if (timeout_counters[host] >= TIMEOUT_LIMIT && !failure_flags[host]) {
-//                L4C_INFO("Host %d reached timeout limit, skipping", host);
+                L4C_INFO("Host %d reached timeout limit, skipping", host);
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
+				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
 //                hostname = hashRing->GetNode(fd_map[fd]);
 //                host = hashRing->ConvertHostToNumber(hostname);
 //                L4C_INFO("new host %d\n", host);
@@ -327,6 +331,7 @@ void hvac_remote_close(int fd){
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
+				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
 				return; // sy: skip further processing for this node
             }
         }
