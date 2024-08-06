@@ -175,9 +175,9 @@ bool hvac_track_file(const char *path, int flags, int fd)
 				hostname = hashRing->GetNode(fd_map[fd]); // sy: Imediately directed to the new node
                 host = hashRing->ConvertHostToNumber(hostname);
 
-
                 {
                     std::lock_guard<std::mutex> lock(data_storage_mutex);
+					auto& client_data_storage = use_first_buffer ? client_data_storage1 : client_data_storage2;				
                     // Iterate through client_data_storage and erase all entries except the one for the failed node
                     for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
                         if (it->first != static_cast<unsigned int>(prev_host)) {
@@ -204,6 +204,7 @@ bool hvac_track_file(const char *path, int flags, int fd)
                         }
                     }
 					data_cnt = 0;
+					use_first_buffer = !use_first_buffer;
                 }
 
 //				L4C_INFO("new host %d\n", host);
@@ -314,6 +315,7 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
                 {
                     std::lock_guard<std::mutex> lock(data_storage_mutex);
                     // Iterate through client_data_storage and erase all entries except the one for the failed node
+					auto& client_data_storage = use_first_buffer ? client_data_storage1 : client_data_storage2;
                     for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
                         if (it->first != static_cast<unsigned int>(host)) {
                             it = client_data_storage.erase(it);
@@ -339,6 +341,7 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
                         }
                     }
 					data_cnt = 0; // re-storing the data in memory like first epoch
+					use_first_buffer = !use_first_buffer;
                 }
 
 				fd_map.erase(fd);
@@ -400,6 +403,7 @@ void hvac_remote_close(int fd){
 
 				{
                     std::lock_guard<std::mutex> lock(data_storage_mutex);
+					auto& client_data_storage = use_first_buffer ? client_data_storage1 : client_data_storage2;
                     // Iterate through client_data_storage and erase all entries except the one for the failed node
                     for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
                         if (it->first != static_cast<unsigned int>(host)) {
@@ -426,6 +430,7 @@ void hvac_remote_close(int fd){
                         }
                     }
 					data_cnt=0;
+					use_first_buffer = !use_first_buffer;
                 }
 				
 				return; // sy: skip further processing for this node
@@ -467,5 +472,6 @@ bool hvac_remove_fd(int fd)
 		return false;
 	}
 	hvac_remote_close(fd);	
-	return fd_map.erase(fd);
+	fd_map.erase(fd);
+	return true;
 }

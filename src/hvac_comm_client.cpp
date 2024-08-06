@@ -79,7 +79,6 @@ bool is_failed(const std::vector<bool>& failure_flags, int rank) {
 void update_buffer(int fd, off_t offset, const char* data, size_t length, hg_bool_t is_exclusive) {
     // Choose the correct maps based on the is_exclusive flag
     std::map<int, std::string>& path_map = is_exclusive ? fd_path_map : first_epoch_fd_path_map;
-    std::vector<FileData>& target_vector = is_exclusive ? exclusive_to_send : shared_data;
 
     // Find the filepath corresponding to the fd
     auto fd_it = path_map.find(fd);
@@ -89,8 +88,10 @@ void update_buffer(int fd, off_t offset, const char* data, size_t length, hg_boo
     }
     const std::string& filepath = fd_it->second;
 
+	{
     // Lock the storage for thread-safe access
     std::lock_guard<std::mutex> lock(data_storage_mutex);
+	std::vector<FileData>& target_vector = is_exclusive ? exclusive_to_send : (use_first_buffer ? shared_data1 : shared_data2);
 
     // Find or create the FileData object in the target_vector
     auto file_it = std::find_if(target_vector.begin(), target_vector.end(),
@@ -115,6 +116,7 @@ void update_buffer(int fd, off_t offset, const char* data, size_t length, hg_boo
         new_file_data.total_size = offset + length;
         target_vector.push_back(std::move(new_file_data));
     }
+	} //lock end
 }
 
 /* sy: add - for data delivery at node failure */
@@ -144,7 +146,9 @@ static hg_return_t hvac_write_cb(const struct hg_cb_info *info) {
 
         if (hvac_rpc_state_p->is_failure) {
             // Handle failure scenario
+			{
             std::lock_guard<std::mutex> lock(data_storage_mutex);
+			auto& client_data_storage = use_first_buffer ? client_data_storage1 : client_data_storage2;
             auto host_it = client_data_storage.find(hvac_rpc_state_p->svr_hash);
             if (host_it != client_data_storage.end()) {
                 auto file_it = std::find_if(host_it->second.begin(), host_it->second.end(),
@@ -156,13 +160,17 @@ static hg_return_t hvac_write_cb(const struct hg_cb_info *info) {
                     }
                 }
             }
+			} //lock end
         } else {
+			{
             // Handle non-failure scenario - exclusive data copy
+            std::lock_guard<std::mutex> lock(data_storage_mutex);
             auto it = std::find_if(exclusive_to_send.begin(), exclusive_to_send.end(),
                 [hvac_rpc_state_p](const FileData& fd) { return &fd == hvac_rpc_state_p->file_data_to_erase; });
             if (it != exclusive_to_send.end()) {
                 exclusive_to_send.erase(it);
             }
+			} //lock end
         }
     }
 
@@ -498,6 +506,7 @@ hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
     hg_return_t ret;
     hvac_broadcast_in_t in;
 
+
     ret = HG_Get_input(handle, &in);
     assert(ret == 0);
     if (ret != HG_SUCCESS) {
@@ -518,6 +527,7 @@ hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
 			
                 {
                     std::lock_guard<std::mutex> lock(data_storage_mutex);
+					auto& client_data_storage = use_first_buffer ? client_data_storage1 : client_data_storage2;
                     // Iterate through client_data_storage and erase all entries except the one for the failed node
                     for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
                         if (it->first != static_cast<unsigned int>(in.rank_failed)) {
@@ -545,12 +555,12 @@ hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
                         }
                     }
 					data_cnt = 0;
+					use_first_buffer = !use_first_buffer; //switch buffer
                 }
 
 
         }
     }
-
 
     HG_Free_input(handle, &in);
     HG_Destroy(handle);
@@ -570,7 +580,7 @@ hg_return_t broadcast_rpc_cb(const struct hg_cb_info *info) {
     }
 
     HG_Destroy(handle);
-    untrack_handle(handle);
+    //untrack_handle(handle);
 
     return HG_SUCCESS;
 }
@@ -595,12 +605,10 @@ void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count) {
             // Normal case, send to partner
             svr_addr = hvac_client_comm_lookup_addr(partner, false);
             hvac_comm_create_handle(svr_addr, hvac_client_broadcast_id, &handle);
-			track_handle(handle);
             ret = HG_Forward(handle, broadcast_rpc_cb, NULL, &in);
             if (ret != HG_SUCCESS) {
                 L4C_FATAL("Failed to forward RPC to partner %d\n", partner);
-                HG_Destroy(handle);
-				untrack_handle(handle);
+				HG_Destroy(handle); 
             }
 
             hvac_comm_free_addr(svr_addr);
@@ -612,20 +620,66 @@ void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count) {
                 if (alternative_partner < count && !is_failed(failure_flags, alternative_partner) && alternative_partner != client_rank) {
                     svr_addr = hvac_client_comm_lookup_addr(alternative_partner, false);
                     hvac_comm_create_handle(svr_addr, hvac_client_broadcast_id, &handle);
-					track_handle(handle);
                     ret = HG_Forward(handle, broadcast_rpc_cb, NULL, &in);
                     if (ret != HG_SUCCESS) {
                         L4C_FATAL("Failed to forward RPC to alternative partner %d\n", alternative_partner);
-                    	HG_Destroy(handle);
-						untrack_handle(handle);
+						HG_Destroy(handle); 
                     }
+				}
 
-                    hvac_comm_free_addr(svr_addr);
-                }
             }
         }
     }
 }
+
+
+hg_return_t hvac_close_cb(const struct hg_cb_info *info) {
+    struct hvac_rpc_state_t_close *hvac_rpc_state_p = (struct hvac_rpc_state_t_close *)info->arg;
+    hg_return_t ret;
+    log_info_t log_info;
+	
+	L4C_INFO("close callback is called\n");
+
+    assert(info->ret == HG_SUCCESS);
+    if (info->ret != HG_SUCCESS) {
+        L4C_FATAL("RPC failed: %s", HG_Error_to_string(info->ret));
+		HG_Destroy(info->info.forward.handle);
+        free(hvac_rpc_state_p);
+        return HG_SUCCESS;
+    } 
+
+    char server_addr[128];
+    char server_ip[128];
+    const struct hg_info *hgi = HG_Get_info(info->info.forward.handle);
+    if (hgi) {
+        hg_size_t server_addr_str_size = sizeof(server_addr);
+        HG_Addr_to_string(hgi->hg_class, server_addr, &server_addr_str_size, hgi->addr);
+        extract_ip_portion(server_addr, server_ip, sizeof(server_ip));
+        log_info.flag = (strcmp(server_ip, client_address) == 0) ? 1 : 0;
+    } else {
+        L4C_FATAL("Failed to get client address info\n");
+    }
+
+    snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", hvac_rpc_state_p->local_fd);
+	strncpy(log_info.request, "close", sizeof(log_info.request));
+    log_info.client_rank = client_rank;
+    log_info.server_rank = hvac_rpc_state_p->host;
+    strncpy(log_info.expn, "CReceive", sizeof(log_info.expn));
+    log_info.n_epoch = -1;
+    log_info.n_batch = -1;
+    gettimeofday(&log_info.clocktime, NULL);
+
+    logging_info(&log_info, "client");
+
+    ret = HG_Destroy(info->info.forward.handle);
+    assert(ret == HG_SUCCESS);
+    free(hvac_rpc_state_p);
+
+    return HG_SUCCESS;
+}
+
+
+
 
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state)
 {
@@ -667,7 +721,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     gettimeofday(&log_info.clocktime, NULL);
 
     logging_info(&log_info, "client");
-    ret = HG_Forward(handle, NULL, NULL, &in);
+    ret = HG_Forward(handle, hvac_close_cb, rpc_state, &in);
     assert(ret == 0);
 
     {
@@ -717,9 +771,11 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
                     L4C_INFO("Currently %s is handled by %d\n", first_epoch_fd_path_map[fd].c_str(), svr_hash);
                     L4C_INFO("After removing node number, is handled by %d\n", neighborNode);
 
+					{
                     std::lock_guard<std::mutex> lock(data_storage_mutex);
-
-                    // Find the corresponding FileData in shared_data and move it to client_data_storage
+                    auto& client_data_storage = use_first_buffer ? client_data_storage1 : client_data_storage2;
+                    auto& shared_data = use_first_buffer ? shared_data1 : shared_data2;
+					// Find the corresponding FileData in shared_data and move it to client_data_storage
                     auto file_it = std::find_if(shared_data.begin(), shared_data.end(),
                         [&filepath = it_first_epoch->second](const FileData& fd) {
                             return fd.filepath == filepath; });
@@ -732,6 +788,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
                         L4C_DEBUG("File data not found in shared_data for path: %s\n", first_epoch_fd_path_map[fd].c_str());
                         // Handle the error case appropriately
                     }
+					} //lock end
 
                     first_epoch_fd_path_map.erase(fd);
                 }
@@ -741,7 +798,6 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     } // end
 
     fd_redir_map.erase(fd);
-    HG_Destroy(handle);
     hvac_comm_free_addr(svr_addr);
 
     return;

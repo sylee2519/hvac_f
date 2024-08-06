@@ -33,12 +33,18 @@ std::unordered_set<hg_handle_t> active_handles;
 pthread_mutex_t handles_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 std::vector<FileData> exclusive_to_send;
-std::vector<FileData> shared_data;
+std::vector<FileData> shared_data1;
+std::vector<FileData> shared_data2;
 std::unordered_map<uint32_t, std::vector<FileData>> memory_data_storage;
 std::vector<FileData> data_storage_to_flush; 
 std::mutex memory_data_storage_mutex;
 std::mutex flush_data_storage_mutex;
-
+std::mutex data_storage_mutex;
+std::unordered_map<uint32_t, std::vector<FileData>> client_data_storage1;
+std::unordered_map<uint32_t, std::vector<FileData>> client_data_storage2;
+std::map<int, std::string> first_epoch_fd_path_map;
+std::map<int, std::string> fd_path_map;
+bool use_first_buffer = true;
 
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
@@ -318,9 +324,9 @@ static hg_return_t hvac_rpc_handler_write_cb(const struct hg_cb_info *info) {
            }
 */
 
-	if(!hvac_rpc_state_p->is_failure){ // exclusive copy, load it in memory
+	if(!(hvac_rpc_state_p->is_failure)){ // exclusive copy, load it in memory
         std::lock_guard<std::mutex> lock(memory_data_storage_mutex);
-
+		
         FileData file_data;
         file_data.filepath = hvac_rpc_state_p->path;
         // Cast hvac_rpc_state_p->buffer to char* before performing arithmetic
@@ -331,7 +337,10 @@ static hg_return_t hvac_rpc_handler_write_cb(const struct hg_cb_info *info) {
         memory_data_storage[hvac_rpc_state_p->rank_origin].push_back(file_data);
     }
 	else { // failure, flush it to the NVMe
+		L4C_INFO("trying to acquire lock\n");
     	std::lock_guard<std::mutex> lock(flush_data_storage_mutex);
+		
+		L4C_INFO("Failure case receive write\n");
 
     	FileData file_data;
     	file_data.filepath = hvac_rpc_state_p->path;
@@ -339,17 +348,22 @@ static hg_return_t hvac_rpc_handler_write_cb(const struct hg_cb_info *info) {
                             static_cast<char*>(hvac_rpc_state_p->buffer) + hvac_rpc_state_p->size);
     	file_data.total_size = hvac_rpc_state_p->size;
     	data_storage_to_flush.push_back(file_data);
-
+		
+		L4C_INFO("after flush buffer assign\n");
 		// Copy all exclusive copy that the server has for this node failed.
-        {
-            std::lock_guard<std::mutex> memory_lock(memory_data_storage_mutex);
-            auto it = memory_data_storage.find(hvac_rpc_state_p->rank_origin);
-            if (it != memory_data_storage.end()) {
-                data_storage_to_flush.insert(data_storage_to_flush.end(), it->second.begin(), it->second.end());
-                memory_data_storage.erase(it); // Clear the data after copying
-            }
-        }
+    	{
+        	std::lock_guard<std::mutex> memory_lock(memory_data_storage_mutex);
+       	 	L4C_INFO("inside lock\n");
+        	auto it = memory_data_storage.find(hvac_rpc_state_p->rank_origin);
+        	if (it != memory_data_storage.end()) {
+            	for (const auto& data_item : it->second) {
+                	data_storage_to_flush.push_back(data_item);
+            	}	
+            	memory_data_storage.erase(it); // Clear the data after copying
+        	}
+    	}
 
+       	L4C_INFO("outside lock\n");
     	// Notify the data flusher thread
     	flush_data_cond.notify_one();
 	}
@@ -507,13 +521,6 @@ hvac_rpc_handler(hg_handle_t handle)
 
     if (hvac_rpc_state_p->in.offset == -1){
         readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-//        L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
-/*
-		if (readbytes < 0) {
-            readbytes = read(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-            L4C_DEBUG("Server Rank %d : Retry Read %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
-		}
-*/
     }else
     {
 		gettimeofday(&log_info.clocktime, NULL);
@@ -521,35 +528,10 @@ hvac_rpc_handler(hg_handle_t handle)
     	log_info.expn[sizeof(log_info.expn) - 1] = '\0';
         readbytes = pread(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
 		gettimeofday(&tmp_time, NULL);	
-//        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
-/*
-		 char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
-            if (hex_buf) {
-                L4C_INFO("Buffer content after remote read: %s", hex_buf);
-                free(hex_buf);
-            }
-*/	
 		if (readbytes < 0) { //sy: add
 			strncpy(log_info.expn, "Fail", sizeof(log_info.expn) - 1);
             log_info.expn[sizeof(log_info.expn) - 1] = '\0';
             logging_info(&log_info, "server");
-/*
-        const char* original_path = fd_to_path[hvac_rpc_state_p->in.accessfd].c_str();
-        int original_fd = open(original_path, O_RDONLY);
-        if (original_fd != -1) {
-            readbytes = pread(original_fd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
-            L4C_DEBUG("Server Rank %d : Retry PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(), hvac_rpc_state_p->in.offset);
-            close(original_fd);
-        } 
-		else {
-			readbytes = pread(hvac_rpc_state_p->in.localfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
-            if(readbytes<0){
-				L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
-			}
-        }
-*/
-//		if(readbytes<0){
-//			L4C_DEBUG("Server Rank %d : Failed to open original file %s", server_rank, original_path);
                 HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
                 free(hvac_rpc_state_p->buffer);
                 L4C_DEBUG("server read failed -1\n");
@@ -557,7 +539,6 @@ hvac_rpc_handler(hg_handle_t handle)
                 HG_Respond(handle, NULL, NULL, &out);
                 free(hvac_rpc_state_p);
                 return HG_SUCCESS;
-//		}
 
     	}
 	}
@@ -736,7 +717,10 @@ hvac_open_rpc_handler(hg_handle_t handle)
     }
     logging_info(&log_info, "server");
 
+	
+//	pthread_mutex_lock(&path_map_mutex); //sy: add
     fd_to_path[out.ret_status] = in.path;  
+//	pthread_mutex_unlock(&path_map_mutex);
     HG_Respond(handle,NULL,NULL,&out);
 
     return (hg_return_t)ret;
@@ -757,7 +741,7 @@ hvac_close_rpc_handler(hg_handle_t handle)
 	gettimeofday(&log_info.clocktime, NULL);
  //   L4C_INFO("Closing File %d\n",in.fd);
     ret = close(in.fd);
-//    assert(ret == 0);
+    assert(ret == 0);
 //	out.done = ret;
 	
 
@@ -826,7 +810,10 @@ hvac_close_rpc_handler(hg_handle_t handle)
 	log_info.clocktime = tmp_time;
     logging_info(&log_info, "server");	
 	
+
+	pthread_mutex_lock(&path_map_mutex);
 	fd_to_path.erase(in.fd);
+	pthread_mutex_unlock(&path_map_mutex);
     return (hg_return_t)ret;
 }
 
