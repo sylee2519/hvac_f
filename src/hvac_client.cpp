@@ -471,7 +471,11 @@ bool hvac_remove_fd(int fd)
 	if (fd_map.empty()){ //sy: add
 		return false;
 	}
-	hvac_remote_close(fd);	
-	fd_map.erase(fd);
+	if (fd_map.find(fd) != fd_map.end())
+    {
+		hvac_remote_close(fd);
+    	fd_map.erase(fd); 
+
+   	}
 	return true;
 }

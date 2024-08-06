@@ -156,7 +156,7 @@ void hvac_init_comm(hg_bool_t listen, hg_bool_t server)
 	//Only for server processes
 	if (server)
 	{
-		char *rank_str = getenv("PMI_RANK");  
+		char *rank_str = getenv("PMIX_RANK");  
     	server_rank = atoi(rank_str);
 		if (rank_str != NULL){
 			hvac_server_rank = atoi(rank_str);

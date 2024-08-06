@@ -74,7 +74,7 @@ void *hvac_data_mover_fn(void *args)
     }
     return NULL;
 }
-/*
+
 void *hvac_data_flusher_fn(void *args) {
     if (getenv("BBPATH") == NULL) {
         L4C_ERR("Set BBPATH Prior to using HVAC");
@@ -124,8 +124,8 @@ void *hvac_data_flusher_fn(void *args) {
     }
     return NULL;
 }
-*/
 
+/*
 void* hvac_data_flusher_fn(void* args) {
     if (getenv("BBPATH") == NULL) {
         L4C_ERR("Set BBPATH Prior to using HVAC");
@@ -146,7 +146,6 @@ void* hvac_data_flusher_fn(void* args) {
         data_storage_to_flush.clear();
         lock.unlock();  // Unlock the mutex before processing
 
-        /* Handle flushing of data_storage_to_flush */
         for (const FileData& file_data : to_flush) {
             char *newdir = (char *)malloc(strlen(nvmepath.c_str()) + 1);
             strcpy(newdir, nvmepath.c_str());
@@ -204,4 +203,4 @@ void* hvac_data_flusher_fn(void* args) {
     }
     return NULL;
 }
-
+*/
