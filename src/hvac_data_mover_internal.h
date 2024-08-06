@@ -3,7 +3,7 @@
 
 #include <queue>
 #include <map>
-
+#include <mutex>
 using namespace std;
 /*Data Mover */
 
@@ -16,4 +16,5 @@ extern map<string, string> path_cache_map;
 
 
 void *hvac_data_mover_fn(void *args);
+void *hvac_data_flusher_fn(void *args); 
 #endif

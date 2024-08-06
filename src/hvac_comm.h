@@ -41,6 +41,7 @@ struct hvac_rpc_state_t_client {
 	char filepath[256]; //sy: add
 	uint32_t svr_hash; //sy: add
 	FileData* file_data_to_erase; // Newly add for ver3
+	hg_bool_t is_failure;
 };
 
 // Carry CB Information for CB
@@ -86,7 +87,7 @@ extern hg_id_t hvac_client_broadcast_id;
 extern hg_context_t *hg_context;
 extern std::unordered_set<hg_handle_t> active_handles;
 extern pthread_mutex_t handles_mutex;
-
+extern int data_cnt;
 
 // sy: for logging
 extern hg_addr_t my_address;
@@ -112,7 +113,7 @@ MERCURY_GEN_PROC(hvac_close_in_t, ((int32_t)(fd))((int32_t)(client_rank)))
 
 //Write Handler
 MERCURY_GEN_PROC(hvac_write_out_t, ((int32_t)(ret)))
-MERCURY_GEN_PROC(hvac_write_in_t, ((hg_string_t)(path))((int32_t)(bulk_size))((hg_bulk_t)(bulk_handle))((int32_t)(rank_origin))((uint32_t)(client_rank)))
+MERCURY_GEN_PROC(hvac_write_in_t, ((hg_string_t)(path))((int32_t)(bulk_size))((hg_bulk_t)(bulk_handle))((int32_t)(rank_origin))((uint32_t)(client_rank))((hg_bool_t)(is_failure)))
 
 //Broadcast Handler for Client
 MERCURY_GEN_PROC(hvac_broadcast_in_t, ((int32_t)(rank_failed)))
@@ -136,7 +137,7 @@ void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int wh
 void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void* buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p);
 void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p);
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state);
-void hvac_client_comm_gen_write_rpc(uint32_t svr_hash, uint32_t rank_origin, string path, void *buffer, ssize_t size, hvac_rpc_state_t_client *hvac_rpc_state_p);
+void hvac_client_comm_gen_write_rpc(uint32_t svr_hash, uint32_t rank_origin, string path, void *buffer, ssize_t size, hvac_rpc_state_t_client *hvac_rpc_state_p, hg_bool_t is_failure);
 void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count);
 hg_addr_t hvac_client_comm_lookup_addr(int rank, bool is_server);
 void hvac_client_comm_register_rpc();

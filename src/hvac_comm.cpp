@@ -1,5 +1,6 @@
 #include "hvac_comm.h"
 #include "hvac_data_mover_internal.h"
+#include "hvac_fault.h"
 
 extern "C" {
 #include "hvac_logging.h"
@@ -31,6 +32,14 @@ hg_id_t hvac_client_broadcast_id;
 std::unordered_set<hg_handle_t> active_handles;
 pthread_mutex_t handles_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+std::vector<FileData> exclusive_to_send;
+std::vector<FileData> shared_data;
+std::unordered_map<uint32_t, std::vector<FileData>> memory_data_storage;
+std::vector<FileData> data_storage_to_flush; 
+std::mutex memory_data_storage_mutex;
+std::mutex flush_data_storage_mutex;
+
+
 /* struct used to carry state of overall operation across callbacks */
 struct hvac_rpc_state {
     hg_size_t size;
@@ -40,6 +49,8 @@ struct hvac_rpc_state {
     hvac_rpc_in_t in;
     hvac_write_in_t write_in;
 	char path[256];
+	hg_bool_t is_failure;
+	int rank_origin;
 };
 
 /* sy: add - Extract IP address for node checking */
@@ -299,12 +310,49 @@ static hg_return_t hvac_rpc_handler_write_cb(const struct hg_cb_info *info) {
     out.ret = hvac_rpc_state_p->size;
     L4C_INFO("Server: Received %d bytes\n", out.ret);
 
+/*
 	char *hex_buf = buffer_to_hex(hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
             if (hex_buf) {
                L4C_INFO("Buffer content after write  received: %s", hex_buf);
                free(hex_buf);
            }
+*/
 
+	if(!hvac_rpc_state_p->is_failure){ // exclusive copy, load it in memory
+        std::lock_guard<std::mutex> lock(memory_data_storage_mutex);
+
+        FileData file_data;
+        file_data.filepath = hvac_rpc_state_p->path;
+        // Cast hvac_rpc_state_p->buffer to char* before performing arithmetic
+        file_data.buffer.assign(static_cast<char*>(hvac_rpc_state_p->buffer), 
+                                static_cast<char*>(hvac_rpc_state_p->buffer) + hvac_rpc_state_p->size);
+        file_data.total_size = hvac_rpc_state_p->size;
+
+        memory_data_storage[hvac_rpc_state_p->rank_origin].push_back(file_data);
+    }
+	else { // failure, flush it to the NVMe
+    	std::lock_guard<std::mutex> lock(flush_data_storage_mutex);
+
+    	FileData file_data;
+    	file_data.filepath = hvac_rpc_state_p->path;
+    	file_data.buffer.assign(static_cast<char*>(hvac_rpc_state_p->buffer),
+                            static_cast<char*>(hvac_rpc_state_p->buffer) + hvac_rpc_state_p->size);
+    	file_data.total_size = hvac_rpc_state_p->size;
+    	data_storage_to_flush.push_back(file_data);
+
+		// Copy all exclusive copy that the server has for this node failed.
+        {
+            std::lock_guard<std::mutex> memory_lock(memory_data_storage_mutex);
+            auto it = memory_data_storage.find(hvac_rpc_state_p->rank_origin);
+            if (it != memory_data_storage.end()) {
+                data_storage_to_flush.insert(data_storage_to_flush.end(), it->second.begin(), it->second.end());
+                memory_data_storage.erase(it); // Clear the data after copying
+            }
+        }
+
+    	// Notify the data flusher thread
+    	flush_data_cond.notify_one();
+	}
 
     // sy: add - logging code
     log_info_t log_info;
@@ -556,7 +604,9 @@ static hg_return_t hvac_write_rpc_handler(hg_handle_t handle) {
     assert(hvac_rpc_state_p->buffer);
 
     hvac_rpc_state_p->size = hvac_rpc_state_p->write_in.bulk_size;
+	hvac_rpc_state_p->is_failure = hvac_rpc_state_p->write_in.is_failure;
     hvac_rpc_state_p->handle = handle;
+	hvac_rpc_state_p->rank_origin = hvac_rpc_state_p->write_in.rank_origin;
 
     /* register local target buffer for bulk access */
     hgi = HG_Get_info(handle);

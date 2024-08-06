@@ -32,6 +32,12 @@ int hvac_start_comm_server(void)
 		L4C_FATAL("Failed to initialized mecury progress thread\n");
 	}
 
+    /* Start the data mover thread for failure copy */
+    pthread_t hvac_data_flusher_tid;
+    if (pthread_create(&hvac_data_flusher_tid, NULL, hvac_data_flusher_fn, NULL) != 0){
+        L4C_FATAL("Failed to initialized data flush thread for fault tolerance\n");
+    }
+
     /* True means we're a listener */
     hvac_init_comm(true, true);
 	hvac_start_progress_thread(hg_context);

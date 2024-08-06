@@ -41,6 +41,9 @@ std::unordered_map<int, std::string> client_address_cache;
 std::unordered_map<int, int> client_to_server_rank;
 bool rank_mapping_initialized = false;
 extern std::map<int, int > fd_redir_map;
+int data_cnt = 0;
+int num_data = 0;
+std::mutex data_cnt_mutex;
 
 /* for logging */
 char client_address[128];
@@ -73,37 +76,44 @@ bool is_failed(const std::vector<bool>& failure_flags, int rank) {
 }
 
 /* sy: add - function to update the exclusive buffer for a given fd */
-void update_buffer(int fd, off_t offset, const char* data, size_t length) {
-    // find the filepath corresponding to the fd
-    auto fd_it = fd_path_map.find(fd);
-    if (fd_it == fd_path_map.end()) {
-		L4C_DEBUG("path not found\n");
+void update_buffer(int fd, off_t offset, const char* data, size_t length, hg_bool_t is_exclusive) {
+    // Choose the correct maps based on the is_exclusive flag
+    std::map<int, std::string>& path_map = is_exclusive ? fd_path_map : first_epoch_fd_path_map;
+    std::vector<FileData>& target_vector = is_exclusive ? exclusive_to_send : shared_data;
+
+    // Find the filepath corresponding to the fd
+    auto fd_it = path_map.find(fd);
+    if (fd_it == path_map.end()) {
+        L4C_DEBUG("path not found\n");
         return;
     }
     const std::string& filepath = fd_it->second;
 
-    // find or create the FileData object in exclusive_to_send
-    auto file_it = std::find_if(exclusive_to_send.begin(), exclusive_to_send.end(),
+    // Lock the storage for thread-safe access
+    std::lock_guard<std::mutex> lock(data_storage_mutex);
+
+    // Find or create the FileData object in the target_vector
+    auto file_it = std::find_if(target_vector.begin(), target_vector.end(),
         [&filepath](const FileData& fd) { return fd.filepath == filepath; });
 
-    if (file_it != exclusive_to_send.end()) {
-        // file found, update its buffer
+    if (file_it != target_vector.end()) {
+        // File found, update its buffer
         FileData& file_data = *file_it;
         if (offset + length > file_data.buffer.size()) {
             file_data.buffer.resize(offset + length);
         }
         std::copy(data, data + length, file_data.buffer.begin() + offset);
-        
-        // update total_size if necessary
+
+        // Update total_size if necessary
         file_data.total_size = std::max(file_data.total_size, static_cast<size_t>(offset + length));
     } else {
-        // file not found, create new FileData and add to vector
+        // File not found, create new FileData and add to vector
         FileData new_file_data;
         new_file_data.filepath = filepath;
         new_file_data.buffer.resize(offset + length);
         std::copy(data, data + length, new_file_data.buffer.begin() + offset);
         new_file_data.total_size = offset + length;
-        exclusive_to_send.push_back(std::move(new_file_data));
+        target_vector.push_back(std::move(new_file_data));
     }
 }
 
@@ -112,14 +122,13 @@ static hg_return_t hvac_write_cb(const struct hg_cb_info *info) {
     hg_return_t ret;
     hvac_write_out_t out;
     struct hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)info->arg;
-    const struct hg_info *hgi;
     log_info_t log_info;
 
     assert(info->ret == HG_SUCCESS);
     if (info->ret != HG_SUCCESS) {
         L4C_INFO("RPC failed: %s", HG_Error_to_string(info->ret));
     } else {
-		/* decode response */
+        /* decode response */
         ret = HG_Get_output(info->info.forward.handle, &out);
         gettimeofday(&log_info.clocktime, NULL);
         if (ret != HG_SUCCESS) {
@@ -132,23 +141,29 @@ static hg_return_t hvac_write_cb(const struct hg_cb_info *info) {
             ret = HG_Free_output(info->info.forward.handle, &out);
             assert(ret == HG_SUCCESS);
         }
-		auto it = std::find_if(exclusive_to_send.begin(), exclusive_to_send.end(),
-            [hvac_rpc_state_p](const FileData& fd) { return &fd == hvac_rpc_state_p->file_data_to_erase; });
-		if (it != exclusive_to_send.end()) {
-            exclusive_to_send.erase(it);
-        }
-    }
 
-    char server_addr[128];
-    char server_ip[128];
-    hgi = HG_Get_info(info->info.forward.handle);
-    if (hgi) {
-        hg_size_t server_addr_str_size = sizeof(server_addr);
-        HG_Addr_to_string(hgi->hg_class, server_addr, &server_addr_str_size, hgi->addr);
-        extract_ip_portion(server_addr, server_ip, sizeof(server_ip));
-        log_info.flag = (strcmp(server_ip, client_address) == 0) ? 1 : 0;
-    } else {
-        L4C_DEBUG("Failed to get client address info\n");
+        if (hvac_rpc_state_p->is_failure) {
+            // Handle failure scenario
+            std::lock_guard<std::mutex> lock(data_storage_mutex);
+            auto host_it = client_data_storage.find(hvac_rpc_state_p->svr_hash);
+            if (host_it != client_data_storage.end()) {
+                auto file_it = std::find_if(host_it->second.begin(), host_it->second.end(),
+                    [hvac_rpc_state_p](const FileData& fd) { return &fd == hvac_rpc_state_p->file_data_to_erase; });
+                if (file_it != host_it->second.end()) {
+                    host_it->second.erase(file_it);
+                    if (host_it->second.empty()) {
+                        client_data_storage.erase(host_it);
+                    }
+                }
+            }
+        } else {
+            // Handle non-failure scenario - exclusive data copy
+            auto it = std::find_if(exclusive_to_send.begin(), exclusive_to_send.end(),
+                [hvac_rpc_state_p](const FileData& fd) { return &fd == hvac_rpc_state_p->file_data_to_erase; });
+            if (it != exclusive_to_send.end()) {
+                exclusive_to_send.erase(it);
+            }
+        }
     }
 
     strncpy(log_info.filepath, hvac_rpc_state_p->filepath, sizeof(log_info.filepath));
@@ -165,10 +180,8 @@ static hg_return_t hvac_write_cb(const struct hg_cb_info *info) {
     /* clean up resources consumed by this rpc */
     ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
     assert(ret == HG_SUCCESS);
-
     ret = HG_Destroy(info->info.forward.handle);
     assert(ret == HG_SUCCESS);
-
     free(hvac_rpc_state_p);
     return HG_SUCCESS;
 }
@@ -204,7 +217,6 @@ hvac_open_cb(const struct hg_cb_info *info)
 	log_info_t log_info;
 	const struct hg_info *hgi;  
 
-   
     assert(info->ret == HG_SUCCESS);
 	if (info->ret != HG_SUCCESS) {
         L4C_INFO("RPC failed: %s", HG_Error_to_string(info->ret));
@@ -241,10 +253,19 @@ hvac_open_cb(const struct hg_cb_info *info)
     logging_info(&log_info, "client");
 
 
-    if(log_info.flag){ //exclusive data
-        fd_path_map[hvac_open_state_p->local_fd] = hvac_open_state_p->filepath; 
-    }
-
+	{
+		std::lock_guard<std::mutex> lock(data_cnt_mutex);
+		if(data_cnt <=num_data){ 	
+			data_cnt++;
+			if(log_info.flag){ //exclusive data
+        		fd_path_map[hvac_open_state_p->local_fd] = hvac_open_state_p->filepath;
+    		}		
+			else{
+				first_epoch_fd_path_map[hvac_open_state_p->local_fd] = hvac_open_state_p->filepath;			
+			}				
+		}
+	}
+	
 
     HG_Free_output(info->info.forward.handle, &out);
     HG_Destroy(info->info.forward.handle);
@@ -336,14 +357,29 @@ hvac_read_cb(const struct hg_cb_info *info)
     logging_info(&log_info, "client");
 
 
-	auto it = fd_path_map.find(hvac_rpc_state_p->local_fd);
-    if (it != fd_path_map.end()) {
-		L4C_DEBUG("file path found %s\n", it->second);
+	{
+        std::lock_guard<std::mutex> lock(data_cnt_mutex);
+        if(data_cnt <=num_data){
+			auto it = fd_path_map.find(hvac_rpc_state_p->local_fd);
+			if (it != fd_path_map.end()) {
+        		L4C_DEBUG("file path found %s\n", it->second);
 
-    	if (bytes_read > 0) {
-        	update_buffer(hvac_rpc_state_p->local_fd, hvac_rpc_state_p->offset, static_cast<const char*>(hvac_rpc_state_p->buffer),bytes_read);
-    	}
-    }	
+        		if (bytes_read > 0) {
+            		update_buffer(hvac_rpc_state_p->local_fd, hvac_rpc_state_p->offset, static_cast<const char*>(hvac_rpc_state_p->buffer),bytes_read, true); //exclusive
+        		}
+    		}
+			else {
+				auto it = first_epoch_fd_path_map.find(hvac_rpc_state_p->local_fd);
+				if(it != first_epoch_fd_path_map.end()){
+					
+                	if (bytes_read > 0) {
+                    	update_buffer(hvac_rpc_state_p->local_fd, hvac_rpc_state_p->offset, static_cast<const char*>(hvac_rpc_state_p->buffer),bytes_read, false); //shared
+                	}
+				}
+
+			}
+        }
+    }
 	
    /* clean up resources consumed by this rpc */
     ret = HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
@@ -479,6 +515,39 @@ hg_return_t hvac_broadcast_rpc_handler(hg_handle_t handle) {
             failure_flags[in.rank_failed] = true;
            	hvac_client_comm_gen_broadcast_rpc(in.rank_failed, client_worldsize);
             client_worldsize--;
+			
+                {
+                    std::lock_guard<std::mutex> lock(data_storage_mutex);
+                    // Iterate through client_data_storage and erase all entries except the one for the failed node
+                    for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
+                        if (it->first != static_cast<unsigned int>(in.rank_failed)) {
+                            it = client_data_storage.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+
+                    auto it = client_data_storage.find(in.rank_failed);
+                    if (it != client_data_storage.end()) {
+                        for (const FileData& file_data : it->second) {
+                            // Get buffer and size from FileData
+                            ssize_t bytes_read = -1;
+							int rank_failed = in.rank_failed;
+                            hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
+                            hvac_rpc_state_p->bytes_read = &bytes_read;
+                            string newhostname = hashRing->GetNode(file_data.filepath);
+                            int newhost = hashRing->ConvertHostToNumber(newhostname);
+                            void* buffer = const_cast<char*>(file_data.buffer.data());
+                            ssize_t size = static_cast<ssize_t>(file_data.buffer.size());
+
+                            hvac_rpc_state_p->file_data_to_erase = const_cast<FileData*>(&file_data);
+                            hvac_client_comm_gen_write_rpc(newhost, rank_failed, file_data.filepath, buffer, size, hvac_rpc_state_p, true);
+                        }
+                    }
+					data_cnt = 0;
+                }
+
+
         }
     }
 
@@ -559,18 +628,140 @@ void hvac_client_comm_gen_broadcast_rpc(int32_t rank_failed, int count) {
 }
 
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state)
+{
+    hg_addr_t svr_addr;
+    hvac_close_in_t in;
+    hg_handle_t handle;
+    int ret;
+
+    /* Get address */
+    svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);
+    rpc_state->addr = svr_addr; //sy: add
+    rpc_state->host = svr_hash;
+
+    /* create create handle to represent this rpc operation */
+    hvac_comm_create_handle(svr_addr, hvac_client_close_id, &handle);
+    rpc_state->handle = handle; //sy: add
+
+    in.fd = fd_redir_map[fd];
+    in.client_rank = client_rank;
+    rpc_state->local_fd = fd;
+
+    // sy: add - logging code
+    log_info_t log_info;
+    snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", fd);
+    strncpy(log_info.request, "close", sizeof(log_info.request));
+
+    char server_addr[128];
+    size_t server_addr_str_size = sizeof(server_addr);
+    ret = HG_Addr_to_string(hvac_comm_get_class(), server_addr, &server_addr_str_size, svr_addr);
+    char server_ip[128];
+    extract_ip_portion(server_addr, server_ip, sizeof(server_ip));
+    log_info.flag = (strcmp(client_address, server_ip) == 0) ? 1 : 0;
+
+    log_info.client_rank = client_rank;
+    log_info.server_rank = svr_hash;
+    strncpy(log_info.expn, "CRequest", sizeof(log_info.expn));
+    log_info.n_epoch = -1;
+    log_info.n_batch = -1;
+    gettimeofday(&log_info.clocktime, NULL);
+
+    logging_info(&log_info, "client");
+    ret = HG_Forward(handle, NULL, NULL, &in);
+    assert(ret == 0);
+
+    {
+        std::lock_guard<std::mutex> lock(data_cnt_mutex);
+        if (data_cnt <= num_data) {
+
+            auto it = fd_path_map.find(fd);
+            if (it != fd_path_map.end()) {
+                L4C_INFO("file path found close %s\n", it->second.c_str());
+                ssize_t bytes_read = -1;
+                hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
+                hvac_rpc_state_p->bytes_read = &bytes_read;
+                string neighborName = hashRing->SimulateNodeRemoval(fd_path_map[fd], svr_hash);
+                int neighborNode = hashRing->ConvertHostToNumber(neighborName);
+                L4C_INFO("Currently %s is handled by %d\n", fd_path_map[fd].c_str(), svr_hash);
+                L4C_INFO("After removing node number, is handled by %d\n", neighborNode);
+
+                // Find the corresponding FileData in exclusive_to_send
+                auto file_it = std::find_if(exclusive_to_send.begin(), exclusive_to_send.end(),
+                    [&filepath = it->second](const FileData& fd) {
+                        return fd.filepath == filepath; });
+
+                if (file_it != exclusive_to_send.end()) {
+                    // Get buffer and size from FileData
+                    void* buffer = file_it->buffer.data();
+                    ssize_t size = static_cast<ssize_t>(file_it->buffer.size());
+
+                    hvac_rpc_state_p->file_data_to_erase = &(*file_it);
+
+                    // Call hvac_client_comm_gen_write_rpc with the retrieved buffer and size
+                    hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p, false);
+
+                } else {
+                    L4C_DEBUG("File data not found in exclusive_to_send for path: %s\n", fd_path_map[fd].c_str());
+                    // Handle the error case appropriately
+                }
+
+                fd_path_map.erase(fd);
+            } else {
+                // fill here
+
+                auto it_first_epoch = first_epoch_fd_path_map.find(fd);
+                if (it_first_epoch != first_epoch_fd_path_map.end()) {
+                    L4C_INFO("file path found in first_epoch_fd_path_map close %s\n", it_first_epoch->second.c_str());
+                    string neighborName = hashRing->SimulateNodeRemoval(first_epoch_fd_path_map[fd], svr_hash);
+                    int neighborNode = hashRing->ConvertHostToNumber(neighborName);
+                    L4C_INFO("Currently %s is handled by %d\n", first_epoch_fd_path_map[fd].c_str(), svr_hash);
+                    L4C_INFO("After removing node number, is handled by %d\n", neighborNode);
+
+                    std::lock_guard<std::mutex> lock(data_storage_mutex);
+
+                    // Find the corresponding FileData in shared_data and move it to client_data_storage
+                    auto file_it = std::find_if(shared_data.begin(), shared_data.end(),
+                        [&filepath = it_first_epoch->second](const FileData& fd) {
+                            return fd.filepath == filepath; });
+
+                    if (file_it != shared_data.end()) {
+                        // Move FileData to client_data_storage
+                        client_data_storage[neighborNode].push_back(std::move(*file_it));
+                        shared_data.erase(file_it);
+                    } else {
+                        L4C_DEBUG("File data not found in shared_data for path: %s\n", first_epoch_fd_path_map[fd].c_str());
+                        // Handle the error case appropriately
+                    }
+
+                    first_epoch_fd_path_map.erase(fd);
+                }
+            }
+
+        }
+    } // end
+
+    fd_redir_map.erase(fd);
+    HG_Destroy(handle);
+    hvac_comm_free_addr(svr_addr);
+
+    return;
+}
+
+
+
+
+/*
+void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state)
 {   
     hg_addr_t svr_addr; 
     hvac_close_in_t in;
     hg_handle_t handle; 
     int ret;
 
-    /* Get address */
     svr_addr = hvac_client_comm_lookup_addr(svr_hash, true);        
 	rpc_state->addr = svr_addr;	//sy: add
 	rpc_state->host = svr_hash;
 
-    /* create create handle to represent this rpc operation */
     hvac_comm_create_handle(svr_addr, hvac_client_close_id, &handle);
 	rpc_state->handle = handle; //sy: add
 
@@ -603,6 +794,12 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     ret = HG_Forward(handle, NULL, NULL, &in);
     assert(ret == 0);
 
+
+	{
+        std::lock_guard<std::mutex> lock(data_cnt_mutex);
+        if(data_cnt <=NUM_DATA){
+
+
 	auto it = fd_path_map.find(fd);
 	if (it != fd_path_map.end()) {
     	L4C_INFO("file path found close %s\n", it->second.c_str());
@@ -627,7 +824,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
 		 hvac_rpc_state_p->file_data_to_erase = &(*file_it);
 
 		// Call hvac_client_comm_gen_write_rpc with the retrieved buffer and size
-//		hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p);
+		hvac_client_comm_gen_write_rpc(neighborNode, svr_hash, fd_path_map[fd], buffer, size, hvac_rpc_state_p, false);
 
 		} else {
 			L4C_DEBUG("File data not found in exclusive_to_send for path: %s\n", fd_path_map[fd].c_str());
@@ -636,6 +833,14 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     
     	fd_path_map.erase(fd);
 	}
+	else{
+		// fill here	
+
+	}
+
+		}
+
+	} // end
 
     fd_redir_map.erase(fd);
     HG_Destroy(handle);
@@ -644,6 +849,8 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     return;
 
 }
+*/
+
 
 void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p)
 {
@@ -779,7 +986,7 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
 
 
 /* sy: add - for delivering lost data at node failure */
-void hvac_client_comm_gen_write_rpc(uint32_t svr_hash, uint32_t rank_origin, string path, void *buffer, ssize_t size, hvac_rpc_state_t_client *hvac_rpc_state_p) {
+void hvac_client_comm_gen_write_rpc(uint32_t svr_hash, uint32_t rank_origin, string path, void *buffer, ssize_t size, hvac_rpc_state_t_client *hvac_rpc_state_p, hg_bool_t is_failure) {
     
 	hg_addr_t svr_addr;
     hvac_write_in_t in;
@@ -814,6 +1021,7 @@ void hvac_client_comm_gen_write_rpc(uint32_t svr_hash, uint32_t rank_origin, str
 	in.path = (hg_string_t)malloc(strlen(path.c_str()) + 1 );
     sprintf(in.path,"%s",path.c_str());	
 
+	in.is_failure = is_failure;
     in.bulk_size = size;
     in.rank_origin = rank_origin;
     in.client_rank = client_rank; //sy: add - for logging
@@ -1046,7 +1254,9 @@ void hvac_get_addr() {
 	
 		const char *rank_str = getenv("HOROVOD_RANK");
 		const char *world_str = getenv("WORLD_SIZE");
+		const char *num_data_str = getenv("NUM_DATA");
     	client_rank = (rank_str != NULL) ? atoi(rank_str) : -1;
 		client_worldsize = (world_str != NULL) ? atoi(world_str) : -1;		
+		num_data = (num_data_str != NULL) ? atoi(num_data_str) : -1;
     }
 }

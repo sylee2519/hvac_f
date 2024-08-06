@@ -5,18 +5,21 @@
 #include <string>
 #include <queue>
 #include <iostream>
+#include <fstream>
 
 #include <pthread.h>
 #include <string.h>
 
 #include "hvac_logging.h"
 #include "hvac_data_mover_internal.h"
+#include "hvac_fault.h"
 using namespace std;
 namespace fs = std::filesystem;
 
 pthread_cond_t data_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t data_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t path_map_mutex = PTHREAD_MUTEX_INITIALIZER;
+std::condition_variable flush_data_cond;
 
 map<int,string> fd_to_path;
 map<string, string> path_cache_map;
@@ -71,3 +74,57 @@ void *hvac_data_mover_fn(void *args)
     }
     return NULL;
 }
+
+void *hvac_data_flusher_fn(void *args) {
+    if (getenv("BBPATH") == NULL) {
+        L4C_ERR("Set BBPATH Prior to using HVAC");
+    }
+
+    string nvmepath = string(getenv("BBPATH")) + "/XXXXXX";
+
+    while (1) {
+        std::vector<FileData> to_flush;
+
+        {
+            std::lock_guard<std::mutex> lock(flush_data_storage_mutex);
+            if (data_storage_to_flush.empty()) {
+                // If there is no data to flush, wait for a signal
+                std::unique_lock<std::mutex> unique_lock(flush_data_storage_mutex);
+                flush_data_cond.wait(unique_lock, []{ return !data_storage_to_flush.empty(); });
+            }
+
+            to_flush = std::move(data_storage_to_flush);
+            data_storage_to_flush.clear();
+        }
+
+        /* Handle flushing of data_storage_to_flush */
+        for (const FileData& file_data : to_flush) {
+            char *newdir = (char *)malloc(strlen(nvmepath.c_str()) + 1);
+            strcpy(newdir, nvmepath.c_str());
+            mkdtemp(newdir);
+            string dirpath = newdir;
+            string filename = dirpath + string("/") + fs::path(file_data.filepath).filename().string();
+
+            try {
+                fs::create_directories(dirpath);
+                std::ofstream file_stream(filename, std::ios::binary);
+                if (file_stream.is_open()) {
+                    file_stream.write(file_data.buffer.data(), file_data.buffer.size());
+                    file_stream.close();
+
+                    pthread_mutex_lock(&path_map_mutex);
+                    path_cache_map[file_data.filepath] = filename;
+                    pthread_mutex_unlock(&path_map_mutex);
+                } else {
+                    throw std::runtime_error("Failed to open file stream.");
+                }
+            } catch (const std::exception &e) {
+                L4C_INFO("Failed to write %s to %s: %s\n", file_data.filepath.c_str(), filename.c_str(), e.what());
+            } catch (...) {
+                L4C_INFO("Failed to write %s to %s\n", file_data.filepath.c_str(), filename);
+            }
+        }
+    }
+    return NULL;
+}
+

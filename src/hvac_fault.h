@@ -8,8 +8,19 @@
 #include <algorithm>
 #include "hvac_comm.h"
 
-std::vector<FileData> exclusive_to_send;
-std::unordered_map<uint32_t, std::vector<FileData>> data_storage;
-std::map<int, std::string> fd_path_map;
-//std::string my_address;
+// For Client
+extern std::vector<FileData> exclusive_to_send;
+extern std::vector<FileData> shared_data;
+extern std::unordered_map<uint32_t, std::vector<FileData>> client_data_storage;
+extern std::mutex data_storage_mutex;
+extern std::map<int, std::string> fd_path_map;
+extern std::map<int, std::string> first_epoch_fd_path_map;
+
+// For Server
+extern std::unordered_map<uint32_t, std::vector<FileData>> memory_data_storage;
+extern std::vector<FileData> data_storage_to_flush;
+extern std::mutex memoroy_data_storage_mutex;
+extern std::mutex flush_data_storage_mutex;
+extern std::condition_variable flush_data_cond;
+
 #endif

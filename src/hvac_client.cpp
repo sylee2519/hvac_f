@@ -12,6 +12,7 @@
 #include "hvac_logging.h"
 #include "hvac_comm.h"
 #include "hvac_hashing.h"
+#include "hvac_fault.h"
 
 #define VIRTUAL_NODE_CNT 100
 
@@ -131,8 +132,8 @@ bool hvac_track_file(const char *path, int flags, int fd)
     hg_bool_t done = HG_FALSE;
     pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-
+	int prev_host = -1;
+	
 	// Send RPC to tell server to open file 
 	if (tracked){
 		if (!g_mercury_init){
@@ -170,8 +171,41 @@ bool hvac_track_file(const char *path, int flags, int fd)
 				failure_flags[host] = true;
 				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
 				client_worldsize--;
+				prev_host = host;
 				hostname = hashRing->GetNode(fd_map[fd]); // sy: Imediately directed to the new node
                 host = hashRing->ConvertHostToNumber(hostname);
+
+
+                {
+                    std::lock_guard<std::mutex> lock(data_storage_mutex);
+                    // Iterate through client_data_storage and erase all entries except the one for the failed node
+                    for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
+                        if (it->first != static_cast<unsigned int>(prev_host)) {
+                            it = client_data_storage.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+
+                    auto it = client_data_storage.find(prev_host);
+                    if (it != client_data_storage.end()) {
+                        for (const FileData& file_data : it->second) {
+                            // Get buffer and size from FileData
+                            ssize_t bytes_read = -1;
+                            hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
+                            hvac_rpc_state_p->bytes_read = &bytes_read;
+                            string newhostname = hashRing->GetNode(file_data.filepath);
+                            int newhost = hashRing->ConvertHostToNumber(newhostname);
+                            void* buffer = const_cast<char*>(file_data.buffer.data());
+                            ssize_t size = static_cast<ssize_t>(file_data.buffer.size());
+
+                            hvac_rpc_state_p->file_data_to_erase = const_cast<FileData*>(&file_data);
+                            hvac_client_comm_gen_write_rpc(newhost, prev_host, file_data.filepath, buffer, size, hvac_rpc_state_p, true);
+                        }
+                    }
+					data_cnt = 0;
+                }
+
 //				L4C_INFO("new host %d\n", host);
             }
         }
@@ -275,9 +309,38 @@ ssize_t hvac_remote_pread(int fd, void *buf, size_t count, off_t offset)
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
 				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
-//                hostname = hashRing->GetNode(fd_map[fd]);
-//                host = hashRing->ConvertHostToNumber(hostname);
-//                L4C_INFO("new host %d\n", host);
+				client_worldsize--;
+
+                {
+                    std::lock_guard<std::mutex> lock(data_storage_mutex);
+                    // Iterate through client_data_storage and erase all entries except the one for the failed node
+                    for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
+                        if (it->first != static_cast<unsigned int>(host)) {
+                            it = client_data_storage.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+	
+                    auto it = client_data_storage.find(host);
+                    if (it != client_data_storage.end()) {
+                        for (const FileData& file_data : it->second) {
+                            // Get buffer and size from FileData
+                            ssize_t bytes_read = -1;
+                            hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
+                            hvac_rpc_state_p->bytes_read = &bytes_read;
+                            string newhostname = hashRing->GetNode(file_data.filepath);
+                            int newhost = hashRing->ConvertHostToNumber(newhostname);
+                            void* buffer = const_cast<char*>(file_data.buffer.data());
+                            ssize_t size = static_cast<ssize_t>(file_data.buffer.size());
+
+                            hvac_rpc_state_p->file_data_to_erase = const_cast<FileData*>(&file_data);
+                            hvac_client_comm_gen_write_rpc(newhost, host, file_data.filepath, buffer, size, hvac_rpc_state_p, true);
+                        }
+                    }
+					data_cnt = 0; // re-storing the data in memory like first epoch
+                }
+
 				fd_map.erase(fd);
 				return bytes_read;
             }
@@ -332,6 +395,39 @@ void hvac_remote_close(int fd){
                 hashRing->RemoveNode(hostname);
                 failure_flags[host] = true;
 				hvac_client_comm_gen_broadcast_rpc(host, client_worldsize);
+								
+				client_worldsize--;
+
+				{
+                    std::lock_guard<std::mutex> lock(data_storage_mutex);
+                    // Iterate through client_data_storage and erase all entries except the one for the failed node
+                    for (auto it = client_data_storage.begin(); it != client_data_storage.end(); ) {
+                        if (it->first != static_cast<unsigned int>(host)) {
+                            it = client_data_storage.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+
+                    auto it = client_data_storage.find(host);
+                    if (it != client_data_storage.end()) {
+                        for (const FileData& file_data : it->second) {
+                            // Get buffer and size from FileData
+							ssize_t bytes_read = -1;
+							hvac_rpc_state_t_client *hvac_rpc_state_p = (hvac_rpc_state_t_client *)malloc(sizeof(hvac_rpc_state_t_client));
+                			hvac_rpc_state_p->bytes_read = &bytes_read;
+							string newhostname = hashRing->GetNode(file_data.filepath);
+							int newhost = hashRing->ConvertHostToNumber(newhostname);
+                            void* buffer = const_cast<char*>(file_data.buffer.data());
+                            ssize_t size = static_cast<ssize_t>(file_data.buffer.size());
+
+							hvac_rpc_state_p->file_data_to_erase = const_cast<FileData*>(&file_data);
+                            hvac_client_comm_gen_write_rpc(newhost, host, file_data.filepath, buffer, size, hvac_rpc_state_p, true);
+                        }
+                    }
+					data_cnt=0;
+                }
+				
 				return; // sy: skip further processing for this node
             }
         }
