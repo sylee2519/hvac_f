@@ -1,8 +1,8 @@
-# Install script for directory: /scratch/s5104a21/hvactest
+# Install script for directory: /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/scratch/s5104a21/hvactest/build/src")
+  set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,13 +39,13 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "/opt/cray/pe/cce/17.0.0/binutils/x86_64/x86_64-pc-linux-gnu/bin/objdump")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/scratch/s5104a21/hvactest/build/src/cmake_install.cmake")
-  include("/scratch/s5104a21/hvactest/build/tests/cmake_install.cmake")
+  include("/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/src/cmake_install.cmake")
+  include("/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/tests/cmake_install.cmake")
 
 endif()
 
@@ -57,5 +57,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/scratch/s5104a21/hvactest/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

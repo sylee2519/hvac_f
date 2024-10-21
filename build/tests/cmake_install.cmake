@@ -1,4 +1,4 @@
-# Install script for directory: /scratch/s5104a21/hvactest/tests
+# Install script for directory: /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,6 +39,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "/opt/cray/pe/cce/17.0.0/binutils/x86_64/x86_64-pc-linux-gnu/bin/objdump")
 endif()
 

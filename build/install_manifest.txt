@@ -1,2 +1,0 @@
-/scratch/s5104a21/hvactest/build/src/lib/libhvac_client.so
-/scratch/s5104a21/hvactest/build/src/bin/hvac_server

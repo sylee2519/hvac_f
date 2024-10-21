@@ -1,1 +1,1 @@
-/apps/compiler/gcc/10.2.0/bin/gcc  -fcommon -g CMakeFiles/basic_test.dir/basic_test.c.o -o basic_test   -L/scratch/s5104a21/lib/mercury2/lib  -L/scratch/s5104a21/lib/log4c/lib 
+/opt/cray/pe/gcc/12.2.0/snos/bin/gcc  -fcommon -g CMakeFiles/basic_test.dir/basic_test.c.o -o basic_test   -L/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib  -L/ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib 

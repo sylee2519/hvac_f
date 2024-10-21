@@ -1,2 +1,3 @@
 src/CMakeFiles/hvac_server.dir/hvac.cpp.o: \
- /scratch/s5104a21/hvactest/src/hvac.cpp /usr/include/stdc-predef.h
+ /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/src/hvac.cpp \
+ /usr/include/stdc-predef.h
