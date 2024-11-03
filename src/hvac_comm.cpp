@@ -54,14 +54,14 @@ void extract_ip_portion(const char* full_address, char* ip_portion, size_t max_l
 
 // sy: add - logging function
 void initialize_log(int rank, const char *type) {
-    char log_filename[64];
+    char log_filename[128];
 //    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, rank);
 	const char *logdir = getenv("HVAC_LOG_DIR");
     snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, rank);
 
     FILE *log_file = fopen(log_filename, "w");
     if (log_file == NULL) {
-        perror("Failed to create log file");
+        L4C_FATAL("Failed to create log file");
         exit(EXIT_FAILURE);
     }
 
@@ -72,7 +72,7 @@ void initialize_log(int rank, const char *type) {
 // sy: add - logging function
 void logging_info(log_info_t *info, const char *type) {
     FILE *log_file;
-    char log_filename[64];
+    char log_filename[128];
 	const char *logdir = getenv("HVAC_LOG_DIR");
 	snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, info->server_rank);
 
@@ -127,8 +127,9 @@ void hvac_init_comm(hg_bool_t listen)
 	//Only for server processes
 	if (listen)
 	{
-		char *rank_str = getenv("PMIX_RANK");  
-    	server_rank = atoi(rank_str);
+		char *rank_str = getenv("PMI_RANK");
+    		server_rank = atoi(rank_str);
+		L4C_DEBUG("PMI RANK %d\n", server_rank);  
 		if (rank_str != NULL){
 			hvac_server_rank = atoi(rank_str);
 			const char *type = "server";
@@ -209,7 +210,7 @@ void hvac_comm_list_addr()
     /* Write addr to a file */
     na_config = fopen(filename, "a+");
     if (!na_config) {
-        L4C_ERR("Could not open config file from: %s\n",
+        L4C_FATAL("Could not open config file from: %s\n",
             filename);
         exit(0);
     }
@@ -283,7 +284,7 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
         //    }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
-//	L4C_INFO("Info Server: Freeing Bulk Handle\n");
+	L4C_INFO("Info Server: Freeing Bulk Handle\n");
     HG_Destroy(hvac_rpc_state_p->handle);
     free(hvac_rpc_state_p->buffer);
     free(hvac_rpc_state_p);
@@ -520,7 +521,7 @@ hvac_close_rpc_handler(hg_handle_t handle)
     int ret = HG_Get_input(handle, &in);
     assert(ret == HG_SUCCESS);
 	gettimeofday(&log_info.clocktime, NULL);
- //   L4C_INFO("Closing File %d\n",in.fd);
+    L4C_INFO("Closing File %d\n",in.fd);
     ret = close(in.fd);
 //    assert(ret == 0);
 //	out.done = ret;

@@ -158,7 +158,7 @@ src/hvac_server: src/CMakeFiles/hvac_server.dir/hvac_logging.c.o
 src/hvac_server: src/CMakeFiles/hvac_server.dir/build.make
 src/hvac_server: /ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib/liblog4c.so
 src/hvac_server: /lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib/libmercury_hl.so
-src/hvac_server: /lustre/orion/proj-shared/stf008/hvac/HVAC/build/mercury/install/lib/libmercury.so
+src/hvac_server: /lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib/libmercury.so
 src/hvac_server: /lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib/libmercury_util.so
 src/hvac_server: /lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib/libna.so
 src/hvac_server: src/CMakeFiles/hvac_server.dir/link.txt

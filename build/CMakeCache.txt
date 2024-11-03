@@ -26,8 +26,8 @@ CMAKE_BUILD_TYPE:STRING=Debug
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
-//No help, variable specified on the command line.
-CMAKE_CXX_COMPILER:UNINITIALIZED=/opt/cray/pe/gcc/12.2.0/snos/bin/g++
+//CXX compiler
+CMAKE_CXX_COMPILER:STRING=/opt/cray/pe/gcc/12.2.0/snos/bin/g++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -52,8 +52,8 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the compiler during release builds with debug info.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG -DDEBUG
 
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:UNINITIALIZED=/opt/cray/pe/gcc/12.2.0/snos/bin/gcc
+//C compiler
+CMAKE_C_COMPILER:STRING=/opt/cray/pe/gcc/12.2.0/snos/bin/gcc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -239,7 +239,7 @@ hvac_client_LIB_DEPENDS:STATIC=general;pthread;general;dl;
 pkgcfg_lib_LOG4C_log4c:FILEPATH=/ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib/liblog4c.so
 
 //Path to a library.
-pkgcfg_lib_MERCURY_mercury:FILEPATH=/lustre/orion/proj-shared/stf008/hvac/HVAC/build/mercury/install/lib/libmercury.so
+pkgcfg_lib_MERCURY_mercury:FILEPATH=/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib/libmercury.so
 
 //Path to a library.
 pkgcfg_lib_MERCURY_mercury_hl:FILEPATH=/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib/libmercury_hl.so

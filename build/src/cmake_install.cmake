@@ -54,7 +54,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libhvac_client.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libhvac_client.so"
-         OLD_RPATH "/sw/summit/gcc/9.1.0-alpha+20190716/lib64:/lustre/orion/proj-shared/stf008/hvac/HVAC/build/mercury/install/lib:/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib:/ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib:"
+         OLD_RPATH "/sw/summit/gcc/9.1.0-alpha+20190716/lib64:/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib:/ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/opt/cray/pe/cce/17.0.0/binutils/x86_64/x86_64-pc-linux-gnu/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libhvac_client.so")
@@ -77,7 +77,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/hvac_server")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/hvac_server"
-         OLD_RPATH "/sw/peak/gcc/10.2.0-2/lib64/:/lustre/orion/proj-shared/stf008/hvac/HVAC/build/mercury/install/lib:/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib:/ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib:"
+         OLD_RPATH "/sw/peak/gcc/10.2.0-2/lib64/:/lustre/orion/gen008/proj-shared/rlibrary/mercury2.0.1/lib:/ccs/home/ketan2/crusherwork/log4c-1.2.4/install/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/opt/cray/pe/cce/17.0.0/binutils/x86_64/x86_64-pc-linux-gnu/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/hvac_server")

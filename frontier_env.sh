@@ -3,19 +3,22 @@
 #module unload darshan-runtime
 
 module load rocm/6.0.0
-#module load cray-pmi/6.1.13
-#module load cray-mpich/8.1.28
+module load cray-pmi/6.1.13
+module load cray-mpich/8.1.28
 
-#source /lustre/orion/proj-shared/stf008/hvac/hsoon_venv/bin/activate 
+source /lustre/orion/proj-shared/stf008/hvac/hsoon_venv/bin/activate 
 
 export HVAC_SERVER_COUNT=1
 export HVAC_LOG_LEVEL=800
 export RDMAV_FORK_SAFE=1
 export VERBS_LOG_LEVEL=4
 export BBPATH=/mnt/bb/$USER
+export MY_JOBID=0
+export HVAC_LOG_DIR=/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/src
+export HVAC_DATA_DIR=/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/tests
 
-export http_proxy=http://proxy.ccs.ornl.gov:3128/
-export https_proxy=http://proxy.ccs.ornl.gov:3128/
+#export http_proxy=http://proxy.ccs.ornl.gov:3128/
+#export https_proxy=http://proxy.ccs.ornl.gov:3128/
 
 #export CC=/lustre/orion/proj-shared/stf008/hvac/hsoon/GCC-9.1.0/bin/gcc
 #export CXX=/lustre/orion/proj-shared/stf008/hvac/hsoon/GCC-9.1.0/bin/c++
