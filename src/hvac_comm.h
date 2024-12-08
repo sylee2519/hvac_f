@@ -26,7 +26,7 @@ struct hvac_rpc_state_t_client {
     void *buffer;
     hg_bulk_t bulk_handle;
     hg_handle_t handle;
-    int local_fd; //sy: add
+    int fd; //sy: add
     int offset; //sy: add
     ssize_t *bytes_read; //sy: add
     hg_bool_t *done; //sy: add
@@ -38,7 +38,7 @@ struct hvac_rpc_state_t_client {
 
 // Carry CB Information for CB
 struct hvac_open_state_t{
-    uint32_t local_fd;
+    uint32_t *fd;
 	char filepath[256];
 	uint32_t svr_hash;
     hg_bool_t *done;
@@ -49,7 +49,7 @@ struct hvac_open_state_t{
 struct hvac_rpc_state_t_close {
     bool done;
     bool timeout;
-	int local_fd;
+	int fd;
     uint32_t host;
     hg_addr_t addr;
     std::condition_variable cond;
@@ -81,11 +81,11 @@ extern int client_rank;
 
 //RPC Open Handler
 MERCURY_GEN_PROC(hvac_open_out_t, ((int32_t)(ret_status)))
-MERCURY_GEN_PROC(hvac_open_in_t, ((hg_string_t)(path))((int32_t)(client_rank))((int32_t)(localfd)))
+MERCURY_GEN_PROC(hvac_open_in_t, ((hg_string_t)(path))((int32_t)(client_rank)))
 
 //BULK Read Handler
 MERCURY_GEN_PROC(hvac_rpc_out_t, ((int32_t)(ret)))
-MERCURY_GEN_PROC(hvac_rpc_in_t, ((int32_t)(input_val))((hg_bulk_t)(bulk_handle))((int32_t)(accessfd))((int32_t)(localfd))((int64_t)(offset))((int32_t)(client_rank)))
+MERCURY_GEN_PROC(hvac_rpc_in_t, ((int32_t)(input_val))((hg_bulk_t)(bulk_handle))((int32_t)(fd))((int64_t)(offset))((int32_t)(client_rank)))
 
 //RPC Seek Handler
 MERCURY_GEN_PROC(hvac_seek_out_t, ((int32_t)(ret)))
@@ -109,8 +109,8 @@ hg_context_t *hvac_comm_get_context();
 
 //Client
 void hvac_client_comm_gen_seek_rpc(uint32_t svr_hash, int fd, int offset, int whence);
-void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void* buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p);
-void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p);
+void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int fd, void* buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p);
+void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, hvac_open_state_t *hvac_open_state_p);
 void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_close* rpc_state);
 hg_addr_t hvac_client_comm_lookup_addr(int rank);
 void hvac_client_comm_register_rpc();

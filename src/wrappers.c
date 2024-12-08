@@ -29,7 +29,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdarg.h>
-
+#include <sys/resource.h>
+#include <pthread.h>
 
 #include "hvac_internal.h"
 #include "hvac_logging.h"
@@ -45,6 +46,80 @@ extern bool g_disable_redirect;
 // to make sure I/O to our log files doesn't get redirected.
 extern __thread bool tl_disable_redirect;
 
+// sy: add to avoid unnecessary open
+#define MAX_FDS 1024
+#define MAX_PATH_LENGTH 1024
+
+typedef struct {
+    int fd;                 // File descriptor
+    char path[MAX_PATH_LENGTH]; // File path
+} FDEntry;
+
+static FDEntry fd_table[MAX_FDS];
+pthread_mutex_t fd_mutex = PTHREAD_MUTEX_INITIALIZER;
+static bool fd_table_initialized = false; 
+
+void initialize_fd_table_if_needed() {
+    pthread_mutex_lock(&fd_mutex); // Lock the mutex
+    if (!fd_table_initialized) {
+        for (int i = 0; i < MAX_FDS; i++) {
+            fd_table[i].fd = -1; // Mark as unused
+            fd_table[i].path[0] = '\0'; // Empty path
+        }
+        fd_table_initialized = true;
+    }
+    pthread_mutex_unlock(&fd_mutex); // Unlock the mutex
+}
+
+void add_fd(int fd, const char *path) {
+    initialize_fd_table_if_needed(); // Ensure the table is initialized
+
+    pthread_mutex_lock(&fd_mutex); // Lock the mutex
+
+    for (int i = 0; i < MAX_FDS; i++) {
+        if (fd_table[i].fd == -1) { // Find an unused slot
+            fd_table[i].fd = fd;
+            strncpy(fd_table[i].path, path, MAX_PATH_LENGTH - 1);
+            fd_table[i].path[MAX_PATH_LENGTH - 1] = '\0'; // Null-terminate
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&fd_mutex); // Unlock the mutex
+}
+
+void remove_fd(int fd) {
+    initialize_fd_table_if_needed(); // Ensure the table is initialized
+
+    pthread_mutex_lock(&fd_mutex); // Lock the mutex
+
+    for (int i = 0; i < MAX_FDS; i++) {
+        if (fd_table[i].fd == fd) {
+            fd_table[i].fd = -1; // Mark as unused
+            fd_table[i].path[0] = '\0'; // Clear the path
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&fd_mutex); // Unlock the mutex
+}
+
+const char* get_fd_path(int fd) {
+    initialize_fd_table_if_needed(); // Ensure the table is initialized
+
+    pthread_mutex_lock(&fd_mutex); // Lock the mutex
+
+    const char *path = NULL;
+    for (int i = 0; i < MAX_FDS; i++) {
+        if (fd_table[i].fd == fd) {
+            path = fd_table[i].path;
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&fd_mutex); // Unlock the mutex
+    return path;
+}
 
 
 /* fopen wrapper */
@@ -56,14 +131,16 @@ FILE *WRAP_DECL(fopen)(const char *path, const char *mode)
 
 	FILE *ptr = __real_fopen(path,mode);
 
+	/*
 	if (ptr != NULL)
 	{
-		if (hvac_track_file(path, O_RDONLY, fileno(ptr)))
+		int fd = fileno(ptr);
+		if (hvac_track_file(path, O_RDONLY, &fd) != -1)
 		{
 			L4C_INFO("FOpen: Tracking File %s",path);
 		}
 	}	
-	
+	*/
 	return ptr;
 }
 
@@ -76,17 +153,59 @@ FILE *WRAP_DECL(fopen64)(const char *path, const char *mode)
 	if (g_disable_redirect || tl_disable_redirect) return __real_fopen64( path, mode);
 
 	FILE *ptr = __real_fopen64(path,mode);
-
+/*
 	if (ptr != NULL)
 	{
-		if (hvac_track_file(path, O_RDONLY, fileno(ptr)))
+		int fd = fileno(ptr);
+		if (hvac_track_file(path, O_RDONLY, &fd) != -1)
 		{
 			L4C_INFO("FOpen64: Tracking File %s",path);
 		}
 	}	
-	
+*/	
 	return ptr;
 }
+
+//sy: add to avoid unnecessary open
+int generate_and_add_fd(const char *path) {
+    struct rlimit rl;
+    getrlimit(RLIMIT_NOFILE, &rl);
+    int max_fd = rl.rlim_cur > MAX_FDS ? MAX_FDS : rl.rlim_cur;
+    int fd;
+
+    pthread_mutex_lock(&fd_mutex); // Lock the mutex for thread safety
+
+    // Generate a random FD that is not already in use
+    do {
+        fd = rand() % max_fd;
+        // Check if the fd already exists in the table
+        int exists = 0;
+        for (int i = 0; i < MAX_FDS; i++) {
+            if (fd_table[i].fd == fd) {
+                exists = 1;
+                break;
+            }
+        }
+        if (!exists) break; // Exit loop if fd is not in use
+    } while (1);
+
+    // Add the FD and the file path to the table
+    for (int i = 0; i < MAX_FDS; i++) {
+        if (fd_table[i].fd == -1) { // Find an unused slot
+            fd_table[i].fd = fd;
+            strncpy(fd_table[i].path, path, MAX_PATH_LENGTH - 1);
+            fd_table[i].path[MAX_PATH_LENGTH - 1] = '\0'; // Null-terminate
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&fd_mutex); // Unlock the mutex
+
+    return fd; // Return the generated FD
+}
+
+
+
 
 int WRAP_DECL(open)(const char *pathname, int flags, ...)
 {
@@ -119,13 +238,25 @@ int WRAP_DECL(open)(const char *pathname, int flags, ...)
 	 * an FD
 	 */
 	//ret = __real_open(pathname, flags, mode); //original code
-	ret = use_mode ? __real_open(pathname, flags, mode) : __real_open(pathname, flags); //sy: add
+//	ret = use_mode ? __real_open(pathname, flags, mode) : __real_open(pathname, flags); //sy: add
 
+	else {
+//		ret = generate_and_add_fd(pathname);
 	// C++ code determines whether to track
-	if (ret != -1){
-		if (hvac_track_file(pathname, flags, ret))
+		
+/*		if (hvac_track_file(pathname, flags, ret))
+
 		{
 //			L4C_INFO("Open: Tracking File %s",pathname);
+		}
+*/
+		int fd;
+		ret = hvac_track_file(pathname, flags, &fd);
+		if(ret <= 0){
+			ret = use_mode ? __real_open(pathname, flags, mode) : __real_open(pathname, flags);
+		}
+		else{
+			add_fd(ret, pathname);
 		}
 	}
 	
@@ -163,9 +294,10 @@ int WRAP_DECL(open64)(const char *pathname, int flags, ...)
 
 	if (ret != -1)
 	{
-		if (hvac_track_file(pathname, flags, ret))
-		{
+		int fd;
+		if (hvac_track_file(pathname, flags, &fd) != -1){
 			L4C_INFO("Open64: Tracking file %s",pathname);
+			return fd;
 		}
 	}
 
@@ -179,7 +311,6 @@ int WRAP_DECL(open64)(const char *pathname, int flags, ...)
 int WRAP_DECL(close)(int fd)
 {
 	int ret = 0;
-
 	/* Check if hvac data has been initialized? Can we possibly hit a close call before an open call? */
 	MAP_OR_FAIL(close);
 	if (g_disable_redirect || tl_disable_redirect) return __real_close(fd);
@@ -189,12 +320,23 @@ int WRAP_DECL(close)(int fd)
 	{
 //		L4C_INFO("Close to file %s",path);
 		hvac_remove_fd(fd);
+		remove_fd(fd);
 	}
 
-	if ((ret = __real_close(fd)) != 0)
-	{
-		L4C_PERROR("Error from close");
-		return ret;
+	else{
+		if (get_fd_path(fd) == NULL) {
+
+			if ((ret = __real_close(fd)) != 0)
+//	if ((ret = __real_close(fd)) != 0)
+			{
+				L4C_PERROR("Error from close");
+				return ret;
+			}
+		}
+		else {
+			remove_fd(fd);
+		}
+
 	}
 
 	return ret;
@@ -274,12 +416,43 @@ ssize_t WRAP_DECL(pread)(int fd, void *buf, size_t count, off_t offset)
 			
                 L4C_INFO("offset %d bytesRead original %d bytesRead hvac %d\n", offset, cnt, ret);
 */
-		if(ret < 0){
+/*		if(ret < 0){
 			
 			L4C_INFO("remote pread_error returned %s",path);
 			ret = __real_pread(fd,buf,count,offset);
 			L4C_INFO("readbytes %d\n", ret);
 		}
+*/
+		 if (ret < 0){
+            // On remote pread error, log the error
+            L4C_INFO("remote pread_error returned %s", path);
+
+            // Check if the path exists in fd_table
+            const char *real_path = get_fd_path(fd);
+            if (real_path != NULL)
+            {
+                // Open the file using the path
+                int temp_fd = __real_open(real_path, O_RDONLY);
+                if (temp_fd < 0)
+                {
+                    L4C_PERROR("Error opening file for real pread");
+                    return ret; // Return error
+                }
+
+                // Perform the real pread
+                ret = __real_pread(temp_fd, buf, count, offset);
+
+                // Close the temporary FD after reading
+                __real_close(temp_fd);
+
+                L4C_INFO("readbytes %d\n", ret);
+            }
+            else
+            {
+                ret = __real_pread(fd, buf, count, offset);
+                L4C_INFO("Fallback readbytes %d\n", ret);
+            }
+        }
 	}
 	else
 	{
@@ -330,6 +503,7 @@ off_t WRAP_DECL(lseek)(int fd, off_t offset, int whence)
 		L4C_INFO("Got an LSEEK on a tracked file %d %ld\n", fd, offset);	
 		return hvac_remote_lseek(fd,offset,whence);
 	}
+
 	return __real_lseek(fd, offset, whence);
 }
 

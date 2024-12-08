@@ -1,4 +1,0 @@
-20241031 02:46:53.201 INFO     hvac_server- [hvac_server.cpp:72] Server process starting up
-20241031 02:46:53.233 DEBUG    hvac_server- [hvac_comm.cpp:132] PMI RANK 2
-
-20241031 02:46:53.234 INFO     hvac_server- [hvac_comm.cpp:143] Mecury initialized

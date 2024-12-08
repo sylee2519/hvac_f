@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f
+CMAKE_SOURCE_DIR = /lustre/orion/proj-shared/gen008/seoyeong/hvac_f
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build
+CMAKE_BINARY_DIR = /lustre/orion/proj-shared/gen008/seoyeong/hvac_f/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -123,7 +123,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/autofs/nccs-svm1_sw/frontier/spack-envs/core-24.07/opt/gcc-7.5.0/cmake-3.27.9-pyxnvhiskwepbw5itqyipzyhhfw3yitk/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -132,9 +132,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/CMakeFiles /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /lustre/orion/proj-shared/gen008/seoyeong/hvac_f/build/CMakeFiles /lustre/orion/proj-shared/gen008/seoyeong/hvac_f/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /lustre/orion/proj-shared/gen008/seoyeong/hvac_f/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

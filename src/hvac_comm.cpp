@@ -74,7 +74,10 @@ void logging_info(log_info_t *info, const char *type) {
     FILE *log_file;
     char log_filename[128];
 	const char *logdir = getenv("HVAC_LOG_DIR");
-	snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, info->server_rank);
+	if (strcmp(type, "server")==0)
+		snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, info->server_rank);
+	else if(strcmp(type, "client")==0)
+		snprintf(log_filename, sizeof(log_filename), "%s/%s_node_%d.log", logdir, type, info->client_rank);
 
 //    snprintf(log_filename, sizeof(log_filename), "%s_node_%d.log", type, info->server_rank);
 
@@ -284,7 +287,6 @@ hvac_rpc_handler_bulk_cb(const struct hg_cb_info *info)
         //    }
 
     HG_Bulk_free(hvac_rpc_state_p->bulk_handle);
-	L4C_INFO("Info Server: Freeing Bulk Handle\n");
     HG_Destroy(hvac_rpc_state_p->handle);
     free(hvac_rpc_state_p->buffer);
     free(hvac_rpc_state_p);
@@ -334,7 +336,7 @@ hvac_rpc_handler(hg_handle_t handle)
     assert(ret == 0);
 
 	// sy: add - logging code
-	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", hvac_rpc_state_p->in.localfd); 
+	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", hvac_rpc_state_p->in.fd); 
     log_info.filepath[sizeof(log_info.filepath) - 1] = '\0';
     strncpy(log_info.request, "read", sizeof(log_info.request) - 1);
     log_info.request[sizeof(log_info.request) - 1] = '\0';
@@ -359,7 +361,7 @@ hvac_rpc_handler(hg_handle_t handle)
 	hvac_rpc_out_t out;
 
     if (hvac_rpc_state_p->in.offset == -1){
-        readbytes = read(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
+        readbytes = read(hvac_rpc_state_p->in.fd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size);
 //        L4C_DEBUG("Server Rank %d : Read %ld bytes from file %s", server_rank,readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str());
 /*
 		if (readbytes < 0) {
@@ -372,7 +374,7 @@ hvac_rpc_handler(hg_handle_t handle)
 		gettimeofday(&log_info.clocktime, NULL);
 		strncpy(log_info.expn, "SSNVMeRequest", sizeof(log_info.expn) - 1);
     	log_info.expn[sizeof(log_info.expn) - 1] = '\0';
-        readbytes = pread(hvac_rpc_state_p->in.accessfd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
+        readbytes = pread(hvac_rpc_state_p->in.fd, hvac_rpc_state_p->buffer, hvac_rpc_state_p->size, hvac_rpc_state_p->in.offset);
 		gettimeofday(&tmp_time, NULL);	
 //        L4C_DEBUG("Server Rank %d : PRead %ld bytes from file %s at offset %ld", server_rank, readbytes, fd_to_path[hvac_rpc_state_p->in.accessfd].c_str(),hvac_rpc_state_p->in.offset );
 /*
@@ -470,7 +472,7 @@ hvac_open_rpc_handler(hg_handle_t handle)
     log_info.server_rank = server_rank;
     strncpy(log_info.expn, "SReceive", sizeof(log_info.expn) - 1);
     log_info.expn[sizeof(log_info.expn) - 1] = '\0';
-    log_info.n_epoch = in.localfd;
+    log_info.n_epoch = -1;
     log_info.n_batch = -1;
     gettimeofday(&log_info.clocktime, NULL);
     logging_info(&log_info, "server");
@@ -500,6 +502,7 @@ hvac_open_rpc_handler(hg_handle_t handle)
         strncpy(log_info.expn, "SPFSReceive", sizeof(log_info.expn) - 1);
         log_info.expn[sizeof(log_info.expn) - 1] = '\0';
     }
+    log_info.n_epoch = out.ret_status;
     logging_info(&log_info, "server");
 
     fd_to_path[out.ret_status] = in.path;  
@@ -521,11 +524,8 @@ hvac_close_rpc_handler(hg_handle_t handle)
     int ret = HG_Get_input(handle, &in);
     assert(ret == HG_SUCCESS);
 	gettimeofday(&log_info.clocktime, NULL);
-    L4C_INFO("Closing File %d\n",in.fd);
     ret = close(in.fd);
-//    assert(ret == 0);
-//	out.done = ret;
-	
+    assert(ret == 0);
 
 	// sy: add - logging code
 	hgi = HG_Get_info(handle);

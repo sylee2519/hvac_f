@@ -81,7 +81,8 @@ hvac_open_cb(const struct hg_cb_info *info)
     }	
     HG_Get_output(info->info.forward.handle, &out);    
 	gettimeofday(&log_info.clocktime, NULL);
-    fd_redir_map[hvac_open_state_p->local_fd] = out.ret_status;
+//    fd_redir_map[hvac_open_state_p->local_fd] = out.ret_status;
+	*(hvac_open_state_p->fd) = out.ret_status;
 //	L4C_INFO("Open RPC Returned FD %d\n",out.ret_status);
 	
 	// sy: add - logging code
@@ -102,7 +103,7 @@ hvac_open_cb(const struct hg_cb_info *info)
     log_info.client_rank = client_rank;
     log_info.server_rank = hvac_open_state_p->svr_hash;
     strncpy(log_info.expn, "CReceive", sizeof(log_info.expn));
-    log_info.n_epoch = hvac_open_state_p->local_fd;
+    log_info.n_epoch = out.ret_status;
     log_info.n_batch = -1;
 
     logging_info(&log_info, "client");
@@ -177,7 +178,7 @@ hvac_read_cb(const struct hg_cb_info *info)
         L4C_DEBUG("Failed to get client address info\n");
     }
 
-	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", hvac_rpc_state_p->local_fd);
+	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", hvac_rpc_state_p->fd);
     strncpy(log_info.request, "read", sizeof(log_info.request));
     log_info.client_rank = client_rank;
     log_info.server_rank = hvac_rpc_state_p->svr_hash;
@@ -314,36 +315,37 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
     hvac_comm_create_handle(svr_addr, hvac_client_close_id, &handle);
 	rpc_state->handle = handle; //sy: add
 
-    in.fd = fd_redir_map[fd];
+//    in.fd = fd_redir_map[fd];
+	in.fd = fd;
 	in.client_rank = client_rank;
-	rpc_state->local_fd = fd;
+	rpc_state->fd = fd;
 
 	// sy: add - logging code
-    log_info_t log_info;
-	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", fd);
-    strncpy(log_info.request, "close", sizeof(log_info.request));
+//    log_info_t log_info;
+//	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", fd);
+//    strncpy(log_info.request, "close", sizeof(log_info.request));
 
-	char server_addr[128];
-    size_t server_addr_str_size = sizeof(server_addr);
-    ret = HG_Addr_to_string(hvac_comm_get_class(), server_addr, &server_addr_str_size, svr_addr);
-    char server_ip[128];
-    extract_ip_portion(server_addr, server_ip, sizeof(server_ip));
-    log_info.flag = (strcmp(client_address, server_ip) == 0) ? 1 : 0;
+//	char server_addr[128];
+//    size_t server_addr_str_size = sizeof(server_addr);
+//    ret = HG_Addr_to_string(hvac_comm_get_class(), server_addr, &server_addr_str_size, svr_addr);
+//    char server_ip[128];
+//    extract_ip_portion(server_addr, server_ip, sizeof(server_ip));
+//    log_info.flag = (strcmp(client_address, server_ip) == 0) ? 1 : 0;
 
-    log_info.client_rank = client_rank;
-    log_info.server_rank = svr_hash;
-    strncpy(log_info.expn, "CRequest", sizeof(log_info.expn));
-    log_info.n_epoch = -1;
-    log_info.n_batch = -1;
-    gettimeofday(&log_info.clocktime, NULL);
+//    log_info.client_rank = client_rank;
+//    log_info.server_rank = svr_hash;
+//    strncpy(log_info.expn, "CRequest", sizeof(log_info.expn));
+//    log_info.n_epoch = -1;
+//    log_info.n_batch = -1;
+//    gettimeofday(&log_info.clocktime, NULL);
 
-    logging_info(&log_info, "client");
+//    logging_info(&log_info, "client");
 
 
     ret = HG_Forward(handle, NULL, NULL, &in);
     assert(ret == 0);
 
-    fd_redir_map.erase(fd);
+//    fd_redir_map.erase(fd);
     HG_Destroy(handle);
     hvac_comm_free_addr(svr_addr);
 
@@ -351,7 +353,7 @@ void hvac_client_comm_gen_close_rpc(uint32_t svr_hash, int fd, hvac_rpc_state_t_
 
 }
 
-void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_open_state_t *hvac_open_state_p)
+void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, hvac_open_state_t *hvac_open_state_p)
 {
 	// sy: modified logic
     hg_addr_t svr_addr;
@@ -363,9 +365,6 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_
     /* Get address */
     svr_addr = hvac_client_comm_lookup_addr(svr_hash);    
 
-    /* Allocate args for callback pass through */
-    hvac_open_state_p->local_fd = fd;
-
     /* create create handle to represent this rpc operation */    
     hvac_comm_create_handle(svr_addr, hvac_client_open_id, &handle);  
 
@@ -374,7 +373,7 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_
    
 	// sy: add - logging code
 	in.client_rank = client_rank;   
-	in.localfd = fd;	
+//	in.localfd = *fd;	
 
 	strncpy(hvac_open_state_p->filepath, path.c_str(), sizeof(hvac_open_state_p->filepath) - 1);
 	hvac_open_state_p->filepath[sizeof(hvac_open_state_p->filepath) - 1] = '\0'; // Ensure null termination
@@ -395,26 +394,22 @@ void hvac_client_comm_gen_open_rpc(uint32_t svr_hash, string path, int fd, hvac_
     log_info.client_rank = client_rank;
     log_info.server_rank = svr_hash;  
     strncpy(log_info.expn, "CRequest", sizeof(log_info.expn));
-	log_info.n_epoch = fd;
+	log_info.n_epoch = -1;
 	log_info.n_batch = -1;
     gettimeofday(&log_info.clocktime, NULL);	
    
 	logging_info(&log_info, "client"); 
 
-
-
-
     ret = HG_Forward(handle, hvac_open_cb, hvac_open_state_p, &in);
     assert(ret == 0);
 
-    
     hvac_comm_free_addr(svr_addr);
 
     return;
 
 }
 
-void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p)
+void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int fd, void *buffer, ssize_t count, off_t offset, hvac_rpc_state_t_client *hvac_rpc_state_p)
 {
 	//sy: modified logic
     hg_addr_t svr_addr;
@@ -444,22 +439,23 @@ void hvac_client_comm_gen_read_rpc(uint32_t svr_hash, int localfd, void *buffer,
 
     hvac_rpc_state_p->bulk_handle = in.bulk_handle;
     assert(ret == HG_SUCCESS);
-	hvac_rpc_state_p->local_fd = localfd; //sy: add
+	hvac_rpc_state_p->fd = fd; //sy: add
 	hvac_rpc_state_p->offset = offset; //sy: add
     /* Send rpc. Note that we are also transmitting the bulk handle in the
      * input struct.  It was set above.
      */
     in.input_val = count;
     //Convert FD to remote FD
-    in.accessfd = fd_redir_map[localfd];
-	in.localfd = localfd; //sy: add
+//    in.accessfd = fd_redir_map[localfd];
+	in.fd = fd;
+//    in.localfd = localfd; //sy: add
     in.offset = offset;
   	in.client_rank = client_rank; //sy: add - for logging  	 
 	hvac_rpc_state_p->svr_hash = svr_hash; //sy: add   
  
 	// sy: add - logging code
     log_info_t log_info;
-	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", localfd);
+	snprintf(log_info.filepath, sizeof(log_info.filepath), "fd_%d", fd);
     strncpy(log_info.request, "read", sizeof(log_info.request));
 	
 	char server_addr[128];
@@ -528,8 +524,8 @@ hg_addr_t hvac_client_comm_lookup_addr(int rank)
 {
 	if (address_cache.find(rank) != address_cache.end())
 	{
-        hg_addr_t target_server;
-        HG_Addr_lookup2(hvac_comm_get_class(), address_cache[rank].c_str(), &target_server);
+        	hg_addr_t target_server;
+        	HG_Addr_lookup2(hvac_comm_get_class(), address_cache[rank].c_str(), &target_server);
 		return target_server;
 	}
 

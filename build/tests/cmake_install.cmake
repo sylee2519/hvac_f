@@ -1,4 +1,4 @@
-# Install script for directory: /lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/tests
+# Install script for directory: /lustre/orion/proj-shared/gen008/seoyeong/hvac_f/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

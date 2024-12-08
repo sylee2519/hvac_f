@@ -90,22 +90,17 @@ void initialize_hash_ring(int serverCount, int vnodes) {
     failure_flags.resize(serverCount, false);
 }
 
-bool hvac_track_file(const char *path, int flags, int fd)
+int hvac_track_file(const char *path, int flags, int *fd)
 {       
-        if (strstr(path, ".ports.cfg.") != NULL)
-        {
-            return false;
-        }
+	std::string file_path;
+        if (strstr(path, ".ports.cfg.") != NULL){
+            return false;}
 	//Always back out of RDONLY
 	bool tracked = false;
 	if ((flags & O_ACCMODE) == O_WRONLY) {
-		return false;
-	}
-
+		return -1;}
 	if ((flags & O_APPEND)) {
-		return false;
-	}    
-
+		return -1;}    
 	try {
 		std::string ppath = std::filesystem::canonical(path).parent_path();
 		// Check if current file exists in HVAC_DATA_DIR
@@ -116,12 +111,12 @@ bool hvac_track_file(const char *path, int flags, int fd)
 			{
 				//L4C_FATAL("Got a file want a stack trace");
 //				L4C_INFO("Traacking used HV_DD file %s",path);
-				fd_map[fd] = std::filesystem::canonical(path);
+				file_path = std::filesystem::canonical(path);
 				tracked = true;
 			}		
 		}else if (ppath == std::filesystem::current_path()) {       
 //			L4C_INFO("Traacking used CWD file %s",path);
-			fd_map[fd] = std::filesystem::canonical(path);
+			file_path = std::filesystem::canonical(path);
 			tracked = true;
 		}
 	} catch (...)
@@ -153,8 +148,10 @@ bool hvac_track_file(const char *path, int flags, int fd)
         hvac_open_state_p->done = &done;
         hvac_open_state_p->cond = &cond;
         hvac_open_state_p->mutex = &mutex;	
+	hvac_open_state_p->fd = (uint32_t *)fd;
+
 //		int host = std::hash<std::string>{}(fd_map[fd]) % g_hvac_server_count;	
-		string hostname = hashRing->GetNode(fd_map[fd]);
+		string hostname = hashRing->GetNode(file_path);
 		int host = hashRing->ConvertHostToNumber(hostname);
 //		L4C_INFO("Remote open - Host %d", host);
 		{
@@ -166,18 +163,22 @@ bool hvac_track_file(const char *path, int flags, int fd)
                 L4C_INFO("Host %d reached timeout limit, skipping", host);
 				hashRing->RemoveNode(hostname);
 				failure_flags[host] = true;
-				hostname = hashRing->GetNode(fd_map[fd]); // sy: Imediately directed to the new node
+				hostname = hashRing->GetNode(file_path); // sy: Imediately directed to the new node
                 host = hashRing->ConvertHostToNumber(hostname);
 //				L4C_INFO("new host %d\n", host);
             }
         }
 
-		hvac_client_comm_gen_open_rpc(host, fd_map[fd], fd, hvac_open_state_p);
+		hvac_client_comm_gen_open_rpc(host, file_path, hvac_open_state_p);
 		hvac_client_block(host, &done, &cond, &mutex);
+		fd_map[*fd] = file_path;
 	}
 
 
-	return tracked;
+	if (tracked){
+		return *fd;
+	}
+	return -1;
 }
 
 /* Need to clean this up - in theory the RPC should time out if the request hasn't been serviced we'll go to the file-system?

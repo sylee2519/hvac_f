@@ -140,7 +140,7 @@ extern int WRAP_DECL(fdatasync)(int fd);
 #endif
 /* HVAC Internal API */
 #ifdef __cplusplus
-extern "C" bool hvac_track_file(const char* path, int flags, int fd);
+extern "C" int hvac_track_file(const char* path, int flags, int *fd);
 extern "C" const char * hvac_get_path(int fd);
 extern "C" bool  hvac_remove_fd(int fd);
 extern "C" ssize_t hvac_remote_read(int fd, void *buf, size_t count);
@@ -150,7 +150,7 @@ extern "C" void hvac_remote_close(int fd);
 extern "C" bool hvac_file_tracked(int fd);
 #endif
 
-extern bool hvac_track_file(const char* path, int flags, int fd);
+extern int hvac_track_file(const char* path, int flags, int *fd);
 extern const char * hvac_get_path(int fd);
 extern bool  hvac_remove_fd(int fd);
 extern ssize_t hvac_remote_read(int fd, void *buf, size_t count);

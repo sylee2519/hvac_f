@@ -5,13 +5,13 @@
 # compile CXX with /opt/cray/pe/gcc/12.2.0/snos/bin/g++
 C_DEFINES = -DHVAC_SERVER -D_GNU_SOURCE
 
-C_INCLUDES = -I/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/include -isystem /opt/cray/pe/mpich/8.1.28/ofi/cray/17.0/include -isystem /ccs/home/ketan2/crusherwork/log4c-1.2.4/install/include
+C_INCLUDES = -I/lustre/orion/proj-shared/gen008/seoyeong/hvac_f/include -isystem /opt/cray/pe/mpich/8.1.28/ofi/cray/17.0/include -isystem /ccs/home/ketan2/crusherwork/log4c-1.2.4/install/include
 
 C_FLAGS =  -fcommon -g -std=gnu11
 
 CXX_DEFINES = -DHVAC_SERVER -D_GNU_SOURCE
 
-CXX_INCLUDES = -I/lustre/orion/proj-shared/stf008/hvac/sylee/hvac_f/include -isystem /opt/cray/pe/mpich/8.1.28/ofi/cray/17.0/include -isystem /ccs/home/ketan2/crusherwork/log4c-1.2.4/install/include
+CXX_INCLUDES = -I/lustre/orion/proj-shared/gen008/seoyeong/hvac_f/include -isystem /opt/cray/pe/mpich/8.1.28/ofi/cray/17.0/include -isystem /ccs/home/ketan2/crusherwork/log4c-1.2.4/install/include
 
 CXX_FLAGS =  -fcommon -g -Wall -DDEBUG -std=gnu++17
 
